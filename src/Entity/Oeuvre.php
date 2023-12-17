@@ -71,7 +71,7 @@ class Oeuvre
     private ?string $commentaireInterne = null;
 
     #[ORM\ManyToOne(inversedBy: 'oeuvres')]
-    private ?OeuvreCategorie $categorieId = null;
+    private ?OeuvreCategorie $categorie = null;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class)]
     private Collection $oeuvreBibliographies;
@@ -314,14 +314,14 @@ class Oeuvre
         return $this;
     }
 
-    public function getCategorieId(): ?OeuvreCategorie
+    public function getCategorie(): ?OeuvreCategorie
     {
-        return $this->categorieId;
+        return $this->categorie;
     }
 
-    public function setCategorieId(?OeuvreCategorie $categorieId): static
+    public function setCategorie(?OeuvreCategorie $categorie): static
     {
-        $this->categorieId = $categorieId;
+        $this->categorie = $categorie;
 
         return $this;
     }
