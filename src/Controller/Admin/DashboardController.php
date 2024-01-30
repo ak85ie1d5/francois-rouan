@@ -46,19 +46,19 @@ class DashboardController extends AbstractDashboardController
     public function configureCrud(): Crud
     {
         return parent::configureCrud()
-            ->addFormTheme('@EasyMedia/form/easy-media.html.twig')
-            ;
+            ->addFormTheme('@EasyMedia/form/easy-media.html.twig');
     }
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('François Rouan ');
+            ->setTitle('Theta Galerie');
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-dashboard');
+        yield MenuItem::linktoRoute('Recherche avancée', 'fas fa-search', 'advanced-search');
         yield MenuItem::linkToCrud('Oeuvres', 'fas fa-solid fa-brush', Oeuvre::class);
         yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-solid fa-palette', OeuvreCategorie::class);
         yield MenuItem::linkToCrud('Lieux', 'fas fa-solid fa-location-dot', Lieu::class);

@@ -5,9 +5,11 @@ namespace App\Controller\Admin;
 use Adeliom\EasyMediaBundle\Admin\Field\EasyMediaField;
 use App\Entity\Oeuvre;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 
 class OeuvreCrudController extends AbstractCrudController
 {
@@ -21,10 +23,7 @@ class OeuvreCrudController extends AbstractCrudController
     {
         $userID = 1;
         return [
-            IdField::new('id'),
-            TextField::new('titre'),
-            TextEditorField::new('description'),
-            EasyMediaField::new('media', "label")
+            EasyMediaField::new('media', "Image")
                 // Apply restrictions by mime-types
                 ->setFormTypeOption("restrictions_uploadTypes", ["image/*"])
                 // Apply restrictions to upload size in MB
@@ -42,7 +41,12 @@ class OeuvreCrudController extends AbstractCrudController
                 ->setFormTypeOption("move", true)
                 ->setFormTypeOption("rename", true)
                 ->setFormTypeOption("metas", true)
-                ->setFormTypeOption("delete", true)
+                ->setFormTypeOption("delete", true),
+            TextField::new('numInventaire', 'N°inv'),
+            TextField::new('titre'),
+            DateField::new('date'),
+            TextField::new('dateComplement'),
+            TextEditorField::new('description'),
         ];
     }
 
