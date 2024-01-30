@@ -12,6 +12,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+
 class DashboardController extends AbstractDashboardController
 {
     #[Route('/admin', name: 'admin')]
@@ -40,6 +42,14 @@ class DashboardController extends AbstractDashboardController
         // return $this->render('some/path/my-dashboard.html.twig');
     }
 
+    // Add the custom form theme
+    public function configureCrud(): Crud
+    {
+        return parent::configureCrud()
+            ->addFormTheme('@EasyMedia/form/easy-media.html.twig')
+            ;
+    }
+
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
@@ -52,5 +62,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Oeuvres', 'fas fa-solid fa-brush', Oeuvre::class);
         yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-solid fa-palette', OeuvreCategorie::class);
         yield MenuItem::linkToCrud('Lieux', 'fas fa-solid fa-location-dot', Lieu::class);
+        yield MenuItem::linkToRoute('Medias', 'fa fa-picture-o', 'media.index');
     }
 }
