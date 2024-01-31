@@ -45,8 +45,8 @@ class DashboardController extends AbstractDashboardController
     // Add the custom form theme
     public function configureCrud(): Crud
     {
-        return parent::configureCrud()
-            ->addFormTheme('@EasyMedia/form/easy-media.html.twig');
+        return parent::configureCrud();
+
     }
 
     public function configureDashboard(): Dashboard
@@ -62,6 +62,5 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Oeuvres', 'fas fa-solid fa-brush', Oeuvre::class);
         yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-solid fa-palette', OeuvreCategorie::class);
         yield MenuItem::linkToCrud('Lieux', 'fas fa-solid fa-location-dot', Lieu::class);
-        yield MenuItem::linkToRoute('Medias', 'fa fa-picture-o', 'media.index');
     }
 }

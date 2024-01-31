@@ -1,37 +1,4 @@
 {
-    "agence-adeliom/easy-common-bundle": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/agence-adeliom/symfony-recipes",
-            "branch": "main",
-            "version": "1.0",
-            "ref": "9769be4ed518a81b8ee9dc5610b12f0879883392"
-        }
-    },
-    "agence-adeliom/easy-media-bundle": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/agence-adeliom/symfony-recipes",
-            "branch": "main",
-            "version": "2.0",
-            "ref": "0c67ba3d33d4222c8ddc76cfed312275201cbb3f"
-        },
-        "files": [
-            "config/packages/easy_media.yaml",
-            "config/routes/easy_media.yaml",
-            "src/Entity/EasyMedia/Folder.php",
-            "src/Entity/EasyMedia/Media.php"
-        ]
-    },
-    "doctrine/annotations": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.10",
-            "ref": "64d8583af5ea57b7afa4aba4b159907f3a148b05"
-        }
-    },
     "doctrine/doctrine-bundle": {
         "version": "2.11",
         "recipe": {
@@ -67,56 +34,6 @@
             "version": "3.0",
             "ref": "b131e6cbfe1b898a508987851963fff485986285"
         }
-    },
-    "league/flysystem-bundle": {
-        "version": "3.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.0",
-            "ref": "913dc3d7a5a1af0d2b044c5ac3a16e2f851d7380"
-        },
-        "files": [
-            "config/packages/flysystem.yaml",
-            "var/storage/.gitignore"
-        ]
-    },
-    "liip/imagine-bundle": {
-        "version": "2.12",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "1.8",
-            "ref": "d1227d002b70d1a1f941d91845fcd7ac7fbfc929"
-        },
-        "files": [
-            "config/packages/liip_imagine.yaml",
-            "config/routes/liip_imagine.yaml"
-        ]
-    },
-    "nyholm/psr7": {
-        "version": "1.8",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.0",
-            "ref": "4a8c0345442dcca1d8a2c65633dcf0285dd5a5a2"
-        },
-        "files": [
-            "config/packages/nyholm_psr7.yaml"
-        ]
-    },
-    "stof/doctrine-extensions-bundle": {
-        "version": "1.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "1.2",
-            "ref": "e805aba9eff5372e2d149a9ff56566769e22819d"
-        },
-        "files": [
-            "config/packages/stof_doctrine_extensions.yaml"
-        ]
     },
     "symfony/apache-pack": {
         "version": "1.0",

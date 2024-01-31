@@ -82,9 +82,6 @@ class Oeuvre
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class)]
     private Collection $oeuvreHistoriques;
 
-    #[ORM\Column(type: 'easy_media_type', nullable: true)]
-    private Media|string|null $media;
-
     public function __construct()
     {
         $this->oeuvreBibliographies = new ArrayCollection();
@@ -430,18 +427,6 @@ class Oeuvre
                 $oeuvreHistorique->setOeuvre(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getMedia()
-    {
-        return $this->media;
-    }
-
-    public function setMedia($media): static
-    {
-        $this->media = $media;
 
         return $this;
     }
