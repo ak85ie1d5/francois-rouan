@@ -1,0 +1,46 @@
+{# @var media \Ranky\MediaBundle\Application\DataTransformer\Response\MediaResponse #}
+<style>
+    .ranky-media-file-show img {
+        max-width: 100%;
+        object-fit: cover;
+        width: 130px;
+        height: 130px;
+        margin: 0 auto;
+        text-align: center;
+        flex: 1;
+    }
+    .ranky-media-file-show ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex-direction: row;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        justify-content: flex-start;
+        justify-items: flex-start;
+    }
+</style>
+{% macro mime_tempate(media) %}
+    {% include [
+        '@RankyMedia/preview/mime-show/' ~ media.file.mimeType ~ '_' ~ media.file.mimeSubType ~ '.html.twig',
+        '@RankyMedia/preview/mime-show/'~ media.file.mimeType ~'.html.twig'
+    ] %}
+{% endmacro %}
+<div class="ranky-media-file-show">
+    <div class="ranky-media-file-show__preview">
+        {% if media is defined and media %}
+            {{ _self.mime_tempate(media) }}
+        {% endif %}
+        {% if medias is defined and medias and media == null %}
+            <ul>
+                {% for media in medias %}
+                    <li>
+                        {{ _self.mime_tempate(media) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
