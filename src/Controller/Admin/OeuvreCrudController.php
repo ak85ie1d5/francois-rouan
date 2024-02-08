@@ -8,7 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
+use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
 
 class OeuvreCrudController extends AbstractCrudController
 {
@@ -20,13 +20,16 @@ class OeuvreCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $userID = 1;
         return [
             TextField::new('numInventaire', 'N°inv'),
             TextField::new('titre'),
             DateField::new('date'),
             TextField::new('dateComplement'),
             TextEditorField::new('description'),
+            EARankyMediaFileManagerField::new('media')
+                ->multipleSelection()
+                ->savePath(true)
+                ->modalTitle('Galerie')
         ];
     }
 
