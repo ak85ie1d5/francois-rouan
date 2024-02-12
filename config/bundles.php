@@ -13,4 +13,5 @@ return [
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Ranky\SharedBundle\RankySharedBundle::class => ['all' => true],
     Ranky\MediaBundle\RankyMediaBundle::class => ['all' => true],
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
 ];
