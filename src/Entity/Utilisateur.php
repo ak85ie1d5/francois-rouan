@@ -7,22 +7,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur
+#[ORM\HasLifecycleCallbacks]
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private ?string $email;
+
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private ?string $identifiant = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -62,6 +68,19 @@ class Utilisateur
         return $this->id;
     }
 
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+
     public function getIdentifiant(): ?string
     {
         return $this->identifiant;
@@ -74,9 +93,26 @@ class Utilisateur
         return $this;
     }
 
+    /**
+     * The public representation of the user
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->identifiant;
+    }
+
+    /**
+     * @see UserInterface
+     */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): static
@@ -86,6 +122,10 @@ class Utilisateur
         return $this;
     }
 
+    /**
+     * @return string|null the hashed password for this user
+     * @see PasswordAuthenticatedUserInterface
+     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -139,11 +179,10 @@ class Utilisateur
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    #[ORM\PrePersist]
+    public function setDateCreation(): void
     {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
+        $this->dateCreation = new \DateTime();
     }
 
     public function getDateModification(): ?\DateTimeInterface
@@ -151,11 +190,10 @@ class Utilisateur
         return $this->dateModification;
     }
 
-    public function setDateModification(?\DateTimeInterface $dateModification): static
+    #[ORM\PreUpdate]
+    public function setDateModification(): void
     {
-        $this->dateModification = $dateModification;
-
-        return $this;
+        $this->dateModification = new \DateTime();
     }
 
     public function getDerniereConnexion(): ?\DateTimeInterface
@@ -216,5 +254,25 @@ class Utilisateur
         $this->groupe->removeElement($groupe);
 
         return $this;
+    }
+
+    /**
+     * Returning a salt is only needed if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
