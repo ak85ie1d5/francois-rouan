@@ -17,7 +17,6 @@ class SecurityController extends AbstractController
         return $this->render('@EasyAdmin/page/login.html.twig', [
             "error" => $error,
             'last_username' => $lastUsername,
-            'forgot_password_enabled' => true,
             'remember_me_enabled' => true,
             'target_path' => '/admin'
         ]);

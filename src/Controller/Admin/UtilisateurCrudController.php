@@ -9,10 +9,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -42,7 +44,7 @@ class UtilisateurCrudController extends AbstractCrudController
                 ->setRequired($pageName === Crud::PAGE_NEW)
                 ->onlyOnForms(),
             EmailField::new('email'),
-            ArrayField::new('roles'),
+            ArrayField::new('roles')->setHelp("ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_UTILISATEUR, ROLE_USER"),
             BooleanField::new('actif')->setValue(true),
             DateField::new('dateCreation')->setDisabled()->hideWhenCreating(),
             DateField::new('dateModification')->setDisabled()->hideWhenCreating(),
