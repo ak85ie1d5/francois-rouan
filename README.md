@@ -25,3 +25,7 @@
     ```shell
     npm install
     ```
+6. Déploiement des scripts générés par Webpack Encore
+   ```shell
+   npm run build
+    ```
