@@ -49,9 +49,6 @@ class Oeuvre
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $details = null;
 
-    #[ORM\Column(type: 'json_document')]
-    private $medias = null;
-
     #[ORM\Column]
     private ?int $nbMedias = null;
 
@@ -84,6 +81,9 @@ class Oeuvre
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class)]
     private Collection $oeuvreHistoriques;
+
+    #[ORM\Column(name: 'media', type: Types::JSON, nullable: true)]
+    private ?array $media;
 
     public function __construct()
     {
@@ -226,18 +226,6 @@ class Oeuvre
     public function setDetails(?string $details): static
     {
         $this->details = $details;
-
-        return $this;
-    }
-
-    public function getMedias()
-    {
-        return $this->medias;
-    }
-
-    public function setMedias($medias): static
-    {
-        $this->medias = $medias;
 
         return $this;
     }
@@ -442,6 +430,18 @@ class Oeuvre
                 $oeuvreHistorique->setOeuvre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMedia(): ?array
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?array $media): static
+    {
+        $this->media = $media;
 
         return $this;
     }

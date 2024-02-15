@@ -25,9 +25,6 @@ class OeuvreCategorie
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
 
-    #[ORM\Column(type: 'json_document')]
-    private $sousCategories = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCreation = null;
 
@@ -46,10 +43,23 @@ class OeuvreCategorie
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: GroupeOeuvreCategoriePerm::class)]
     private Collection $groupeOeuvreCategoriePerms;
 
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'oeuvreCategories')]
+    private Collection $sousCategorie;
+
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'sousCategorie')]
+    private Collection $oeuvreCategories;
+
     public function __construct()
     {
         $this->oeuvres = new ArrayCollection();
         $this->groupeOeuvreCategoriePerms = new ArrayCollection();
+        $this->oeuvreCategories = new ArrayCollection();
+        $this->sousCategorie = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->nom; // ou toute autre propriété que vous souhaitez afficher
     }
 
     public function getId(): ?int
@@ -89,18 +99,6 @@ class OeuvreCategorie
     public function setCommentaire(?string $commentaire): static
     {
         $this->commentaire = $commentaire;
-
-        return $this;
-    }
-
-    public function getSousCategories()
-    {
-        return $this->sousCategories;
-    }
-
-    public function setSousCategories($sousCategories): static
-    {
-        $this->sousCategories = $sousCategories;
 
         return $this;
     }
@@ -208,6 +206,69 @@ class OeuvreCategorie
             if ($groupeOeuvreCategoriePerm->getCategorie() === $this) {
                 $groupeOeuvreCategoriePerm->setCategorie(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getOeuvreCategories(): Collection
+    {
+        return $this->oeuvreCategories;
+    }
+
+    public function getOeuvreCategorie(): ?self
+    {
+        return $this->oeuvreCategorie;
+    }
+
+    public function setOeuvreCategorie(?self $oeuvreCategorie): static
+    {
+        $this->oeuvreCategorie = $oeuvreCategorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getSousCategorie(): Collection
+    {
+        return $this->sousCategorie;
+    }
+
+    public function addSousCategorie(self $sousCategorie): static
+    {
+        if (!$this->sousCategorie->contains($sousCategorie)) {
+            $this->sousCategorie->add($sousCategorie);
+        }
+
+        return $this;
+    }
+
+    public function removeSousCategorie(self $sousCategorie): static
+    {
+        $this->sousCategorie->removeElement($sousCategorie);
+
+        return $this;
+    }
+
+    public function addOeuvreCategory(self $oeuvreCategory): static
+    {
+        if (!$this->oeuvreCategories->contains($oeuvreCategory)) {
+            $this->oeuvreCategories->add($oeuvreCategory);
+            $oeuvreCategory->addSousCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOeuvreCategory(self $oeuvreCategory): static
+    {
+        if ($this->oeuvreCategories->removeElement($oeuvreCategory)) {
+            $oeuvreCategory->removeSousCategorie($this);
         }
 
         return $this;
