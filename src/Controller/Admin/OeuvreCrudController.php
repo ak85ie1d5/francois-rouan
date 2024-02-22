@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Oeuvre;
+use App\Form\OeuvreHistoriqueType;
 use App\Form\TableRowType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -25,10 +26,8 @@ class OeuvreCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud
-            ->setFormThemes(['admin/field/table.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
+        return $crud->addFormTheme('Admin/Field/Table.html.twig');
     }
-
 
     public function configureFields(string $pageName): iterable
     {
@@ -51,11 +50,14 @@ class OeuvreCrudController extends AbstractCrudController
             IntegerField::new('sousCategorie', 'Sous catégorie'),
             TextareaField::new('details', 'Details')->stripTags()->onlyOnDetail(),
 
-            FormField::addTab('Historique'),
+            /*FormField::addTab('Historique'),
             CollectionField::new('oeuvreHistoriques')
                 ->setEntryType(TableRowType::class)
                 ->allowAdd()
                 ->allowDelete(),
+            */
+
+
             FormField::addTab('Bibliographie'),
             FormField::addTab('Exposition'),
             FormField::addTab('Localisation'),
