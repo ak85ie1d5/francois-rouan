@@ -4,13 +4,18 @@ namespace App\Controller\Admin;
 
 use App\Entity\Lieu;
 use App\Entity\Oeuvre;
+use App\Entity\OeuvreBibliographie;
 use App\Entity\OeuvreCategorie;
+use App\Entity\OeuvreExposition;
+use App\Entity\OeuvreHistorique;
+use App\Entity\OeuvreStockage;
 use App\Entity\Utilisateur;
 use ContainerCqAJogm\getSafeFileNameService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Ranky\MediaBundle\Domain\Model\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -66,6 +71,13 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-solid fa-palette', OeuvreCategorie::class);
         yield MenuItem::linkToCrud('Lieux', 'fas fa-solid fa-location-dot', Lieu::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', Utilisateur::class)->setPermission('ROLE_ADMIN');
+
+        yield MenuItem::section('Super Users')->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Oeuvre Historique', 'fa-solid fa-clock-rotate-left', OeuvreHistorique::class)->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Oeuvre Bibliographie', 'fa-solid fa-book', OeuvreBibliographie::class)->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Oeuvre Exposition', 'fa-solid fa-building-columns', OeuvreExposition::class)->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Oeuvre Localisation', 'fas fa-solid fa-location-dot', OeuvreStockage::class)->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Oeuvre Media', 'fa-solid fa-image', Media::class)->setPermission('ROLE_SUPERADMIN');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu
