@@ -73,7 +73,7 @@ class Oeuvre
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class)]
     private Collection $oeuvreBibliographies;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist"])]
     private Collection $oeuvreExpositions;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class)]
@@ -444,5 +444,10 @@ class Oeuvre
         $this->media = $media;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->numInventaire;
     }
 }

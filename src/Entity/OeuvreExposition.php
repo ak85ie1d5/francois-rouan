@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OeuvreExpositionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class OeuvreExposition
 {
     #[ORM\Id]
@@ -117,11 +118,10 @@ class OeuvreExposition
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    #[ORM\PrePersist]
+    public function setDateCreation(): void
     {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
+        $this->dateCreation = new \DateTime();
     }
 
     public function getDateModification(): ?\DateTimeInterface
@@ -129,11 +129,10 @@ class OeuvreExposition
         return $this->dateModification;
     }
 
-    public function setDateModification(?\DateTimeInterface $dateModification): static
+    #[ORM\PreUpdate]
+    public function setDateModification(): void
     {
-        $this->dateModification = $dateModification;
-
-        return $this;
+        $this->dateModification = new \DateTime();
     }
 
     public function getCreateur(): array
@@ -182,5 +181,10 @@ class OeuvreExposition
         $this->oeuvre = $oeuvre;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->titre;
     }
 }

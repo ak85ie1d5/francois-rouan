@@ -2,11 +2,9 @@
 
 namespace App\Controller\Admin;
 
-use App\Admin\Field\TableField;
 use App\Entity\Oeuvre;
 use App\Form\Type\HistoryCollectionType;
-use App\Form\Type\YourCustomFieldType;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Form\Type\ExpositionCollectionType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -23,11 +21,6 @@ class OeuvreCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Oeuvre::class;
-    }
-
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud->setFormThemes(['easy_admin/collection_table.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
     }
 
     public function configureFields(string $pageName): iterable
@@ -59,14 +52,20 @@ class OeuvreCrudController extends AbstractCrudController
                 ->renderExpanded(),
 
             FormField::addTab('Bibliographie'),
+
             FormField::addTab('Exposition'),
+            CollectionField::new('oeuvreExpositions', 'Exposition')
+                ->setEntryType(ExpositionCollectionType::class)
+                ->allowAdd()
+                ->allowDelete()
+                ->renderExpanded(),
+
             FormField::addTab('Localisation'),
             FormField::addTab('Médias'),
             EARankyMediaFileManagerField::new('media')
                 ->multipleSelection()
                 ->savePath(true)
                 ->modalTitle('Galerie'),
-
         ];
     }
 }
