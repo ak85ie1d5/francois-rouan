@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OeuvreHistoriqueRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class OeuvreHistorique
 {
     #[ORM\Id]
@@ -41,13 +42,6 @@ class OeuvreHistorique
     #[ORM\ManyToOne(inversedBy: 'oeuvreHistoriques')]
     private ?Oeuvre $oeuvre = null;
 
-    public function __construct()
-    {
-        // Attribuer des valeurs par défaut aux champs titre et dateCreation
-        $this->titre = 'Nouvel Historique'; // Valeur par défaut pour le champ titre
-        $this->dateCreation = new \DateTime(); // Date et heure actuelles comme valeur par défaut pour le champ dateCreation
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -58,9 +52,10 @@ class OeuvreHistorique
         return $this->titre;
     }
 
-    public function setTitre(string $titre): static
+    #[ORM\PrePersist]
+    public function setTitre(): static
     {
-        $this->titre = $titre;
+        $this->titre = "Sans titre";
 
         return $this;
     }
@@ -106,11 +101,10 @@ class OeuvreHistorique
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    #[ORM\PrePersist]
+    public function setDateCreation(): void
     {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
+        $this->dateCreation = new \DateTime();
     }
 
     public function getDateModification(): ?\DateTimeInterface
@@ -118,11 +112,10 @@ class OeuvreHistorique
         return $this->dateModification;
     }
 
-    public function setDateModification(?\DateTimeInterface $dateModification): static
+    #[ORM\PreUpdate]
+    public function setDateModification(): void
     {
-        $this->dateModification = $dateModification;
-
-        return $this;
+        $this->dateModification = new \DateTime();
     }
 
     public function getCreateur(): array
