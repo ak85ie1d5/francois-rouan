@@ -79,7 +79,7 @@ class Oeuvre
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class)]
     private Collection $oeuvreStockages;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist"])]
     private Collection $oeuvreHistoriques;
 
     #[ORM\Column(name: 'media', type: Types::JSON, nullable: true)]
