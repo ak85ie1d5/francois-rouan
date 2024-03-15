@@ -2,19 +2,20 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\TableField;
 use App\Entity\Oeuvre;
-use App\Form\OeuvreHistoriqueType;
-use App\Form\TableRowType;
+use App\Form\Type\HistoryCollectionType;
+use App\Form\Type\YourCustomFieldType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 
 
 class OeuvreCrudController extends AbstractCrudController
@@ -22,6 +23,11 @@ class OeuvreCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Oeuvre::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud->setFormThemes(['easy_admin/collection_table.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
     }
 
     public function configureFields(string $pageName): iterable
@@ -47,9 +53,10 @@ class OeuvreCrudController extends AbstractCrudController
 
             FormField::addTab('Historique'),
             CollectionField::new('oeuvreHistoriques')
-                ->setEntryType(TableRowType::class)
+                ->setEntryType(HistoryCollectionType::class)
                 ->allowAdd()
-                ->allowDelete(),
+                ->allowDelete()
+                ->renderExpanded(),
 
             FormField::addTab('Bibliographie'),
             FormField::addTab('Exposition'),
