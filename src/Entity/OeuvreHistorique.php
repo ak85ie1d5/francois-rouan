@@ -41,6 +41,13 @@ class OeuvreHistorique
     #[ORM\ManyToOne(inversedBy: 'oeuvreHistoriques')]
     private ?Oeuvre $oeuvre = null;
 
+    public function __construct()
+    {
+        // Attribuer des valeurs par défaut aux champs titre et dateCreation
+        $this->titre = 'Nouvel Historique'; // Valeur par défaut pour le champ titre
+        $this->dateCreation = new \DateTime(); // Date et heure actuelles comme valeur par défaut pour le champ dateCreation
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,5 +159,10 @@ class OeuvreHistorique
         $this->oeuvre = $oeuvre;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getDateCreation()->format('d/m/y H:i');
     }
 }
