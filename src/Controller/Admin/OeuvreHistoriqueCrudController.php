@@ -21,7 +21,6 @@ class OeuvreHistoriqueCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-
             TextField::new('titre'),
             DateField::new('date'),
             TextareaField::new('description'),

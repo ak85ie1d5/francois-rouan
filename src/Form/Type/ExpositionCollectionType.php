@@ -1,10 +1,12 @@
 <?php
 namespace App\Form\Type;
 
+use App\Entity\Lieu;
 use App\Entity\OeuvreExposition;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,8 +21,20 @@ class ExpositionCollectionType extends AbstractType
             ->add('titre', TextType::class)
             ->add('description', TextareaType::class)
             ->add('commentaire', TextareaType::class)
-            ->add('dateDebut', DateTimeType::class)
-            ->add('dateFin', DateTimeType::class);
+            ->add('dateDebut', DateType::class)
+            ->add('dateFin', DateType::class)
+            ->add('lieu', EntityType::class, [
+                'class' => Lieu::class,
+                'choice_label' => 'nom'
+            ])
+            ->add('AjouterUnLieu', CollectionType::class, [
+                'entry_type' => LieuCollectionType::class,
+                'entry_options' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'mapped' => false
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -70,13 +70,13 @@ class Oeuvre
     #[ORM\ManyToOne(inversedBy: 'oeuvres')]
     private ?OeuvreCategorie $categorie = null;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist"])]
     private Collection $oeuvreBibliographies;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist"])]
     private Collection $oeuvreExpositions;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist"])]
     private Collection $oeuvreStockages;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist"])]
@@ -448,6 +448,6 @@ class Oeuvre
 
     public function __toString(): string
     {
-        return $this->numInventaire;
+        return "N° inv $this->numInventaire - $this->titre";
     }
 }

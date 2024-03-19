@@ -2,9 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Lieu;
 use App\Entity\Oeuvre;
 use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\ExpositionCollectionType;
+use App\Form\Type\LieuCollectionType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -15,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
 
+use Doctrine\ORM\EntityManagerInterface;
 
 class OeuvreCrudController extends AbstractCrudController
 {
@@ -52,9 +55,12 @@ class OeuvreCrudController extends AbstractCrudController
                 ->renderExpanded(),
 
             FormField::addTab('Bibliographie'),
+            CollectionField::new('oeuvreBibliographies')
+                ->setEntryIsComplex(),
 
             FormField::addTab('Exposition'),
-            CollectionField::new('oeuvreExpositions', 'Exposition')
+            FormField::addColumn('col-lg-6'),
+            CollectionField::new('oeuvreExpositions')
                 ->setEntryType(ExpositionCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
