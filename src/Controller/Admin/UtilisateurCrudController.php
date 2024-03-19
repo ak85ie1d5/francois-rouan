@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -35,6 +36,7 @@ class UtilisateurCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            FormField::addColumn('col-lg-5'),
             IdField::new('id')->hideOnForm(),
             TextField::new('prenom'),
             TextField::new('nom'),
@@ -46,6 +48,9 @@ class UtilisateurCrudController extends AbstractCrudController
             EmailField::new('email'),
             ArrayField::new('roles')->setHelp("ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_UTILISATEUR, ROLE_USER"),
             BooleanField::new('actif')->setValue(true),
+
+            FormField::addColumn('col-lg-5'),
+            FormField::addColumn('col-lg-2'),
             DateField::new('dateCreation')->setDisabled()->hideWhenCreating(),
             DateField::new('dateModification')->setDisabled()->hideWhenCreating(),
             DateField::new('derniereConnexion')->setDisabled()->hideWhenCreating()
