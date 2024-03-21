@@ -2,11 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Lieu;
 use App\Entity\Oeuvre;
+use App\Form\Type\BibliographieColectionType;
 use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\ExpositionCollectionType;
-use App\Form\Type\LieuCollectionType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -24,6 +23,15 @@ class OeuvreCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Oeuvre::class;
+    }
+
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        parent::persistEntity($entityManager, $entityInstance);
+
+
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
     }
 
     public function configureFields(string $pageName): iterable
@@ -56,10 +64,13 @@ class OeuvreCrudController extends AbstractCrudController
 
             FormField::addTab('Bibliographie'),
             CollectionField::new('oeuvreBibliographies')
-                ->setEntryIsComplex(),
+                ->setEntryType(BibliographieColectionType::class)
+                ->allowAdd()
+                ->allowDelete()
+                ->renderExpanded(),
 
             FormField::addTab('Exposition'),
-            FormField::addColumn('col-lg-6'),
+            FormField::addColumn('col-lg-7'),
             CollectionField::new('oeuvreExpositions')
                 ->setEntryType(ExpositionCollectionType::class)
                 ->allowAdd()

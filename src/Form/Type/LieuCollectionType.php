@@ -32,11 +32,11 @@ class LieuCollectionType extends AbstractType
             ->add('commentaire', TextareaType::class)
             ->add('organisme', TextType::class)
             ->add('pays', CountryType::class)
-            ->add('oeuvreStockages', EntityType::class, [
+            /*->add('oeuvreStockages', EntityType::class, [
                 'class' => OeuvreStockage::class,
                 'placeholder' => 'Sélectionnez une localisation',
                 'choice_label' => 'titre'
-            ]);
+            ])*/;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
