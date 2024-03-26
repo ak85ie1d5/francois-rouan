@@ -31,7 +31,6 @@ class LieuCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
 
             TextField::new('nom'),
-            TextField::new('organisme'),
             TextField::new('adresse'),
             TextField::new('ville'),
             TextField::new('codePostal'),

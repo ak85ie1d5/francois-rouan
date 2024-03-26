@@ -30,7 +30,6 @@ class LieuCollectionType extends AbstractType
             ->add('email', EmailType::class)
             ->add('description', TextareaType::class)
             ->add('commentaire', TextareaType::class)
-            ->add('organisme', TextType::class)
             ->add('pays', CountryType::class)
             /*->add('oeuvreStockages', EntityType::class, [
                 'class' => OeuvreStockage::class,
