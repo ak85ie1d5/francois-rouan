@@ -6,6 +6,7 @@ use App\Entity\Oeuvre;
 use App\Form\Type\BibliographieColectionType;
 use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\ExpositionCollectionType;
+use App\Form\Type\StockageCollectionType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -78,6 +79,11 @@ class OeuvreCrudController extends AbstractCrudController
                 ->renderExpanded(),
 
             FormField::addTab('Localisation'),
+            CollectionField::new('oeuvreStockages')
+                ->setEntryType(StockageCollectionType::class)
+                ->allowAdd()
+                ->allowDelete(),
+
             FormField::addTab('Médias'),
             EARankyMediaFileManagerField::new('media')
                 ->multipleSelection()
