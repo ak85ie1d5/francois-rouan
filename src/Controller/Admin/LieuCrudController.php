@@ -28,33 +28,44 @@ class LieuCrudController extends AbstractCrudController
         return [
             FormField::addTab('Général'),
             FormField::addColumn('col-lg-5'),
-            IdField::new('id')->hideOnForm(),
-
             TextField::new('nom'),
             TextField::new('adresse'),
             TextField::new('ville'),
             TextField::new('codePostal'),
-            CountryField::new('pays'),
-            EmailField::new('email'),
+            CountryField::new('pays')
+                ->hideOnIndex(),
+            EmailField::new('email')
+                ->hideOnIndex(),
 
             FormField::addColumn('col-lg-5'),
-            TelephoneField::new('tel1'),
-            TelephoneField::new('tel2'),
-            TelephoneField::new('tel3'),
-            TextareaField::new('description'),
-            TextareaField::new('commentaire'),
+            TelephoneField::new('tel1')
+                ->hideOnIndex(),
+            TelephoneField::new('tel2')
+                ->hideOnIndex(),
+            TelephoneField::new('tel3')
+                ->hideOnIndex(),
+            TextareaField::new('description')
+                ->hideOnIndex(),
+            TextareaField::new('commentaire')
+                ->hideOnIndex(),
 
             FormField::addColumn('col-lg-2'),
-            DateTimeField::new('dateCreation')->setDisabled()->hideWhenCreating(),
-            DateTimeField::new('dateModification')->setDisabled()->hideWhenCreating(),
+            DateTimeField::new('dateCreation')
+                ->setDisabled()
+                ->onlyOnForms(),
+            DateTimeField::new('dateModification')
+                ->setDisabled()
+                ->onlyOnForms(),
             //ArrayField::new('createur')->setDisabled()->hideWhenCreating(),
             //ArrayField::new('modificateur')->setDisabled()->hideWhenCreating(),
 
             FormField::addTab('Expositions'),
-            CollectionField::new('oeuvreExpositions'),
+            CollectionField::new('oeuvreExpositions')
+                ->hideOnIndex(),
 
             FormField::addTab('Localisations'),
-            CollectionField::new('oeuvreStockages'),
+            CollectionField::new('oeuvreStockages')
+                ->hideOnIndex(),
         ];
     }
 

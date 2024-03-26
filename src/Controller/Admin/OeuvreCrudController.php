@@ -43,47 +43,60 @@ class OeuvreCrudController extends AbstractCrudController
             FormField::addColumn('col-lg-6'),
             TextField::new('numInventaire', 'N°inv'),
             TextField::new('titre'),
-            TextField::new('sousTitre'),
-            TextareaField::new('serie', 'Série')->stripTags(),
+            TextField::new('sousTitre')
+                ->stripTags()
+                ->hideOnIndex(),
+            TextareaField::new('serie', 'Série')
+                ->stripTags()
+                ->hideOnIndex(),
             DateField::new('date'),
             TextField::new('dateComplement', 'Complément de date'),
-            TextField::new('dimensions'),
-            TextareaField::new('description')->stripTags(),
+            TextField::new('dimensions')
+                ->hideOnIndex(),
+            TextareaField::new('description')
+                ->stripTags(),
             FormField::addColumn('col-lg-6'),
-            TextareaField::new('commentairePublic', 'Commentaire public')->stripTags(),
-            TextareaField::new('commentaireInterne', 'Commentaire interne')->stripTags(),
-            AssociationField::new('categorie', 'Catégorie'),
-            IntegerField::new('sousCategorie', 'Sous catégorie'),
-            TextareaField::new('details', 'Details')->stripTags()->onlyOnDetail(),
-
+            TextareaField::new('commentairePublic', 'Commentaire public')
+                ->stripTags()
+                ->hideOnIndex(),
+            TextareaField::new('commentaireInterne', 'Commentaire interne')
+                ->stripTags()
+                ->hideOnIndex(),
+            AssociationField::new('categorie', 'Catégorie')
+                ->hideOnIndex(),
+            IntegerField::new('sousCategorie', 'Sous catégorie')
+                ->hideOnIndex(),
+            TextareaField::new('details', 'Details')
+                ->stripTags()
+                ->onlyOnDetail(),
             FormField::addTab('Historique'),
             CollectionField::new('oeuvreHistoriques')
                 ->setEntryType(HistoryCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
-                ->renderExpanded(),
-
+                ->renderExpanded()
+                ->hideOnIndex(),
             FormField::addTab('Bibliographie'),
             CollectionField::new('oeuvreBibliographies')
                 ->setEntryType(BibliographieColectionType::class)
                 ->allowAdd()
                 ->allowDelete()
-                ->renderExpanded(),
-
+                ->renderExpanded()
+                ->hideOnIndex(),
             FormField::addTab('Exposition'),
             FormField::addColumn('col-lg-7'),
             CollectionField::new('oeuvreExpositions')
                 ->setEntryType(ExpositionCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
-                ->renderExpanded(),
-
+                ->renderExpanded()
+                ->hideOnIndex(),
             FormField::addTab('Localisation'),
             CollectionField::new('oeuvreStockages')
                 ->setEntryType(StockageCollectionType::class)
                 ->allowAdd()
-                ->allowDelete(),
-
+                ->allowDelete()
+                ->hideOnIndex(),
             FormField::addTab('Médias'),
             EARankyMediaFileManagerField::new('media')
                 ->multipleSelection()
