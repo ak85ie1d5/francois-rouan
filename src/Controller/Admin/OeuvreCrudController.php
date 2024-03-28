@@ -98,10 +98,15 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowDelete()
                 ->hideOnIndex(),
             FormField::addTab('Médias'),
+            EARankyMediaFileManagerField::new('medias')
+                ->association()
+                ->multipleSelection()
+                ->modalTitle('Galerie'),
+            /*FormField::addTab('Média (JSON)'),
             EARankyMediaFileManagerField::new('media')
                 ->multipleSelection()
                 ->savePath(true)
-                ->modalTitle('Galerie'),
+                ->modalTitle('Galerie'),*/
         ];
     }
 }
