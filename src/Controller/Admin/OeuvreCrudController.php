@@ -2,11 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\TableField;
 use App\Entity\Oeuvre;
 use App\Form\Type\BibliographieColectionType;
-use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\ExpositionCollectionType;
+use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\StockageCollectionType;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -17,10 +20,19 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
 
-use Doctrine\ORM\EntityManagerInterface;
-
 class OeuvreCrudController extends AbstractCrudController
 {
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            // ...
+
+            // don't forget to add EasyAdmin's form theme at the end of the list
+            // (otherwise you'll lose all the styles for the rest of form fields)
+            ->setFormThemes(['admin/table.html.twig', '@EasyAdmin/crud/form_theme.html.twig'])
+            ;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Oeuvre::class;
@@ -92,10 +104,10 @@ class OeuvreCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->hideOnIndex(),
             FormField::addTab('Localisation'),
-            CollectionField::new('oeuvreStockages')
+            TableField::new('oeuvreStockages')
                 ->setEntryType(StockageCollectionType::class)
                 ->allowAdd()
-                ->allowDelete()
+                ->allowDelete(false)
                 ->hideOnIndex(),
             FormField::addTab('Médias'),
             EARankyMediaFileManagerField::new('medias')

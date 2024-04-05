@@ -1,0 +1,96 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{% use '@EasyAdmin/symfony-form-themes/bootstrap_5_layout.html.twig' %}
+
+
+
+{% block table_row %}
+    {% if prototype is defined and not prototype.rendered %}
+        {% set row_attr = row_attr|merge({ 'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+
+    {% set row_attr = row_attr|merge({
+        'data-ea-collection-field': 'true',
+        'data-entry-is-complex': form.vars.ea_vars.field and form.vars.ea_vars.field.customOptions.get('entryIsComplex') ? 'true' : 'false',
+        'data-allow-add': allow_add ? 'true' : 'false',
+        'data-allow-delete': allow_delete ? 'true' : 'false',
+        'data-num-items': form.children is empty ? 0 : max(form.children|keys),
+        'data-form-type-name-placeholder': prototype is defined ? prototype.vars.name : '',
+    }) %}
+
+    {{ block('form_row') }}
+{% endblock %}
+
+
+{% block table_widget %}
+    {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
+    {% set is_array_field = 'EasyCorp\\Bundle\\EasyAdminBundle\\Field\\ArrayField' == form.vars.ea_vars.field.fieldFqcn ?? false %}
+
+    <div class="ea-form-collection-items">
+        {% if isEmptyCollection %}
+            {{ block('empty_collection') }}
+        {% elseif is_array_field %}
+            {{ block('form_widget') }}
+        {% else %}
+            <table class="table datagrid ">
+                {{ block('form_widget') }}
+            </table>
+        {% endif %}
+    </div>
+
+    {% if isEmptyCollection or form.vars.prototype is defined %}
+        {% set attr = attr|merge({'data-empty-collection': block('empty_collection') }) %}
+    {% endif %}
+
+    {% if allow_add|default(false) and not disabled %}
+        <button type="button" class="btn btn-link field-collection-add-button">
+            <i class="fa fa-plus pr-1"></i>
+            {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
+        </button>
+    {% endif %}
+{% endblock %}
+
+{% block table_help %} table_help {% endblock %}
+{% block table_errors %}{% endblock %}
+
+
+{% block table_entry_label %}
+    {% set allows_deleting_items = form_parent(form).vars.allow_delete|default(false) %}
+    <thead>
+        <tr>
+            {% for child in form.children %}
+                <th>{{ form_label(child) }}</th>
+            {% endfor %}
+            {% if allows_deleting_items and not disabled %}
+                <th></th>
+            {% endif %}
+        </tr>
+    </thead>
+{% endblock %}
+
+{% block table_entry_widget %}
+    {% set allows_deleting_items = form_parent(form).vars.allow_delete|default(false) %}
+    {% set delete_item_button %}
+        <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
+                title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+            <i class="far fa-trash-alt"></i>
+        </button>
+    {% endset %}
+
+    <tbody>
+        <tr>
+            {% for child in form.children %}
+                <td>{{ form_widget(child) }}</td>
+            {% endfor %}
+
+            {% if allows_deleting_items and not disabled %}
+                <td>
+                    {{ delete_item_button }}
+                </td>
+            {% endif %}
+        </tr>
+    </tbody>
+    <tfoot></tfoot>
+{% endblock %}
+
+{% block table_entry_help %} table_entry_help {% endblock %}
+{% block table_entry_errors %}{% endblock %}
