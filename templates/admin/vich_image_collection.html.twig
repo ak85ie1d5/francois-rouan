@@ -1,0 +1,13 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# this is a bit ugly, but Twig doesn't have a 'is numeric' test #}
+{% if field.formattedValue %}
+    {% for image in field.value %}
+        {% if image.position == 1 %}
+            <img src="{{ vich_uploader_asset(image) }}" alt="{{ image.nom }}" width="200px" class="img-fluid" />
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <img src="dummy-image-square.jpg" alt="Dummy image square" width="200px" class="img-fluid" />
+{% endif %}

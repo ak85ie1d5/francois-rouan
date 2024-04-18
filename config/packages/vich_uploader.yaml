@@ -1,0 +1,19 @@
+vich_uploader:
+    db_driver: orm
+
+    metadata:
+        type: attribute
+
+    mappings:
+        artworks:
+            uri_prefix: /oeuvre-medias
+            upload_destination: '%kernel.project_dir%/public/oeuvre-medias'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            directory_namer:
+                service: Vich\UploaderBundle\Naming\CurrentDateTimeDirectoryNamer
+                options:
+                    date_time_format: 'Y/m'
+                    date_time_property: dateCreation
+            inject_on_load: true
+            delete_on_update: true
+            delete_on_remove: true

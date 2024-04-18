@@ -8,6 +8,7 @@ use App\Entity\OeuvreBibliographie;
 use App\Entity\OeuvreCategorie;
 use App\Entity\OeuvreExposition;
 use App\Entity\OeuvreHistorique;
+use App\Entity\OeuvreMediaTest;
 use App\Entity\OeuvreStockage;
 use App\Entity\Utilisateur;
 use ContainerCqAJogm\getSafeFileNameService;
@@ -77,7 +78,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Oeuvre Bibliographie', 'fa-solid fa-book', OeuvreBibliographie::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Exposition', 'fa-solid fa-building-columns', OeuvreExposition::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Localisation', 'fas fa-solid fa-location-dot', OeuvreStockage::class)->setPermission('ROLE_SUPERADMIN');
-        yield MenuItem::linkToCrud('Oeuvre Media', 'fa-solid fa-image', Media::class)->setPermission('ROLE_SUPERADMIN');
+        //yield MenuItem::linkToCrud('Oeuvre Media', 'fa-solid fa-image', Media::class)->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Oeuvre Media', 'fa-solid fa-image', OeuvreMediaTest::class)->setPermission('ROLE_SUPERADMIN');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

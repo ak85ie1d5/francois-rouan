@@ -36,7 +36,7 @@ final class TableField implements FieldInterface
             ->setTemplateName('crud/field/collection')
             ->setFormType(TableType::class)
             ->addCssClass('field-table')
-            ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-table.js')->onlyOnForms())
+            ->addJsFiles('build/field-table.js')
             ->setCustomOption(self::OPTION_ALLOW_ADD, true)
             ->setCustomOption(self::OPTION_ALLOW_DELETE, true)
             ->setCustomOption(self::OPTION_ENTRY_IS_COMPLEX, null)

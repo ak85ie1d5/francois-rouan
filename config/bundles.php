@@ -14,4 +14,5 @@ return [
     Ranky\SharedBundle\RankySharedBundle::class => ['all' => true],
     Ranky\MediaBundle\RankyMediaBundle::class => ['all' => true],
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
+    Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
 ];

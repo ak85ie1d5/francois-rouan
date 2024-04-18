@@ -5,11 +5,15 @@ namespace App\Entity;
 use App\Repository\OeuvreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ranky\MediaBundle\Domain\Model\Media;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
+#[Vich\Uploadable]
 class Oeuvre
 {
     #[ORM\Id]
@@ -89,6 +93,10 @@ class Oeuvre
     #[ORM\ManyToMany(targetEntity: Media::class)]
     private Collection $medias;
 
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreMediaTest::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[ORM\OrderBy(["position" => "ASC"])]
+    private Collection $mediaTest;
+
     public function __construct()
     {
         $this->oeuvreBibliographies = new ArrayCollection();
@@ -96,6 +104,7 @@ class Oeuvre
         $this->oeuvreStockages = new ArrayCollection();
         $this->oeuvreHistoriques = new ArrayCollection();
         $this->medias = new ArrayCollection();
+        $this->mediaTest = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -476,6 +485,36 @@ class Oeuvre
     public function removeMedia(Media $media): static
     {
         $this->medias->removeElement($media);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OeuvreMediaTest>
+     */
+    public function getMediaTest(): Collection
+    {
+        return $this->mediaTest;
+    }
+
+    public function addMediaTest(OeuvreMediaTest $mediaTest): static
+    {
+        if (!$this->mediaTest->contains($mediaTest)) {
+            $this->mediaTest->add($mediaTest);
+            $mediaTest->setOeuvre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMediaTest(OeuvreMediaTest $mediaTest): static
+    {
+        if ($this->mediaTest->removeElement($mediaTest)) {
+            // set the owning side to null (unless already changed)
+            if ($mediaTest->getOeuvre() === $this) {
+                $mediaTest->setOeuvre(null);
+            }
+        }
 
         return $this;
     }

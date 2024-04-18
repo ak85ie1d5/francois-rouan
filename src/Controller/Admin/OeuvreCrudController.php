@@ -3,12 +3,18 @@
 namespace App\Controller\Admin;
 
 use App\Admin\Field\TableField;
+use App\Admin\Field\VichImageField;
+use App\Entity\ContentBlock;
 use App\Entity\Oeuvre;
+use App\Entity\OeuvreMediaTest;
+use App\Form\ContentBlockType;
 use App\Form\Type\BibliographieColectionType;
 use App\Form\Type\ExpositionCollectionType;
 use App\Form\Type\HistoryCollectionType;
+use App\Form\Type\OeuvreMediaTestType;
 use App\Form\Type\StockageCollectionType;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -19,18 +25,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class OeuvreCrudController extends AbstractCrudController
 {
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            // ...
-
-            // don't forget to add EasyAdmin's form theme at the end of the list
-            // (otherwise you'll lose all the styles for the rest of form fields)
-            ->setFormThemes(['admin/table.html.twig', '@EasyAdmin/crud/form_theme.html.twig'])
-            ;
+            ->setFormThemes(['admin/table.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
     }
 
     public static function getEntityFqcn(): string
@@ -67,6 +69,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             TextareaField::new('description')
                 ->stripTags(),
+            //VichImageField::new('mediaTest'),
             FormField::addColumn('col-lg-6'),
             TextareaField::new('commentairePublic', 'Commentaire public')
                 ->stripTags()
@@ -107,18 +110,24 @@ class OeuvreCrudController extends AbstractCrudController
             TableField::new('oeuvreStockages')
                 ->setEntryType(StockageCollectionType::class)
                 ->allowAdd()
-                ->allowDelete(false)
+                ->allowDelete()
                 ->hideOnIndex(),
             FormField::addTab('Médias'),
-            EARankyMediaFileManagerField::new('medias')
+            CollectionField::new('mediaTest')
+                ->setEntryType(OeuvreMediaTestType::class)
+                ->setTemplatePath('admin/vich_image_collection.html.twig')
+                ->allowAdd()
+                ->allowDelete(),
+
+            /*EARankyMediaFileManagerField::new('medias')
                 ->association()
                 ->multipleSelection()
-                ->modalTitle('Galerie'),
-            /*FormField::addTab('Média (JSON)'),
+                ->modalTitle('Galerie'),*/
+            FormField::addTab('Média (JSON)'),
             EARankyMediaFileManagerField::new('media')
                 ->multipleSelection()
-                ->savePath(true)
-                ->modalTitle('Galerie'),*/
+                ->savePath()
+                ->modalTitle('Galerie'),
         ];
     }
 }
