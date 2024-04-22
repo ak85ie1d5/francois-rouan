@@ -16,6 +16,9 @@ class StockageCollectionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $colWidth = 100/8;
+
         $builder
             ->add('titre', TextType::class)
             ->add('dateDebut', DateType::class)

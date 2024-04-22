@@ -1,4 +1,6 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% use '@EasyAdmin/symfony-form-themes/bootstrap_5_layout.html.twig' %}
 
 {% block form_start %}
@@ -74,9 +76,9 @@
     {% set row_attr = row_attr|merge({
         class: row_attr.class|default('') ~ ' form-group'
     }) %}
-    {%  set field = form.vars.ea_vars.field %}
+    {% set field = form.vars.ea_vars.field %}
 
-    <div class="{{ field.columns ?? field.defaultColumns ?? '' }}">
+    <div class="{{ field.columns ?? field.defaultColumns ?? '' }} field-column">
         <div {% with { attr: row_attr } %}{{ block('attributes') }}{% endwith %}>
             {{- form_label(form) -}}
             <div class="form-widget">
@@ -113,6 +115,8 @@
     {% if field.columns|default(null) is null %}
         <div class="flex-fill"></div>
     {% endif %}
+
+
 {% endblock form_row %}
 
 {% block choice_widget_collapsed %}
@@ -149,6 +153,31 @@
                returns an empty string, "is empty" returns true even if it's not a collection #}
     {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
     {% set is_array_field = 'EasyCorp\\Bundle\\EasyAdminBundle\\Field\\ArrayField' == form.vars.ea_vars.field.fieldFqcn ?? false %}
+    {% set is_table_field = 'App\\Admin\\Field\\TableField' == form.vars.ea_vars.field.fieldFqcn ?? false %}
+    {% set is_drag_and_drop = false %}
+
+    {% if is_table_field %}
+        <div class="table-label d-flex">
+            <div class="row w-100">
+                {% for prototype_key, prototype_value in form.vars.prototype %}
+                    {% if prototype_key == 'position' %}
+                        {% set is_drag_and_drop = true %}
+                    {% endif %}
+                    <div class="table-label-col col">
+                        {{ prototype_key|humanize }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if is_drag_and_drop %}
+                <div class="table-label-btn table-label-btn-arrows"></div>
+            {% endif %}
+            {% if allow_delete %}
+                <div class="table-label-btn table-label-btn-delete"></div>
+            {% endif %}
+        </div>
+
+    {% endif %}
 
     <div class="ea-form-collection-items">
         {% if isEmptyCollection %}
@@ -179,6 +208,7 @@
     {% set is_complex = form_parent(form).vars.ea_vars.field.customOptions.get('entryIsComplex') ?? false %}
     {% set allows_deleting_items = form_parent(form).vars.allow_delete|default(false) %}
     {% set render_expanded = form_parent(form).vars.ea_vars.field.customOptions.get('renderExpanded') ?? false %}
+    {% set is_table_field = 'App\\Admin\\Field\\TableField' == form_parent(form).vars.ea_vars.field.fieldFqcn ?? false %}
     {% set delete_item_button %}
         <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
                 title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
@@ -194,23 +224,51 @@
                 {{ delete_item_button }}
             {% endif %}
         {% else %}
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button {{ render_expanded ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#{{ id }}-contents">
-                        <i class="fas fw fa-chevron-right form-collection-item-collapse-marker"></i>
-                        {{ value|ea_as_string }}
-                    </button>
 
-                    {% if allows_deleting_items and not disabled %}
-                        {{ delete_item_button }}
-                    {% endif %}
-                </h2>
+            <div class="accordion-item">
+
+                {% if is_table_field == false %}
+                    <h2 class="accordion-header">
+                        <button class="accordion-button {{ render_expanded ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#{{ id }}-contents">
+                            <i class="fas fw fa-chevron-right form-collection-item-collapse-marker"></i>
+                            {{ value|ea_as_string }}
+                        </button>
+                        {% if allows_deleting_items and not disabled %}
+                            {{ delete_item_button }}
+                        {% endif %}
+                    </h2>
+                {% endif %}
+
+
                 <div id="{{ id }}-contents" class="accordion-collapse collapse {{ render_expanded ? 'show' }}">
                     <div class="accordion-body">
-                        <div class="row">
+                        {% if is_table_field %}
+                            <div class="table-row d-flex">
 
-                            {{ form_widget(form) }}
-                        </div>
+                                {{ form_widget(form) }}
+
+                                {% if 'position' in form_parent(form).vars.prototype.children|keys %}
+                                    <div class="table-drag-and-drop">
+                                        <button class="accordion-button {{ render_expanded ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#{{ id }}-contents">
+                                            <i class="fas fw fa-arrows-up-down form-collection-item-collapse-marker"></i>
+                                        </button>
+                                    </div>
+                                {% endif %}
+
+                                {% if allows_deleting_items and not disabled %}
+
+                                    <div class="table-trash">
+                                        <div class="accordion-button d-none"></div>
+                                        {{ delete_item_button }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        {% else %}
+                            <div class="row">
+                                {{ form_widget(form) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -20,6 +20,7 @@ final class TableField implements FieldInterface
     public const OPTION_ENTRY_IS_COMPLEX = 'entryIsComplex';
     public const OPTION_ENTRY_TYPE = 'entryType';
     public const OPTION_SHOW_ENTRY_LABEL = 'showEntryLabel';
+    public const OPTION_RENDER_EXPANDED = 'renderExpanded';
     public const OPTION_ENTRY_USES_CRUD_FORM = 'entryUsesCrudController';
     public const OPTION_ENTRY_CRUD_CONTROLLER_FQCN = 'entryCrudControllerFqcn';
     public const OPTION_ENTRY_CRUD_NEW_PAGE_NAME = 'entryCrudNewPageName';
@@ -35,13 +36,17 @@ final class TableField implements FieldInterface
             ->setLabel($label)
             ->setTemplateName('crud/field/collection')
             ->setFormType(TableType::class)
-            ->addCssClass('field-table')
-            ->addJsFiles('build/field-table.js')
+            ->addCssClass('field-collection table-collection')
+            //->addJsFiles('build/field-table.js')
+            ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-collection.js')->onlyOnForms())
+            ->addCssFiles('build/table-collection.css')
+            ->setDefaultColumns('col-12')
             ->setCustomOption(self::OPTION_ALLOW_ADD, true)
             ->setCustomOption(self::OPTION_ALLOW_DELETE, true)
             ->setCustomOption(self::OPTION_ENTRY_IS_COMPLEX, null)
             ->setCustomOption(self::OPTION_ENTRY_TYPE, null)
             ->setCustomOption(self::OPTION_SHOW_ENTRY_LABEL, false)
+            ->setCustomOption(self::OPTION_RENDER_EXPANDED, false)
             ->setCustomOption(self::OPTION_ENTRY_USES_CRUD_FORM, false)
             ->setCustomOption(self::OPTION_ENTRY_CRUD_CONTROLLER_FQCN, null)
             ->setCustomOption(self::OPTION_ENTRY_CRUD_NEW_PAGE_NAME, null)
@@ -83,6 +88,13 @@ final class TableField implements FieldInterface
     public function showEntryLabel(bool $showLabel = true): self
     {
         $this->setCustomOption(self::OPTION_SHOW_ENTRY_LABEL, $showLabel);
+
+        return $this;
+    }
+
+    public function renderExpanded(bool $renderExpanded = true): self
+    {
+        $this->setCustomOption(self::OPTION_RENDER_EXPANDED, $renderExpanded);
 
         return $this;
     }

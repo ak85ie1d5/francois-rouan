@@ -22,13 +22,14 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('field-table', './assets/field-table.js')
+    .addEntry('table-collection', './assets/styles/table-collection.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
-    .splitEntryChunks()
+    //.splitEntryChunks()
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    .enableSingleRuntimeChunk()
+    .disableSingleRuntimeChunk()
 
     /*
      * FEATURE CONFIG

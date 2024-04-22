@@ -110,7 +110,7 @@ class TableType extends AbstractType
         }
 
         foreach ($view as $entryView) {
-            array_splice($entryView->vars['block_prefixes'], $prefixOffset, 0, 'table_entry');
+            array_splice($entryView->vars['block_prefixes'], $prefixOffset, 0, 'collection_entry');
         }
 
         /** @var FormInterface $prototype */
@@ -123,7 +123,7 @@ class TableType extends AbstractType
                 --$prefixOffset;
             }
 
-            array_splice($view->vars['prototype']->vars['block_prefixes'], $prefixOffset, 0, 'table_entry');
+            array_splice($view->vars['prototype']->vars['block_prefixes'], $prefixOffset, 0, 'collection_entry');
         }
     }
 
@@ -131,6 +131,6 @@ class TableType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'table';
+        return 'collection';
     }
 }

@@ -3,18 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Admin\Field\TableField;
-use App\Admin\Field\VichImageField;
-use App\Entity\ContentBlock;
 use App\Entity\Oeuvre;
-use App\Entity\OeuvreMediaTest;
-use App\Form\ContentBlockType;
 use App\Form\Type\BibliographieColectionType;
 use App\Form\Type\ExpositionCollectionType;
 use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\OeuvreMediaTestType;
 use App\Form\Type\StockageCollectionType;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -25,14 +20,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
-use Vich\UploaderBundle\Form\Type\VichImageType;
+
 
 class OeuvreCrudController extends AbstractCrudController
 {
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setFormThemes(['admin/table.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
+            //->setFormThemes(['admin/table.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
+            ->setFormThemes(['admin/table.html.twig', 'form_table_layout.html.twig', 'form_div_layout.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
     }
 
     public static function getEntityFqcn(): string
@@ -107,10 +103,12 @@ class OeuvreCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->hideOnIndex(),
             FormField::addTab('Localisation'),
-            TableField::new('oeuvreStockages')
+            TableField::new('oeuvreStockages', '')
                 ->setEntryType(StockageCollectionType::class)
+                ->renderExpanded()
                 ->allowAdd()
                 ->allowDelete()
+                ->setEntryIsComplex()
                 ->hideOnIndex(),
             FormField::addTab('Médias'),
             CollectionField::new('mediaTest')
