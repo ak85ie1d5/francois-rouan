@@ -11,6 +11,7 @@ use App\Form\Type\OeuvreMediaTestType;
 use App\Form\Type\StockageCollectionType;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -19,6 +20,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NullFilter;
 use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
 
 
@@ -45,13 +49,30 @@ class OeuvreCrudController extends AbstractCrudController
         $entityManager->flush();
     }
 
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('numInventaire')
+            ->add('titre')
+            ->add('sousTitre')
+            ->add('dimensions')
+            ->add('date')
+            ->add('serie')
+            ->add('description')
+            ->add('commentairePublic')
+            ->add('categorie')
+            ->add(EntityFilter::new('mediaTest'))
+
+            ;
+    }
+
     public function configureFields(string $pageName): iterable
     {
 
         return [
             FormField::addTab('Général'),
             FormField::addColumn('col-lg-6'),
-            TextField::new('numInventaire', 'N°inv'),
+            TextField::new('numInventaire', 'N°inventaire'),
             TextField::new('titre'),
             TextField::new('sousTitre')
                 ->stripTags()

@@ -251,6 +251,6 @@ class OeuvreMediaTest
 
     public function __toString(): string
     {
-        return $this->position;
+        return $this->nom;
     }
 }
