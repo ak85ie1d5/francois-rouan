@@ -6,12 +6,11 @@ use App\Entity\OeuvreMediaTest;
 use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
@@ -23,7 +22,7 @@ class OeuvreMediaTestType extends AbstractType
             ->add('imageFile', VichImageType::class)
             ->add('nom', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('position', IntegerType::class)
+            ->add('position', HiddenType::class)
             ->add('createur', EntityType::class, [
                 'class' => Utilisateur::class,
                 'choice_label' => 'id',

@@ -1,13 +1,17 @@
 import Sortable from 'sortablejs';
 
 document.addEventListener('DOMContentLoaded', () => {
-    new DraggableCollection
+    if (document.getElementById('draggable-collection')) {
+        new DraggableCollection
+    }
+
 });
 
 class DraggableCollection {
     constructor() {
         this.#sortableJSInit(this.#getParentElement())
         this.#updatePositions(this.#getDraggableElements(this.#getParentElement()))
+        this.#onParentMutation(this.#getParentElement())
     }
 
     #sortableJSInit(el) {
@@ -15,6 +19,17 @@ class DraggableCollection {
             animation: 150,
             ghostClass: 'blue-background-class'
         });
+    }
+
+    #onParentMutation(draggableElements) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach(mutation => {
+                if (mutation.type === 'childList') {
+                    this.#handleDragEnd(draggableElements);
+                }
+            })
+        })
+        observer.observe(draggableElements, { childList: true });
     }
 
     #updatePositions(draggableElements) {
@@ -25,7 +40,8 @@ class DraggableCollection {
     }
 
     #handleDragEnd(event) {
-        let DraggableElements = event.target.parentElement.children
+        //let DraggableElements = event.target.parentElement.children
+        let DraggableElements = this.#getDraggableElements(this.#getParentElement())
 
         for (let i = 0; i < DraggableElements.length; i++) {
             const element = DraggableElements[i];

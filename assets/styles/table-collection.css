@@ -9,6 +9,10 @@
     width: 28px;
 }
 
+.table-row .form-widget-compound {
+    width: 100%
+}
+
 .table-row .form-widget-compound > div {
     display: flex;
     --bs-gutter-x: 1.5rem;

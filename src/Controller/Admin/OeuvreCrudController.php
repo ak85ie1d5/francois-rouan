@@ -105,17 +105,17 @@ class OeuvreCrudController extends AbstractCrudController
             FormField::addTab('Localisation'),
             TableField::new('oeuvreStockages', '')
                 ->setEntryType(StockageCollectionType::class)
-                ->renderExpanded()
                 ->allowAdd()
                 ->allowDelete()
                 ->setEntryIsComplex()
                 ->hideOnIndex(),
             FormField::addTab('Médias'),
-            CollectionField::new('mediaTest')
+            TableField::new('mediaTest', '')
                 ->setEntryType(OeuvreMediaTestType::class)
                 ->setTemplatePath('admin/vich_image_collection.html.twig')
                 ->allowAdd()
-                ->allowDelete(),
+                ->allowDelete()
+                ->setEntryIsComplex(),
 
             /*EARankyMediaFileManagerField::new('medias')
                 ->association()
