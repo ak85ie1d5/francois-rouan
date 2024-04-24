@@ -29,7 +29,8 @@ class OeuvreBibliographieCrudController extends AbstractCrudController
             DateTimeField::new('date'),
 
             FormField::addColumn('col-lg-5'),
-            AssociationField::new('oeuvre')->setCrudController(OeuvreCrudController::class),
+            AssociationField::new('oeuvre')
+                ->setCrudController(OeuvreCrudController::class),
 
             FormField::addColumn('col-lg-2'),
             DateTimeField::new('dateCreation')->setDisabled()->hideWhenCreating(),

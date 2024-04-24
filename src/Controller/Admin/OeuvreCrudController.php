@@ -33,6 +33,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->showEntityActionsInlined();
     }
 
+
     public static function getEntityFqcn(): string
     {
         return Oeuvre::class;
