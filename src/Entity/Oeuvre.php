@@ -5,11 +5,8 @@ namespace App\Entity;
 use App\Repository\OeuvreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Ranky\MediaBundle\Domain\Model\Media;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
@@ -90,9 +87,6 @@ class Oeuvre
     #[ORM\Column(name: 'media', type: Types::JSON, nullable: true)]
     private ?array $media;
 
-    #[ORM\ManyToMany(targetEntity: Media::class)]
-    private Collection $medias;
-
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreMediaTest::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     #[ORM\OrderBy(["position" => "ASC"])]
     private Collection $mediaTest;
@@ -103,7 +97,6 @@ class Oeuvre
         $this->oeuvreExpositions = new ArrayCollection();
         $this->oeuvreStockages = new ArrayCollection();
         $this->oeuvreHistoriques = new ArrayCollection();
-        $this->medias = new ArrayCollection();
         $this->mediaTest = new ArrayCollection();
     }
 
@@ -463,30 +456,6 @@ class Oeuvre
     public function __toString(): string
     {
         return "N° inv $this->numInventaire - $this->titre";
-    }
-
-    /**
-     * @return Collection<int, Media>
-     */
-    public function getMedias(): Collection
-    {
-        return $this->medias;
-    }
-
-    public function addMedia(Media $media): static
-    {
-        if (!$this->medias->contains($media)) {
-            $this->medias->add($media);
-        }
-
-        return $this;
-    }
-
-    public function removeMedia(Media $media): static
-    {
-        $this->medias->removeElement($media);
-
-        return $this;
     }
 
     /**

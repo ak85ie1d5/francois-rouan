@@ -10,6 +10,8 @@ use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\OeuvreMediaTestType;
 use App\Form\Type\StockageCollectionType;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -20,10 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\NullFilter;
-use Ranky\MediaBundle\Presentation\Form\EasyAdmin\EARankyMediaFileManagerField;
 
 
 class OeuvreCrudController extends AbstractCrudController
@@ -31,8 +30,7 @@ class OeuvreCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            //->setFormThemes(['admin/table.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
-            ->setFormThemes(['admin/table.html.twig', 'form_table_layout.html.twig', 'form_div_layout.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
+            ->showEntityActionsInlined();
     }
 
     public static function getEntityFqcn(): string
@@ -137,16 +135,6 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowAdd()
                 ->allowDelete()
                 ->setEntryIsComplex(),
-
-            /*EARankyMediaFileManagerField::new('medias')
-                ->association()
-                ->multipleSelection()
-                ->modalTitle('Galerie'),*/
-            FormField::addTab('Média (JSON)'),
-            EARankyMediaFileManagerField::new('media')
-                ->multipleSelection()
-                ->savePath()
-                ->modalTitle('Galerie'),
         ];
     }
 }

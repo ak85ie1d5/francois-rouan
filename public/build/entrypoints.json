@@ -1,0 +1,25 @@
+{
+  "entrypoints": {
+    "app": {
+      "css": [
+        "/build/app.css"
+      ],
+      "js": [
+        "/build/app.js"
+      ]
+    },
+    "table-collection": {
+      "css": [
+        "/build/table-collection.css"
+      ],
+      "js": [
+        "/build/table-collection.js"
+      ]
+    },
+    "draggable-collection": {
+      "js": [
+        "/build/draggable-collection.js"
+      ]
+    }
+  }
+}
