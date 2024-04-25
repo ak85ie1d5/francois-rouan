@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VichImageField;
 use App\Entity\OeuvreMediaTest;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;

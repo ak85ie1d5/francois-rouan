@@ -4,7 +4,6 @@ namespace App\Entity\Trait;
 
 use App\Entity\Utilisateur;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 trait UserColumnTrait
 {

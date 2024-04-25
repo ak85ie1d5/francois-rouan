@@ -91,6 +91,10 @@ class Oeuvre
     #[ORM\OrderBy(["position" => "ASC"])]
     private Collection $mediaTest;
 
+    #[ORM\ManyToOne(inversedBy: 'oeuvres')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?ArtworkCategory $ArtworkCategory = null;
+
     public function __construct()
     {
         $this->oeuvreBibliographies = new ArrayCollection();
@@ -484,6 +488,18 @@ class Oeuvre
                 $mediaTest->setOeuvre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getArtworkCategory(): ?ArtworkCategory
+    {
+        return $this->ArtworkCategory;
+    }
+
+    public function setArtworkCategory(?ArtworkCategory $ArtworkCategory): static
+    {
+        $this->ArtworkCategory = $ArtworkCategory;
 
         return $this;
     }

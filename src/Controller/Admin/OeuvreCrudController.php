@@ -23,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use Umanit\EasyAdminTreeBundle\Field\TreeField;
 
 
 class OeuvreCrudController extends AbstractCrudController
@@ -96,6 +97,8 @@ class OeuvreCrudController extends AbstractCrudController
             AssociationField::new('categorie', 'Catégorie')
                 ->hideOnIndex(),
             IntegerField::new('sousCategorie', 'Sous catégorie')
+                ->hideOnIndex(),
+            TreeField::new('ArtworkCategory', 'Catégorie')
                 ->hideOnIndex(),
             TextareaField::new('details', 'Details')
                 ->stripTags()
