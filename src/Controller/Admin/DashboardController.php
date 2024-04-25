@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\ArtworkCategory;
 use App\Entity\Lieu;
 use App\Entity\Oeuvre;
 use App\Entity\OeuvreBibliographie;
@@ -76,9 +77,9 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-dashboard');
-        //yield MenuItem::linktoRoute('Recherche avancée', 'fas fa-search', 'advanced-search');
         yield MenuItem::linkToCrud('Oeuvres', 'fas fa-solid fa-brush', Oeuvre::class);
         yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-solid fa-palette', OeuvreCategorie::class);
+        yield MenuItem::linkToCrud('Categories Tree', 'fas fa-list', ArtworkCategory::class);
         yield MenuItem::linkToCrud('Lieux', 'fas fa-solid fa-location-dot', Lieu::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', Utilisateur::class)->setPermission('ROLE_ADMIN');
 
@@ -87,7 +88,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Oeuvre Bibliographie', 'fa-solid fa-book', OeuvreBibliographie::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Exposition', 'fa-solid fa-building-columns', OeuvreExposition::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Localisation', 'fas fa-solid fa-location-dot', OeuvreStockage::class)->setPermission('ROLE_SUPERADMIN');
-        //yield MenuItem::linkToCrud('Oeuvre Media', 'fa-solid fa-image', Media::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Media', 'fa-solid fa-image', OeuvreMediaTest::class)->setPermission('ROLE_SUPERADMIN');
     }
 

@@ -230,6 +230,9 @@
     "twig/extra-bundle": {
         "version": "v3.8.0"
     },
+    "umanit/easyadmin-tree-bundle": {
+        "version": "0.0.5"
+    },
     "vich/uploader-bundle": {
         "version": "2.3",
         "recipe": {
