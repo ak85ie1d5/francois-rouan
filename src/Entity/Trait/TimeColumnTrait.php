@@ -33,4 +33,18 @@ trait TimeColumnTrait
     {
         $this->updatedAt = new \DateTime();
     }
+
+    public function setOldCreatedAt($oldDate): static
+    {
+        $this->createdAt = $oldDate;
+
+        return $this;
+    }
+
+    public function setOldUpdatedAt($oldDate): static
+    {
+        $this->createdAt = $oldDate;
+
+        return $this;
+    }
 }

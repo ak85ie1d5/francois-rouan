@@ -41,4 +41,12 @@ class ExternalDataService extends \PDO
 
         return $stmt->fetchAll();
     }
+
+    public function getExternalDatas($sqlQuery): array
+    {
+        $stmt = $this->prepare($sqlQuery);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }
