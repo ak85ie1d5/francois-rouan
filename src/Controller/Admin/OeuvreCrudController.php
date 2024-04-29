@@ -60,7 +60,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('serie')
             ->add('description')
             ->add('commentairePublic')
-            ->add('categorie')
+            ->add('ArtworkCategory')
             ->add(EntityFilter::new('mediaTest'))
 
             ;
@@ -93,10 +93,6 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             TextareaField::new('commentaireInterne', 'Commentaire interne')
                 ->stripTags()
-                ->hideOnIndex(),
-            AssociationField::new('categorie', 'Catégorie')
-                ->hideOnIndex(),
-            IntegerField::new('sousCategorie', 'Sous catégorie')
                 ->hideOnIndex(),
             TreeField::new('ArtworkCategory', 'Catégorie')
                 ->hideOnIndex(),

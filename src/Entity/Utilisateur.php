@@ -55,14 +55,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $modificateur = [];
 
-    #[ORM\ManyToMany(targetEntity: Groupe::class, inversedBy: 'utilisateur_id')]
-    private Collection $groupe;
-
-    public function __construct()
-    {
-        $this->groupe = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -228,30 +220,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setModificateur(array $modificateur): static
     {
         $this->modificateur = $modificateur;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Groupe>
-     */
-    public function getGroupe(): Collection
-    {
-        return $this->groupe;
-    }
-
-    public function addGroupe(Groupe $groupe): static
-    {
-        if (!$this->groupe->contains($groupe)) {
-            $this->groupe->add($groupe);
-        }
-
-        return $this;
-    }
-
-    public function removeGroupe(Groupe $groupe): static
-    {
-        $this->groupe->removeElement($groupe);
 
         return $this;
     }

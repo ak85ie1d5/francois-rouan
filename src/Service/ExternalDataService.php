@@ -33,15 +33,6 @@ class ExternalDataService extends \PDO
         ]);
     }
 
-    public function getExternalGroups(): array
-    {
-        $sql = "SELECT `nom`, `description`, `commentaire`, `createur`, `modificateur`, `date_modification`, `date_creation` FROM `groupe`";
-        $stmt = $this->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
     public function getExternalDatas($sqlQuery): array
     {
         $stmt = $this->prepare($sqlQuery);

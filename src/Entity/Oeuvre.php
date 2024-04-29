@@ -45,9 +45,6 @@ class Oeuvre
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentairePublic = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $sousCategorie = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $details = null;
 
@@ -68,9 +65,6 @@ class Oeuvre
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaireInterne = null;
-
-    #[ORM\ManyToOne(inversedBy: 'oeuvres')]
-    private ?OeuvreCategorie $categorie = null;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist"])]
     private Collection $oeuvreBibliographies;
@@ -217,18 +211,6 @@ class Oeuvre
         return $this;
     }
 
-    public function getSousCategorie(): ?int
-    {
-        return $this->sousCategorie;
-    }
-
-    public function setSousCategorie(?int $sousCategorie): static
-    {
-        $this->sousCategorie = $sousCategorie;
-
-        return $this;
-    }
-
     public function getDetails(): ?string
     {
         return $this->details;
@@ -309,18 +291,6 @@ class Oeuvre
     public function setCommentaireInterne(?string $commentaireInterne): static
     {
         $this->commentaireInterne = $commentaireInterne;
-
-        return $this;
-    }
-
-    public function getCategorie(): ?OeuvreCategorie
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(?OeuvreCategorie $categorie): static
-    {
-        $this->categorie = $categorie;
 
         return $this;
     }

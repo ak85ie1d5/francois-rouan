@@ -14,10 +14,11 @@ class AppFixtures extends Fixture
 
     }
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
-            GroupeFixtures::class
+            CategoryFixtures::class,
+            SubCategoryFixtures::class
         ];
     }
 }

@@ -6,13 +6,11 @@ use App\Entity\ArtworkCategory;
 use App\Entity\Lieu;
 use App\Entity\Oeuvre;
 use App\Entity\OeuvreBibliographie;
-use App\Entity\OeuvreCategorie;
 use App\Entity\OeuvreExposition;
 use App\Entity\OeuvreHistorique;
 use App\Entity\OeuvreMediaTest;
 use App\Entity\OeuvreStockage;
 use App\Entity\Utilisateur;
-use App\Repository\LieuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -38,7 +36,7 @@ class DashboardController extends AbstractDashboardController
         $repository = $this->entityManager->getRepository(Lieu::class);
         $lieux = $repository->findAll();
         return $this->render('admin/dashboard.html.twig', [
-            'nb_artworks' => '3000',
+            'nb_artworks' => "Nombre d'oeuvre: 3758",
             'lieux' => $lieux,
         ]);
 
@@ -78,10 +76,9 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-dashboard');
         yield MenuItem::linkToCrud('Oeuvres', 'fas fa-solid fa-brush', Oeuvre::class);
-        yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-solid fa-palette', OeuvreCategorie::class);
-        yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-list', ArtworkCategory::class);
-        yield MenuItem::linkToCrud('Lieux', 'fas fa-solid fa-location-dot', Lieu::class);
-        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', Utilisateur::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Catégories d\'oeuvres', 'fas fa-list', ArtworkCategory::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Lieux', 'fas fa-solid fa-location-dot', Lieu::class)->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', Utilisateur::class);
 
         yield MenuItem::section('Super Users')->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Historique', 'fa-solid fa-clock-rotate-left', OeuvreHistorique::class)->setPermission('ROLE_SUPERADMIN');
