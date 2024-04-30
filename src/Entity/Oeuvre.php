@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
 #[Vich\Uploadable]
@@ -89,7 +90,9 @@ class Oeuvre
     #[ORM\JoinColumn(nullable: true)]
     private ?ArtworkCategory $ArtworkCategory = null;
 
-    public function __construct()
+    private ?array $primaryMedia;
+
+    public function __construct(StorageInterface $storage)
     {
         $this->oeuvreBibliographies = new ArrayCollection();
         $this->oeuvreExpositions = new ArrayCollection();
@@ -470,6 +473,18 @@ class Oeuvre
     public function setArtworkCategory(?ArtworkCategory $ArtworkCategory): static
     {
         $this->ArtworkCategory = $ArtworkCategory;
+
+        return $this;
+    }
+
+    public function getPrimaryMedia()
+    {
+        return [$this->getMediaTest()->first()];
+    }
+
+    public function setPrimaryMedia($primaryMedia): static
+    {
+        $this->primaryMedia = $primaryMedia;
 
         return $this;
     }

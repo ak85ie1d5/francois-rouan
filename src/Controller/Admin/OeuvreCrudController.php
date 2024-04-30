@@ -8,18 +8,15 @@ use App\Form\Type\BibliographieColectionType;
 use App\Form\Type\ExpositionCollectionType;
 use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\OeuvreMediaTestType;
+use App\Form\Type\PrimaryMediaType;
 use App\Form\Type\StockageCollectionType;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
@@ -61,9 +58,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('description')
             ->add('commentairePublic')
             ->add('ArtworkCategory')
-            ->add(EntityFilter::new('mediaTest'))
-
-            ;
+            ->add(EntityFilter::new('mediaTest'));
     }
 
     public function configureFields(string $pageName): iterable
@@ -71,7 +66,7 @@ class OeuvreCrudController extends AbstractCrudController
 
         return [
             FormField::addTab('Général'),
-            FormField::addColumn('col-lg-6'),
+            FormField::addColumn('col-lg-5'),
             TextField::new('numInventaire', 'N°inventaire'),
             TextField::new('titre'),
             TextField::new('sousTitre')
@@ -86,19 +81,29 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             TextareaField::new('description')
                 ->stripTags(),
-            //VichImageField::new('mediaTest'),
-            FormField::addColumn('col-lg-6'),
+            FormField::addColumn('col-lg-5'),
+
             TextareaField::new('commentairePublic', 'Commentaire public')
                 ->stripTags()
                 ->hideOnIndex(),
             TextareaField::new('commentaireInterne', 'Commentaire interne')
                 ->stripTags()
                 ->hideOnIndex(),
-            TreeField::new('ArtworkCategory', 'Catégorie')
-                ->hideOnIndex(),
+
             TextareaField::new('details', 'Details')
                 ->stripTags()
                 ->onlyOnDetail(),
+            FormField::addColumn('col-lg-2'),
+            CollectionField::new('primary_media', 'Image principale')
+                ->setEntryType(PrimaryMediaType::class)
+                ->addCssClass('primary-media')
+                ->addCssFiles('/build/primary-media.css')
+                ->hideOnIndex()
+                ->allowAdd(false)
+                ->allowDelete(false)
+                ->renderExpanded(),
+            TreeField::new('ArtworkCategory', 'Catégorie')
+                ->hideOnIndex(),
             FormField::addTab('Historique'),
             CollectionField::new('oeuvreHistoriques')
                 ->setEntryType(HistoryCollectionType::class)

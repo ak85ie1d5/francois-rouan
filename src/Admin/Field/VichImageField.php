@@ -18,6 +18,7 @@ class VichImageField implements FieldInterface
             ->setTemplatePath('admin/vich_image.html.twig')
             ->setLabel($label)
             ->setFormType(VichImageType::class)
+            ->setFormTypeOptions(['delete_label' => 'Delete image ?'])
             ->addCssClass('field-vich-image');
     }
 }
