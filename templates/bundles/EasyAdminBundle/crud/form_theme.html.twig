@@ -164,7 +164,8 @@
                         {% set is_drag_and_drop = true %}
                     {% else %}
                         <div class="table-label-col col">
-                            {{ prototype_key|humanize }}
+                            {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
+
                         </div>
                     {% endif %}
 
