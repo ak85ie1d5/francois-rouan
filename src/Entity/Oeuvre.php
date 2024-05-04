@@ -477,9 +477,13 @@ class Oeuvre
         return $this;
     }
 
-    public function getPrimaryMedia()
+    public function getPrimaryMedia(): ?array
     {
-        return [$this->getMediaTest()->first()];
+        if ($this->getMediaTest()->first()) {
+            return [$this->getMediaTest()->first()];
+        }
+
+        return null;
     }
 
     public function setPrimaryMedia($primaryMedia): static
