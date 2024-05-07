@@ -27,4 +27,23 @@ class DateChoices
             'Décembre' => 12,
         ];
     }
+
+    public static function getLocalisationTypes(): array
+    {
+        return [
+            '' => 0,
+            'Interne' => 2,
+            'Externe' => 3,
+        ];
+    }
+
+    public static function getLocalisationDetails(): array
+    {
+        return [
+            '' => 0,
+            'Collection publique' => 2,
+            'Collection particulière' => 3,
+            'Consignation' => 4
+        ];
+    }
 }

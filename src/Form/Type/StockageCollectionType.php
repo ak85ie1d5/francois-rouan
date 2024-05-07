@@ -8,10 +8,8 @@ use App\Utils\DateChoices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +18,6 @@ class StockageCollectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('titre', TextType::class)
             ->add('day', ChoiceType::class, [
                 'choices' => DateChoices::getDayChoices(),
                 'label' => 'Jour'
@@ -32,16 +29,18 @@ class StockageCollectionType extends AbstractType
             ->add('year', IntegerType::class, [
                 'label' => 'Année'
             ])
-            ->add('dateDebut', DateType::class)
-            ->add('dateFin', DateType::class)
-            ->add('description', TextareaType::class)
-            ->add('commentaire', TextareaType::class)
-            ->add('precisions', TextType::class)
-            ->add('type', TextType::class)
+            ->add('type', ChoiceType::class, [
+                'choices' => DateChoices::getLocalisationTypes()
+            ])
+            ->add('precisions', ChoiceType::class, [
+                'choices' => DateChoices::getLocalisationDetails()
+            ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'choice_label' => 'nom'
-            ]);
+            ])
+            ->add('description', TextareaType::class)
+            ->add('commentaire', TextareaType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

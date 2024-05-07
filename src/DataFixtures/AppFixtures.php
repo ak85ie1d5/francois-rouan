@@ -18,7 +18,8 @@ class AppFixtures extends Fixture
     {
         return [
             CategoryFixtures::class,
-            SubCategoryFixtures::class
+            SubCategoryFixtures::class,
+            StockageFixtures::class
         ];
     }
 }
