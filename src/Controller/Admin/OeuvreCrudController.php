@@ -21,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Umanit\EasyAdminTreeBundle\Field\TreeField;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 
 class OeuvreCrudController extends AbstractCrudController
@@ -36,6 +37,34 @@ class OeuvreCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Oeuvre::class;
+    }
+
+    private $storage;
+
+    /**
+     * Inject the StorageInterface instance into the controller.
+     *
+     * OeuvreCrudController constructor.
+     * @param StorageInterface $storage
+     */
+    public function __construct(StorageInterface $storage)
+    {
+        $this->storage = $storage;
+    }
+
+    /**
+     * Override the createEntity method to provide the necessary StorageInterface instance.
+     *
+     * @param string $entityFqcn
+     * @return Oeuvre|mixed
+     */
+    public function createEntity(string $entityFqcn): mixed
+    {
+        if ($entityFqcn === Oeuvre::class) {
+            return new Oeuvre($this->storage);
+        }
+
+        return parent::createEntity($entityFqcn);
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
