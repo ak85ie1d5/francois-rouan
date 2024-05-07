@@ -21,6 +21,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('draggable-collection', './assets/draggable-collection.js')
+    .addStyleEntry('app', './assets/styles/app.css')
     .addStyleEntry('table-collection', './assets/styles/table-collection.css')
     .addStyleEntry('primary-media', './assets/styles/primary-media.css')
 

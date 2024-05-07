@@ -217,6 +217,6 @@ class OeuvreStockage
 
     public function __toString(): string
     {
-        return '';
+        return $this->lieu ?? '';
     }
 }

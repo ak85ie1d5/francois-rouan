@@ -1,5 +1,6 @@
 {
   "build/draggable-collection.js": "/build/draggable-collection.js",
+  "build/app.css": "/build/app.css",
   "build/table-collection.css": "/build/table-collection.css",
   "build/primary-media.css": "/build/primary-media.css"
 }

@@ -3,11 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\OeuvreHistorique;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -16,6 +16,16 @@ class OeuvreHistoriqueCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return OeuvreHistorique::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->setEntityLabelInSingular('historique d\'oeuvre')
+            ->setEntityLabelInPlural('historiques d\'oeuvres')
+            ->setPageTitle('edit', 'Modifier l\'%entity_label_singular%');
+
+        return parent::configureCrud($crud);
     }
 
 

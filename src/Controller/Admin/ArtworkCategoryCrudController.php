@@ -22,8 +22,10 @@ class ArtworkCategoryCrudController extends TreeCrudController
     public function configureCrud(Crud $crud): Crud
     {
         $crud
-            ->setEntityLabelInSingular('Catégorie d\'oeuvres')
-            ->setEntityLabelInPlural('Catégories d\'oeuvres');
+            ->setEntityLabelInSingular('catégorie d\'oeuvres')
+            ->setEntityLabelInPlural('catégories d\'oeuvres')
+            ->setPageTitle('new', 'Créer une %entity_label_singular%')
+            ->setPageTitle('edit', 'Modifier la %entity_label_singular%');;
 
         return parent::configureCrud($crud);
     }

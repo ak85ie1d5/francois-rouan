@@ -22,6 +22,16 @@ class OeuvreMediaTestCrudController extends AbstractCrudController
         return OeuvreMediaTest::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->setEntityLabelInSingular('média')
+            ->setEntityLabelInPlural('médias')
+            ->setPageTitle('edit', 'Modifier le %entity_label_singular%');
+
+        return parent::configureCrud($crud);
+    }
+
     public function createEntity(string $entityFqcn)
     {
         $oeuvreMediaTest = new OeuvreMediaTest();

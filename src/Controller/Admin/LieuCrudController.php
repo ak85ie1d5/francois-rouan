@@ -3,18 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Lieu;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -24,6 +19,14 @@ class LieuCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Lieu::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('lieu')
+            ->setEntityLabelInPlural('lieux')
+            ->setPageTitle('edit', 'Modifier le %entity_label_singular%');
     }
 
     public function configureFields(string $pageName): iterable
@@ -71,5 +74,4 @@ class LieuCrudController extends AbstractCrudController
                 ->hideOnIndex(),
         ];
     }
-
 }

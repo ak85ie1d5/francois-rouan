@@ -9,13 +9,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -31,6 +29,15 @@ class UtilisateurCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Utilisateur::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->setEntityLabelInSingular('utilisateur')
+            ->setEntityLabelInPlural('utilisateurs');
+
+        return parent::configureCrud($crud);
     }
 
     public function configureFields(string $pageName): iterable

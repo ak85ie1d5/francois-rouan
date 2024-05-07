@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\OeuvreExposition;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -17,6 +18,17 @@ class OeuvreExpositionCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return OeuvreExposition::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->setEntityLabelInSingular('exposition d\'oeuvre')
+            ->setEntityLabelInPlural('expositions d\'oeuvres')
+            ->setPageTitle('new', 'Créer une %entity_label_singular%')
+            ->setPageTitle('edit', 'Modifier l\'%entity_label_singular%');
+
+        return parent::configureCrud($crud);
     }
 
     public function configureFields(string $pageName): iterable

@@ -23,9 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use function Symfony\Component\String\u;
 
-/**
- * @author Javier Eguiluz <javier.eguiluz@gmail.com>
- */
+
 final class TableConfigurator implements FieldConfiguratorInterface
 {
     private RequestStack $requestStack;
@@ -115,14 +113,23 @@ final class TableConfigurator implements FieldConfiguratorInterface
         }
     }
 
-    private function formatTable(FieldDto $field, AdminContext $context)
+    /**
+     * Formats the table field value to be displayed in the backend and return the most recent value.
+     *
+     * @param FieldDto $field
+     * @param AdminContext $context
+     * @return int|mixed|string
+     */
+    private function formatTable(FieldDto $field, AdminContext $context): mixed
     {
         $doctrineMetadata = $field->getDoctrineMetadata();
+
         if ('array' !== $doctrineMetadata->get('type') && !$field->getValue() instanceof PersistentCollection) {
             return $this->countNumElements($field->getValue());
         }
 
         $collectionItemsAsText = [];
+
         foreach ($field->getValue() ?? [] as $item) {
             if (!\is_string($item) && !(\is_object($item) && method_exists($item, '__toString'))) {
                 return $this->countNumElements($field->getValue());
@@ -133,7 +140,10 @@ final class TableConfigurator implements FieldConfiguratorInterface
 
         $isDetailAction = Action::DETAIL === $context->getCrud()->getCurrentAction();
 
-        return u(', ')->join($collectionItemsAsText)->truncate($isDetailAction ? 512 : 32, '…')->toString();
+        // Return only the last item in the collection
+        $lastItem = end($collectionItemsAsText);
+
+        return $lastItem !== false ? $lastItem : '';
     }
 
     private function countNumElements($collection): int

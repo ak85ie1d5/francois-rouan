@@ -28,9 +28,10 @@ class OeuvreCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->showEntityActionsInlined();
+            ->showEntityActionsInlined()
+            ->setEntityLabelInSingular('oeuvre')
+            ->setEntityLabelInPlural('oeuvres');
     }
-
 
     public static function getEntityFqcn(): string
     {
@@ -66,23 +67,23 @@ class OeuvreCrudController extends AbstractCrudController
 
         return [
             FormField::addTab('Général'),
-            FormField::addColumn('col-lg-5'),
+            FormField::addColumn('col-lg-4'),
             TextField::new('numInventaire', 'N°inventaire'),
             TextField::new('titre'),
             TextField::new('sousTitre')
                 ->stripTags()
                 ->hideOnIndex(),
-            TextareaField::new('serie', 'Série')
+            TextField::new('serie', 'Série')
                 ->stripTags()
                 ->hideOnIndex(),
             DateField::new('date'),
             TextField::new('dateComplement', 'Complément de date'),
             TextField::new('dimensions')
                 ->hideOnIndex(),
+
+            FormField::addColumn('col-lg-4'),
             TextareaField::new('description')
                 ->stripTags(),
-            FormField::addColumn('col-lg-5'),
-
             TextareaField::new('commentairePublic', 'Commentaire public')
                 ->stripTags()
                 ->hideOnIndex(),
@@ -93,7 +94,7 @@ class OeuvreCrudController extends AbstractCrudController
             TextareaField::new('details', 'Details')
                 ->stripTags()
                 ->onlyOnDetail(),
-            FormField::addColumn('col-lg-2'),
+            FormField::addColumn('col-lg-3'),
             CollectionField::new('primary_media', 'Image principale')
                 ->setEntryType(PrimaryMediaType::class)
                 ->addCssClass('primary-media')
@@ -105,14 +106,14 @@ class OeuvreCrudController extends AbstractCrudController
             TreeField::new('ArtworkCategory', 'Catégorie')
                 ->hideOnIndex(),
             FormField::addTab('Historique'),
-            CollectionField::new('oeuvreHistoriques')
+            CollectionField::new('oeuvreHistoriques', 'Historique de l\'oeuvre')
                 ->setEntryType(HistoryCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
                 ->renderExpanded()
                 ->hideOnIndex(),
             FormField::addTab('Bibliographie'),
-            CollectionField::new('oeuvreBibliographies')
+            CollectionField::new('oeuvreBibliographies', 'Bibliographie de l\'oeuvre')
                 ->setEntryType(BibliographieColectionType::class)
                 ->allowAdd()
                 ->allowDelete()
@@ -120,21 +121,21 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             FormField::addTab('Exposition'),
             FormField::addColumn('col-lg-7'),
-            CollectionField::new('oeuvreExpositions')
+            CollectionField::new('oeuvreExpositions', 'Exposition de l\'oeuvre')
                 ->setEntryType(ExpositionCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
                 ->renderExpanded()
                 ->hideOnIndex(),
             FormField::addTab('Localisation'),
-            TableField::new('oeuvreStockages', '')
+            TableField::new('oeuvreStockages', 'Dernière localisation ')
                 ->setEntryType(StockageCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
                 ->setEntryIsComplex()
-                ->hideOnIndex(),
+                ,
             FormField::addTab('Médias'),
-            TableField::new('mediaTest', '')
+            TableField::new('mediaTest', 'Image principale')
                 ->setEntryType(OeuvreMediaTestType::class)
                 ->setTemplatePath('admin/vich_image_collection.html.twig')
                 ->allowAdd()

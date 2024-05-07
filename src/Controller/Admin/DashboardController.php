@@ -12,6 +12,9 @@ use App\Entity\OeuvreMediaTest;
 use App\Entity\OeuvreStockage;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -62,14 +65,50 @@ class DashboardController extends AbstractDashboardController
     // Add the custom form theme
     public function configureCrud(): Crud
     {
-        return parent::configureCrud();
+        $crud = parent::configureCrud();
 
+        return $crud
+            ->setPageTitle('index', 'Liste des %entity_label_plural%')
+            ->setPageTitle('new', 'Créer un %entity_label_singular%')
+            ->setPageTitle('edit', 'Modifier l\'%entity_label_singular%');
     }
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Theta Galerie');
+            ->setTitle('Theta Galerie')
+            ->renderContentMaximized();
+    }
+
+    public function configureActions(): Actions
+    {
+        $saveAndReturnAction = Action::new(Action::SAVE_AND_RETURN, 'Vadider et retourner à la liste')
+            ->linkToCrudAction(Crud::PAGE_EDIT)
+            ->addCssClass('btn btn-primary');
+
+        return Actions::new()
+            ->addBatchAction(Action::BATCH_DELETE)
+            ->add(Crud::PAGE_INDEX, Action::NEW)
+            ->add(Crud::PAGE_INDEX, Action::EDIT)
+            ->add(Crud::PAGE_INDEX, Action::DELETE)
+
+            ->add(Crud::PAGE_DETAIL, Action::EDIT)
+            ->add(Crud::PAGE_DETAIL, Action::INDEX)
+            ->add(Crud::PAGE_DETAIL, Action::DELETE)
+
+            ->add(Crud::PAGE_EDIT, $saveAndReturnAction)
+            ->add(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE)
+
+            ->add(Crud::PAGE_NEW, $saveAndReturnAction)
+            ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER);
+    }
+
+    public function configureAssets(): Assets
+    {
+        $assets = parent::configureAssets();
+
+        return $assets
+            ->addCssFile('build/app.css');
     }
 
     public function configureMenuItems(): iterable

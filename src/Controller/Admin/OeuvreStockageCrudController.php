@@ -8,7 +8,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -22,6 +21,17 @@ class OeuvreStockageCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return OeuvreStockage::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->setEntityLabelInSingular('localisation d\'oeuvres')
+            ->setEntityLabelInPlural('localisation d\'oeuvres')
+            ->setPageTitle('new', 'Créer une %entity_label_singular%')
+            ->setPageTitle('edit', 'Modifier la %entity_label_singular%');
+
+        return parent::configureCrud($crud);
     }
 
     public function configureFields(string $pageName): iterable
@@ -61,11 +71,5 @@ class OeuvreStockageCrudController extends AbstractCrudController
             //ArrayField::new('modificateur')->setDisabled()->hideWhenCreating(),
 
         ];
-    }
-
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud
-            ->setPageTitle('edit', 'Modifier la localisation');
     }
 }

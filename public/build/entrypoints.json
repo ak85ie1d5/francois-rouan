@@ -5,6 +5,11 @@
         "/build/draggable-collection.js"
       ]
     },
+    "app": {
+      "css": [
+        "/build/app.css"
+      ]
+    },
     "table-collection": {
       "css": [
         "/build/table-collection.css"
