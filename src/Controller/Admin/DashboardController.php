@@ -80,28 +80,7 @@ class DashboardController extends AbstractDashboardController
             ->renderContentMaximized();
     }
 
-    public function configureActions(): Actions
-    {
-        $saveAndReturnAction = Action::new(Action::SAVE_AND_RETURN, 'Vadider et retourner à la liste')
-            ->linkToCrudAction(Crud::PAGE_EDIT)
-            ->addCssClass('btn btn-primary');
 
-        return Actions::new()
-            ->addBatchAction(Action::BATCH_DELETE)
-            ->add(Crud::PAGE_INDEX, Action::NEW)
-            ->add(Crud::PAGE_INDEX, Action::EDIT)
-            ->add(Crud::PAGE_INDEX, Action::DELETE)
-
-            ->add(Crud::PAGE_DETAIL, Action::EDIT)
-            ->add(Crud::PAGE_DETAIL, Action::INDEX)
-            ->add(Crud::PAGE_DETAIL, Action::DELETE)
-
-            ->add(Crud::PAGE_EDIT, $saveAndReturnAction)
-            ->add(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE)
-
-            ->add(Crud::PAGE_NEW, $saveAndReturnAction)
-            ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER);
-    }
 
     public function configureAssets(): Assets
     {
