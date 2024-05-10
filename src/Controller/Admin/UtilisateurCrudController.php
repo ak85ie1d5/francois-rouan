@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -29,6 +30,21 @@ class UtilisateurCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Utilisateur::class;
+    }
+
+    public function createEntity(string $entityFqcn)
+    {
+        $artworkCategory = new Utilisateur();
+        $artworkCategory->setCreatedBy($this->getUser());
+
+        return $artworkCategory;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setUpdatedBy($this->getUser());
+
+        parent::updateEntity($entityManager, $entityInstance);
     }
 
     public function configureCrud(Crud $crud): Crud

@@ -97,7 +97,7 @@ class OeuvreCrudController extends AbstractCrudController
         return [
             FormField::addTab('Général'),
             FormField::addColumn('col-lg-4'),
-            TextField::new('numInventaire', 'N°inventaire'),
+            TextField::new('numInventaire', 'N°inv'),
             TextField::new('titre'),
             TextField::new('sousTitre')
                 ->stripTags()
