@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimeColumnTrait;
+use App\Entity\Trait\UserColumnTrait;
 use App\Repository\OeuvreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,9 +13,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 class Oeuvre
 {
+    use TimeColumnTrait, UserColumnTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,12 +35,6 @@ class Oeuvre
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $serie = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $dateComplement = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $dimensions = null;
 
@@ -48,21 +46,6 @@ class Oeuvre
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $details = null;
-
-    #[ORM\Column]
-    private ?int $nbMedias = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateModification = null;
-
-    #[ORM\Column]
-    private array $createur = [];
-
-    #[ORM\Column]
-    private array $modificateur = [];
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaireInterne = null;
@@ -79,9 +62,6 @@ class Oeuvre
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist"])]
     private Collection $oeuvreHistoriques;
 
-    #[ORM\Column(name: 'media', type: Types::JSON, nullable: true)]
-    private ?array $media;
-
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreMediaTest::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     #[ORM\OrderBy(["position" => "ASC"])]
     private Collection $mediaTest;
@@ -91,6 +71,30 @@ class Oeuvre
     private ?ArtworkCategory $ArtworkCategory = null;
 
     private ?array $primaryMedia;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $FirstDay = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $FirstMonth = null;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $FirstYear;
+    #[ORM\Column]
+    private ?bool $FirstDateUncertain = null;
+
+    private ?\DateTime $FirstDate;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $SecondDay = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $SecondMonth = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $SecondYear = null;
+    #[ORM\Column]
+    private ?bool $SecondDateUncertain = null;
 
     public function __construct(StorageInterface $storage)
     {
@@ -154,30 +158,6 @@ class Oeuvre
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(?\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getDateComplement(): ?string
-    {
-        return $this->dateComplement;
-    }
-
-    public function setDateComplement(?string $dateComplement): static
-    {
-        $this->dateComplement = $dateComplement;
-
-        return $this;
-    }
-
     public function getDimensions(): ?string
     {
         return $this->dimensions;
@@ -222,66 +202,6 @@ class Oeuvre
     public function setDetails(?string $details): static
     {
         $this->details = $details;
-
-        return $this;
-    }
-
-    public function getNbMedias(): ?int
-    {
-        return $this->nbMedias;
-    }
-
-    public function setNbMedias(int $nbMedias): static
-    {
-        $this->nbMedias = $nbMedias;
-
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-
-    public function getDateModification(): ?\DateTimeInterface
-    {
-        return $this->dateModification;
-    }
-
-    public function setDateModification(?\DateTimeInterface $dateModification): static
-    {
-        $this->dateModification = $dateModification;
-
-        return $this;
-    }
-
-    public function getCreateur(): array
-    {
-        return $this->createur;
-    }
-
-    public function setCreateur(array $createur): static
-    {
-        $this->createur = $createur;
-
-        return $this;
-    }
-
-    public function getModificateur(): array
-    {
-        return $this->modificateur;
-    }
-
-    public function setModificateur(array $modificateur): static
-    {
-        $this->modificateur = $modificateur;
 
         return $this;
     }
@@ -418,23 +338,6 @@ class Oeuvre
         return $this;
     }
 
-    public function getMedia(): ?array
-    {
-        return $this->media;
-    }
-
-    public function setMedia(?array $media): static
-    {
-        $this->media = $media;
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        return "N° inv $this->numInventaire - $this->titre";
-    }
-
     /**
      * @return Collection<int, OeuvreMediaTest>
      */
@@ -491,5 +394,124 @@ class Oeuvre
         $this->primaryMedia = $primaryMedia;
 
         return $this;
+    }
+
+    public function getFirstDay(): ?int
+    {
+        return $this->FirstDay;
+    }
+
+    public function setFirstDay(?int $FirstDay): static
+    {
+        $this->FirstDay = $FirstDay;
+
+        return $this;
+    }
+
+    public function getFirstMonth(): ?int
+    {
+        return $this->FirstMonth;
+    }
+
+    public function setFirstMonth(?int $FirstMonth): static
+    {
+        $this->FirstMonth = $FirstMonth;
+
+        return $this;
+    }
+
+    public function getFirstYear(): int
+    {
+        return $this->FirstYear;
+    }
+
+    public function setFirstYear(int $Firstyear): static
+    {
+        $this->FirstYear = $Firstyear;
+
+        return $this;
+    }
+
+    public function getFirstDate(): ?\DateTime
+    {
+        if ($this->FirstYear && $this->FirstMonth && $this->FirstDay) {
+            return new \DateTime(sprintf('%d-%d-%d', $this->FirstYear, $this->FirstMonth, $this->FirstDay));
+        }
+
+        return null;
+    }
+
+    public function isFirstDateUncertain(): ?bool
+    {
+        return $this->FirstDateUncertain;
+    }
+
+    public function setFirstDateUncertain(bool $FirstDateUncertain): static
+    {
+        $this->FirstDateUncertain = $FirstDateUncertain;
+
+        return $this;
+    }
+
+    public function getSecondDay(): ?int
+    {
+        return $this->SecondDay;
+    }
+
+    public function setSecondDay(?int $SecondDay): static
+    {
+        $this->SecondDay = $SecondDay;
+
+        return $this;
+    }
+
+    public function getSecondMonth(): ?int
+    {
+        return $this->SecondMonth;
+    }
+
+    public function setSecondMonth(?int $SecondMonth): static
+    {
+        $this->SecondMonth = $SecondMonth;
+
+        return $this;
+    }
+
+    public function getSecondYear(): int
+    {
+        return $this->SecondYear;
+    }
+
+    public function setSecondYear(int $Secondyear): static
+    {
+        $this->SecondYear = $Secondyear;
+
+        return $this;
+    }
+
+    public function getSecondDate(): ?\DateTime
+    {
+        if ($this->SecondYear && $this->SecondMonth && $this->SecondDay) {
+            return new \DateTime(sprintf('%d-%d-%d', $this->SecondYear, $this->SecondMonth, $this->SecondDay));
+        }
+
+        return null;
+    }
+
+    public function isSecondDateUncertain(): ?bool
+    {
+        return $this->SecondDateUncertain;
+    }
+
+    public function setSecondDateUncertain(bool $SecondDateUncertain): static
+    {
+        $this->SecondDateUncertain = $SecondDateUncertain;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return "N° inv $this->numInventaire - $this->titre";
     }
 }

@@ -14,9 +14,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
@@ -61,10 +63,20 @@ class OeuvreCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn): mixed
     {
         if ($entityFqcn === Oeuvre::class) {
-            return new Oeuvre($this->storage);
+            $oeuvre = new Oeuvre($this->storage);
+            $oeuvre->setCreatedBy($this->getUser());
+
+            return $oeuvre;
         }
 
         return parent::createEntity($entityFqcn);
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setUpdatedBy($this->getUser());
+
+        parent::updateEntity($entityManager, $entityInstance);
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -83,7 +95,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('titre')
             ->add('sousTitre')
             ->add('dimensions')
-            ->add('date')
+
             ->add('serie')
             ->add('description')
             ->add('commentairePublic')
@@ -105,12 +117,38 @@ class OeuvreCrudController extends AbstractCrudController
             TextField::new('serie', 'Série')
                 ->stripTags()
                 ->hideOnIndex(),
-            DateField::new('date'),
-            TextField::new('dateComplement', 'Complément de date'),
-            TextField::new('dimensions')
+            DateField::new('FirstDate', 'Date de création')
+                ->setFormat('dd/MM/yyyy')
+                ->onlyOnIndex(),
+
+            FormField::addFieldset('Date de création'),
+            IntegerField::new('FirstDay', 'Jour')
+                ->hideOnIndex()
+                ->setColumns(4),
+            IntegerField::new('FirstMonth', 'Mois')
+                ->hideOnIndex()
+                ->setColumns(4),
+            IntegerField::new('FirstYear', 'Année')
+                ->hideOnIndex()
+                ->setColumns(4),
+            BooleanField::new('FirstDateUncertain', 'Date incertaine')
+                ->hideOnIndex(),
+            IntegerField::new('SecondDay', 'Jour')
+                ->hideOnIndex()
+                ->setColumns(4),
+            IntegerField::new('SecondMonth', 'Mois')
+                ->hideOnIndex()
+                ->setColumns(4),
+            IntegerField::new('SecondYear', 'Année')
+                ->hideOnIndex()
+                ->setColumns(4),
+            BooleanField::new('SecondDateUncertain', 'Date incertaine')
                 ->hideOnIndex(),
 
+
             FormField::addColumn('col-lg-4'),
+            TextField::new('dimensions')
+                ->hideOnIndex(),
             TextareaField::new('description')
                 ->stripTags(),
             TextareaField::new('commentairePublic', 'Commentaire public')
