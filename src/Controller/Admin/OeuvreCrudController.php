@@ -95,7 +95,9 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('titre')
             ->add('sousTitre')
             ->add('dimensions')
-
+            ->add('FirstDay')
+            ->add('FirstMonth')
+            ->add('FirstYear')
             ->add('serie')
             ->add('description')
             ->add('commentairePublic')
@@ -117,19 +119,12 @@ class OeuvreCrudController extends AbstractCrudController
             TextField::new('serie', 'Série')
                 ->stripTags()
                 ->hideOnIndex(),
-            DateField::new('FirstDate', 'Date de création')
-                ->setFormat('dd/MM/yyyy')
-                ->onlyOnIndex(),
-
             FormField::addFieldset('Date de création'),
             IntegerField::new('FirstDay', 'Jour')
-                ->hideOnIndex()
                 ->setColumns(4),
             IntegerField::new('FirstMonth', 'Mois')
-                ->hideOnIndex()
                 ->setColumns(4),
             IntegerField::new('FirstYear', 'Année')
-                ->hideOnIndex()
                 ->setColumns(4),
             BooleanField::new('FirstDateUncertain', 'Date incertaine')
                 ->hideOnIndex(),

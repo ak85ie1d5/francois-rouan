@@ -83,8 +83,6 @@ class Oeuvre
     #[ORM\Column]
     private ?bool $FirstDateUncertain = null;
 
-    private ?\DateTime $FirstDate;
-
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $SecondDay = null;
 
@@ -430,15 +428,6 @@ class Oeuvre
         $this->FirstYear = $Firstyear;
 
         return $this;
-    }
-
-    public function getFirstDate(): ?\DateTime
-    {
-        if ($this->FirstYear && $this->FirstMonth && $this->FirstDay) {
-            return new \DateTime(sprintf('%d-%d-%d', $this->FirstYear, $this->FirstMonth, $this->FirstDay));
-        }
-
-        return null;
     }
 
     public function isFirstDateUncertain(): ?bool
