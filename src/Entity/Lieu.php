@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimeColumnTrait;
+use App\Entity\Trait\UserColumnTrait;
 use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class Lieu
 {
+    use UserColumnTrait, TimeColumnTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -48,21 +51,6 @@ class Lieu
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateModification = null;
-
-    #[ORM\Column]
-    private array $createur = [];
-
-    #[ORM\Column]
-    private array $modificateur = [];
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $organisme = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $pays = null;
 
@@ -76,7 +64,6 @@ class Lieu
     {
         $this->oeuvreExpositions = new ArrayCollection();
         $this->oeuvreStockages = new ArrayCollection();
-
     }
 
     public function getId(): ?int
@@ -200,64 +187,6 @@ class Lieu
     public function setCommentaire(?string $commentaire): static
     {
         $this->commentaire = $commentaire;
-
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    #[ORM\PrePersist]
-    public function setDateCreation(): void
-    {
-        $this->dateCreation = new \DateTime();
-    }
-
-    public function getDateModification(): ?\DateTimeInterface
-    {
-        return $this->dateModification;
-    }
-
-    #[ORM\PreUpdate]
-    public function setDateModification(): void
-    {
-        $this->dateModification = new \DateTime();
-    }
-
-    public function getCreateur(): array
-    {
-        return $this->createur;
-    }
-
-    public function setCreateur(array $createur): static
-    {
-        $this->createur = $createur;
-
-        return $this;
-    }
-
-    public function getModificateur(): array
-    {
-        return $this->modificateur;
-    }
-
-    public function setModificateur(array $modificateur): static
-    {
-        $this->modificateur = $modificateur;
-
-        return $this;
-    }
-
-    public function getOrganisme(): ?string
-    {
-        return $this->organisme;
-    }
-
-    public function setOrganisme(?string $organisme): static
-    {
-        $this->organisme = $organisme;
 
         return $this;
     }

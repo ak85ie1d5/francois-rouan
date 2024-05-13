@@ -75,7 +75,6 @@ class OeuvreBibliographieCrudController extends AbstractCrudController
             AssociationField::new('updatedBy')
                 ->setDisabled()
                 ->onlyOnForms(),
-
         ];
     }
 }
