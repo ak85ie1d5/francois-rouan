@@ -152,10 +152,6 @@ class OeuvreCrudController extends AbstractCrudController
             TextareaField::new('commentaireInterne', 'Commentaire interne')
                 ->stripTags()
                 ->hideOnIndex(),
-
-            TextareaField::new('details', 'Details')
-                ->stripTags()
-                ->onlyOnDetail(),
             FormField::addColumn('col-lg-3'),
             CollectionField::new('primary_media', 'Image principale')
                 ->setEntryType(PrimaryMediaType::class)

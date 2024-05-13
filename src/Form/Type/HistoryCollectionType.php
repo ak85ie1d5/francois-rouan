@@ -14,7 +14,6 @@ class HistoryCollectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre', TextType::class)
             ->add('description', TextareaType::class);
     }
 
