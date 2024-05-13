@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\OeuvreHistorique;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -28,6 +29,20 @@ class OeuvreHistoriqueCrudController extends AbstractCrudController
         return parent::configureCrud($crud);
     }
 
+    public function createEntity(string $entityFqcn)
+    {
+        $artworkCategory = new OeuvreHistorique();
+        $artworkCategory->setCreatedBy($this->getUser());
+
+        return $artworkCategory;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setUpdatedBy($this->getUser());
+
+        parent::updateEntity($entityManager, $entityInstance);
+    }
 
     public function configureFields(string $pageName): iterable
     {
@@ -40,8 +55,14 @@ class OeuvreHistoriqueCrudController extends AbstractCrudController
             FormField::addColumn('col-lg-5'),
             AssociationField::new('oeuvre'),
             FormField::addColumn('col-lg-2'),
-            DateField::new('dateCreation')->setDisabled()->hideWhenCreating(),
-            DateField::new('dateModification')->setDisabled()->hideWhenCreating(),
+            DateField::new('createdAt')->setDisabled()->hideWhenCreating(),
+            DateField::new('updatedAt')->setDisabled()->hideWhenCreating(),
+            AssociationField::new('createdBy')
+                ->setDisabled()
+                ->onlyOnForms(),
+            AssociationField::new('updatedBy')
+                ->setDisabled()
+                ->onlyOnForms(),
         ];
     }
 

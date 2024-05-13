@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimeColumnTrait;
+use App\Entity\Trait\UserColumnTrait;
 use App\Repository\OeuvreHistoriqueRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class OeuvreHistorique
 {
+    use TimeColumnTrait, UserColumnTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -27,18 +30,6 @@ class OeuvreHistorique
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateModification = null;
-
-    #[ORM\Column]
-    private array $createur = [];
-
-    #[ORM\Column]
-    private array $modificateur = [];
-
     #[ORM\ManyToOne(inversedBy: 'oeuvreHistoriques')]
     private ?Oeuvre $oeuvre = null;
 
@@ -52,10 +43,14 @@ class OeuvreHistorique
         return $this->titre;
     }
 
-    #[ORM\PrePersist]
-    public function setTitre(): static
+
+    public function setTitre(?string $titre): static
     {
         $this->titre = "Sans titre";
+
+        if ($titre) {
+            $this->titre = $titre;
+        }
 
         return $this;
     }
@@ -96,52 +91,6 @@ class OeuvreHistorique
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    #[ORM\PrePersist]
-    public function setDateCreation(): void
-    {
-        $this->dateCreation = new \DateTime();
-    }
-
-    public function getDateModification(): ?\DateTimeInterface
-    {
-        return $this->dateModification;
-    }
-
-    #[ORM\PreUpdate]
-    public function setDateModification(): void
-    {
-        $this->dateModification = new \DateTime();
-    }
-
-    public function getCreateur(): array
-    {
-        return $this->createur;
-    }
-
-    public function setCreateur(array $createur): static
-    {
-        $this->createur = $createur;
-
-        return $this;
-    }
-
-    public function getModificateur(): array
-    {
-        return $this->modificateur;
-    }
-
-    public function setModificateur(array $modificateur): static
-    {
-        $this->modificateur = $modificateur;
-
-        return $this;
-    }
-
     public function getOeuvre(): ?Oeuvre
     {
         return $this->oeuvre;
@@ -156,6 +105,6 @@ class OeuvreHistorique
 
     public function __toString(): string
     {
-        return $this->getDateCreation()->format('d/m/y H:i');
+        return $this->getCreatedAt()->format('d/m/y H:i');
     }
 }
