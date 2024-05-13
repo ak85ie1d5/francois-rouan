@@ -48,15 +48,16 @@ class OeuvreHistoriqueCrudController extends AbstractCrudController
     {
         return [
             FormField::addColumn('col-lg-5'),
-            TextField::new('titre'),
-            DateField::new('date'),
             TextareaField::new('description'),
-            TextareaField::new('commentaire'),
             FormField::addColumn('col-lg-5'),
             AssociationField::new('oeuvre'),
             FormField::addColumn('col-lg-2'),
-            DateField::new('createdAt')->setDisabled()->hideWhenCreating(),
-            DateField::new('updatedAt')->setDisabled()->hideWhenCreating(),
+            DateField::new('createdAt')
+                ->setDisabled()
+                ->hideWhenCreating(),
+            DateField::new('updatedAt')
+                ->setDisabled()
+                ->hideWhenCreating(),
             AssociationField::new('createdBy')
                 ->setDisabled()
                 ->onlyOnForms(),

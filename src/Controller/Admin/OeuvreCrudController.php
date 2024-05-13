@@ -171,11 +171,11 @@ class OeuvreCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->hideOnIndex(),
             FormField::addTab('Bibliographie'),
-            CollectionField::new('oeuvreBibliographies', 'Bibliographie de l\'oeuvre')
+            TableField::new('oeuvreBibliographies', 'Bibliographie de l\'oeuvre')
                 ->setEntryType(BibliographieColectionType::class)
                 ->allowAdd()
                 ->allowDelete()
-                ->renderExpanded()
+                ->setEntryIsComplex()
                 ->hideOnIndex(),
             FormField::addTab('Exposition'),
             FormField::addColumn('col-lg-7'),
@@ -190,8 +190,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->setEntryType(StockageCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
-                ->setEntryIsComplex()
-                ,
+                ->setEntryIsComplex(),
             FormField::addTab('Médias'),
             TableField::new('mediaTest', 'Image principale')
                 ->setEntryType(OeuvreMediaTestType::class)

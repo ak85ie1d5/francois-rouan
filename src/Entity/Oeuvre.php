@@ -50,7 +50,7 @@ class Oeuvre
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaireInterne = null;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $oeuvreBibliographies;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist"])]

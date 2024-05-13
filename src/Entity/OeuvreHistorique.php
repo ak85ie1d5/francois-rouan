@@ -55,6 +55,6 @@ class OeuvreHistorique
 
     public function __toString(): string
     {
-        return $this->getCreatedAt()->format('d/m/y H:i');
+        return $this->getCreatedAt()->format('d/m/y');
     }
 }
