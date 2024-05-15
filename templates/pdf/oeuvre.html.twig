@@ -13,7 +13,7 @@
 
         <p>Numéro d'inventaire : {{ oeuvre.numInventaire }}</p>
         https://devmaster.local:5443{{ vich_uploader_asset(oeuvre.primaryMedia[0]) }}
-        <img src="https://devmaster.local:5443{{ vich_uploader_asset(oeuvre.primaryMedia[0]) }}" alt="" class="img-fluid" width="200" height="200">
+        <img src="{{ base64Image }}" alt="" class="img-fluid" width="200" height="200">
 
         <p>Titre : {{ oeuvre.titre }}</p>
         <p>Date de création : {% if oeuvre.FirstDay %}{{ oeuvre.FirstDay }}/{% endif %}{% if oeuvre.FirstMonth %}{{ oeuvre.FirstMonth }}/{% endif %}{{ oeuvre.FirstYear }}</p>

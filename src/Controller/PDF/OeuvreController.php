@@ -25,17 +25,18 @@ class OeuvreController extends AbstractController
         // Fetch data from `oeuvre` entity
         // This is just a placeholder, replace with your actual data fetching logic
         $oeuvresData = $this->entityManager->getRepository(Oeuvre::class)->findOneBy(['id' => $id]);
+        $base64Image = $this->convertImageToBase64($oeuvresData->getPrimaryMedia()[0]->getImageFile());
 
         // Render HTML template
         $html = $this->renderView('pdf/oeuvre.html.twig', [
-            'oeuvre' => $oeuvresData
+            'oeuvre' => $oeuvresData,
+            'base64Image' => $base64Image
         ]);
 
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $pdfOptions->set('isRemoteEnabled', true);
-        $pdfOptions->set('chroot', realpath(''));
 
         // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
@@ -46,7 +47,18 @@ class OeuvreController extends AbstractController
         // Render the HTML as PDF
         $dompdf->render();
 
-        $dompdf->stream();
+        return new Response (
+            $dompdf->stream('resume', ["Attachment" => false]),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/pdf']
+        );
+    }
 
+    function convertImageToBase64($imagePath): string
+    {
+        $type = pathinfo($imagePath, PATHINFO_EXTENSION);
+        $data = file_get_contents($imagePath);
+
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 }
