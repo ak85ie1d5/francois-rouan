@@ -11,12 +11,12 @@ use App\Form\Type\OeuvreMediaTestType;
 use App\Form\Type\PrimaryMediaType;
 use App\Form\Type\StockageCollectionType;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -24,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Umanit\EasyAdminTreeBundle\Field\TreeField;
 use Vich\UploaderBundle\Storage\StorageInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 
 
 class OeuvreCrudController extends AbstractCrudController
@@ -86,6 +87,29 @@ class OeuvreCrudController extends AbstractCrudController
 
         $entityManager->persist($entityInstance);
         $entityManager->flush();
+    }
+
+    /**
+     * Configure the actions for the OeuvreCrudController.
+     *
+     * @param Actions $actions
+     * @return Actions
+     */
+    public function configureActions(Actions $actions): Actions
+    {
+        // Create a new action to generate a PDF of the Oeuvre entity.
+        $pdf = Action::new('pdf', 'PDF', 'fa fa-file-pdf')
+            ->linkToRoute('pdf_oeuvre', function (Oeuvre $entity) {
+                return ['id' => $entity->getId()];
+            })
+            ->setHtmlAttributes([
+                'target' => '_blank',
+            ]);
+
+        $actions
+            ->add(Crud::PAGE_INDEX, $pdf);
+
+        return parent::configureActions($actions);
     }
 
     public function configureFilters(Filters $filters): Filters

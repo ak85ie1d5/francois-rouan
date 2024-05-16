@@ -26,6 +26,7 @@ class OeuvreController extends AbstractController
         // This is just a placeholder, replace with your actual data fetching logic
         $oeuvresData = $this->entityManager->getRepository(Oeuvre::class)->findOneBy(['id' => $id]);
         $base64Image = $this->convertImageToBase64($oeuvresData->getPrimaryMedia()[0]->getImageFile());
+        $filename = $oeuvresData->getNumInventaire().' - '.$oeuvresData->getTitre();
 
         // Render HTML template
         $html = $this->renderView('pdf/oeuvre.html.twig', [
@@ -48,7 +49,7 @@ class OeuvreController extends AbstractController
         $dompdf->render();
 
         return new Response (
-            $dompdf->stream('resume', ["Attachment" => false]),
+            $dompdf->stream($oeuvresData->getNumInventaire().' - '.$oeuvresData->getTitre(), ["Attachment" => false]),
             Response::HTTP_OK,
             ['Content-Type' => 'application/pdf']
         );
