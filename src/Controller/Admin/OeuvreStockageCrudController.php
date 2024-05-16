@@ -57,13 +57,13 @@ class OeuvreStockageCrudController extends AbstractCrudController
             FormField::addColumn('col-lg-5'),
             IdField::new('id')->hideOnForm(),
             FormField::addFieldset('Date de début'),
-            ChoiceField::new('day', 'Jour')
+            ChoiceField::new('FirstDay', 'Jour')
                 ->setChoices(DateChoices::getDayChoices())
                 ->setColumns(4),
-            ChoiceField::new('month', 'Mois')
+            ChoiceField::new('FirstMonth', 'Mois')
                 ->setChoices(DateChoices::getMonthChoices())
                 ->setColumns(4),
-            IntegerField::new('year', 'Année')
+            IntegerField::new('FirstYear', 'Année')
                 ->setColumns(4),
 
             FormField::addFieldset(),

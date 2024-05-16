@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class OeuvreStockage
 {
-    use Trait\StartDateTrait;
+    use Trait\FirstDateTrait;
     use Trait\TimeColumnTrait;
     use Trait\UserColumnTrait;
 

@@ -18,15 +18,15 @@ class StockageCollectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('day', ChoiceType::class, [
+            ->add('FirstDay', ChoiceType::class, [
                 'choices' => DateChoices::getDayChoices(),
                 'label' => 'Jour'
             ])
-            ->add('month', ChoiceType::class, [
+            ->add('FirstMonth', ChoiceType::class, [
                 'choices' => DateChoices::getMonthChoices(),
                 'label' => 'Mois'
             ])
-            ->add('year', IntegerType::class, [
+            ->add('FirstYear', IntegerType::class, [
                 'label' => 'Année'
             ])
             ->add('type', ChoiceType::class, [
