@@ -80,7 +80,15 @@ class DashboardController extends AbstractDashboardController
             ->renderContentMaximized();
     }
 
+    public function configureActions(): Actions
+    {
+        $actions = parent::configureActions();
 
+        return $actions
+            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
+                return $action->setLabel('Sauvegarder et quitter');
+            });
+    }
 
     public function configureAssets(): Assets
     {

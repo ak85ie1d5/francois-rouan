@@ -117,6 +117,10 @@ class OeuvreStockage
 
     public function __toString(): string
     {
-        return $this->lieu ?? '';
+        return <<<END
+            {$this->getLieu()->getNom()}
+            {$this->getLieu()->getVille()}
+            {$this->getLieu()->getPays()}
+            END;
     }
 }

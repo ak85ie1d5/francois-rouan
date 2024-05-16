@@ -10,12 +10,14 @@ use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\OeuvreMediaTestType;
 use App\Form\Type\PrimaryMediaType;
 use App\Form\Type\StockageCollectionType;
+use App\Utils\DateChoices;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -143,27 +145,29 @@ class OeuvreCrudController extends AbstractCrudController
             TextField::new('serie', 'Série')
                 ->stripTags()
                 ->hideOnIndex(),
+            TextareaField::new('details')
+                ->setMaxLength(15)
+                ->hideOnIndex(),
             FormField::addFieldset('Date de création'),
-            IntegerField::new('FirstDay', 'Jour')
-                ->setColumns(4),
-            IntegerField::new('FirstMonth', 'Mois')
+            ChoiceField::new('FirstMonth', 'Mois')
+                ->setChoices(DateChoices::getMonthChoices())
                 ->setColumns(4),
             IntegerField::new('FirstYear', 'Année')
-                ->setColumns(4),
+                ->setColumns(3),
             BooleanField::new('FirstDateUncertain', 'Date incertaine')
-                ->hideOnIndex(),
-            IntegerField::new('SecondDay', 'Jour')
                 ->hideOnIndex()
-                ->setColumns(4),
-            IntegerField::new('SecondMonth', 'Mois')
+                ->setLabel('Date incertaine')
+                ->setColumns(5),
+            ChoiceField::new('SecondMonth', 'Mois')
                 ->hideOnIndex()
+                ->setChoices(DateChoices::getMonthChoices())
                 ->setColumns(4),
             IntegerField::new('SecondYear', 'Année')
                 ->hideOnIndex()
-                ->setColumns(4),
+                ->setColumns(3),
             BooleanField::new('SecondDateUncertain', 'Date incertaine')
-                ->hideOnIndex(),
-
+                ->hideOnIndex()
+                ->setColumns(5),
 
             FormField::addColumn('col-lg-4'),
             TextField::new('dimensions')

@@ -34,7 +34,7 @@ final class TableField implements FieldInterface
         return (new self())
             ->setProperty($propertyName)
             ->setLabel($label)
-            ->setTemplateName('crud/field/collection')
+            ->setTemplatePath('admin/table.html.twig')
             ->setFormType(TableType::class)
             ->addCssClass('field-collection table-collection')
             ->addJsFiles('build/draggable-collection.js')

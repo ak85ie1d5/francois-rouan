@@ -11,3 +11,7 @@
 .umanit_easyadmintree_tree_field-item--active .umanit_easyadmintree_tree_field-item-label {
     color: var(--button-primary-color) !important;
 }
+
+.badge-outline {
+    display: none;
+}
