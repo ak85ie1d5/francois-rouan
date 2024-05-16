@@ -5,11 +5,14 @@ use App\Controller\Admin\LieuCrudController;
 use App\Entity\Lieu;
 use App\Entity\OeuvreExposition;
 
+use App\Utils\DateChoices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,8 +27,28 @@ class ExpositionCollectionType extends AbstractType
             ->add('titre', TextType::class)
             ->add('description', TextareaType::class)
             ->add('commentaire', TextareaType::class)
-            ->add('dateDebut', DateType::class)
-            ->add('dateFin', DateType::class)
+            ->add('FirstDay', ChoiceType::class, [
+                'choices' => DateChoices::getDayChoices(),
+                'label' => 'Jour'
+            ])
+            ->add('FirstMonth', ChoiceType::class, [
+                'choices' => DateChoices::getMonthChoices(),
+                'label' => 'Mois'
+            ])
+            ->add('FirstYear', IntegerType::class, [
+                'label' => 'Année'
+            ])
+            ->add('SecondDay', ChoiceType::class, [
+                'choices' => DateChoices::getDayChoices(),
+                'label' => 'Jour'
+            ])
+            ->add('SecondMonth', ChoiceType::class, [
+                'choices' => DateChoices::getMonthChoices(),
+                'label' => 'Mois'
+            ])
+            ->add('SecondYear', IntegerType::class, [
+                'label' => 'Année'
+            ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'choice_label' => 'nom'

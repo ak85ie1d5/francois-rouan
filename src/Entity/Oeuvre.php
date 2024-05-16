@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\FirstDateTrait;
+use App\Entity\Trait\SecondDateTrait;
 use App\Entity\Trait\TimeColumnTrait;
 use App\Entity\Trait\UserColumnTrait;
 use App\Repository\OeuvreRepository;
@@ -17,7 +19,7 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 #[Vich\Uploadable]
 class Oeuvre
 {
-    use TimeColumnTrait, UserColumnTrait;
+    use TimeColumnTrait, UserColumnTrait, FirstDateTrait, SecondDateTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -72,25 +74,9 @@ class Oeuvre
 
     private ?array $primaryMedia;
 
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $FirstDay = null;
-
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $FirstMonth = null;
-
-    #[ORM\Column(type: Types::INTEGER)]
-    private int $FirstYear;
     #[ORM\Column]
     private ?bool $FirstDateUncertain = null;
 
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $SecondDay = null;
-
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $SecondMonth = null;
-
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $SecondYear = null;
     #[ORM\Column]
     private ?bool $SecondDateUncertain = null;
 
@@ -394,41 +380,6 @@ class Oeuvre
         return $this;
     }
 
-    public function getFirstDay(): ?int
-    {
-        return $this->FirstDay;
-    }
-
-    public function setFirstDay(?int $FirstDay): static
-    {
-        $this->FirstDay = $FirstDay;
-
-        return $this;
-    }
-
-    public function getFirstMonth(): ?int
-    {
-        return $this->FirstMonth;
-    }
-
-    public function setFirstMonth(?int $FirstMonth): static
-    {
-        $this->FirstMonth = $FirstMonth;
-
-        return $this;
-    }
-
-    public function getFirstYear(): int
-    {
-        return $this->FirstYear;
-    }
-
-    public function setFirstYear(int $Firstyear): static
-    {
-        $this->FirstYear = $Firstyear;
-
-        return $this;
-    }
 
     public function isFirstDateUncertain(): ?bool
     {
@@ -440,51 +391,6 @@ class Oeuvre
         $this->FirstDateUncertain = $FirstDateUncertain;
 
         return $this;
-    }
-
-    public function getSecondDay(): ?int
-    {
-        return $this->SecondDay;
-    }
-
-    public function setSecondDay(?int $SecondDay): static
-    {
-        $this->SecondDay = $SecondDay;
-
-        return $this;
-    }
-
-    public function getSecondMonth(): ?int
-    {
-        return $this->SecondMonth;
-    }
-
-    public function setSecondMonth(?int $SecondMonth): static
-    {
-        $this->SecondMonth = $SecondMonth;
-
-        return $this;
-    }
-
-    public function getSecondYear(): int
-    {
-        return $this->SecondYear;
-    }
-
-    public function setSecondYear(int $Secondyear): static
-    {
-        $this->SecondYear = $Secondyear;
-
-        return $this;
-    }
-
-    public function getSecondDate(): ?\DateTime
-    {
-        if ($this->SecondYear && $this->SecondMonth && $this->SecondDay) {
-            return new \DateTime(sprintf('%d-%d-%d', $this->SecondYear, $this->SecondMonth, $this->SecondDay));
-        }
-
-        return null;
     }
 
     public function isSecondDateUncertain(): ?bool

@@ -203,11 +203,11 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             FormField::addTab('Exposition'),
             FormField::addColumn('col-lg-7'),
-            CollectionField::new('oeuvreExpositions', 'Exposition de l\'oeuvre')
+            TableField::new('oeuvreExpositions', 'Exposition de l\'oeuvre')
                 ->setEntryType(ExpositionCollectionType::class)
                 ->allowAdd()
                 ->allowDelete()
-                ->renderExpanded()
+                ->setEntryIsComplex()
                 ->hideOnIndex(),
             FormField::addTab('Localisation'),
             TableField::new('oeuvreStockages', 'Dernière localisation ')
