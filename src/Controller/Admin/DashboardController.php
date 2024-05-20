@@ -26,7 +26,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 class DashboardController extends AbstractDashboardController
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -36,11 +36,44 @@ class DashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        $repository = $this->entityManager->getRepository(Lieu::class);
-        $lieux = $repository->findAll();
+        $OeuvreRepository = $this->entityManager->getRepository(Oeuvre::class);
+
+        // Count artworks by category
+        $countArtworksByCategory = $OeuvreRepository->countArtworksByCategory();
+        // Count artworks by year
+        $countArtworksByYear = $OeuvreRepository->countArtworksByYear();
+
+        $OeuvreStockageRepository = $this->entityManager->getRepository(OeuvreStockage::class);
+
+        // Count localisation type
+        $countLocalisationType = $OeuvreStockageRepository->countLocalisationType();
+        // Count last artworks localisation
+        $countLastArtworksLocalisation = $OeuvreStockageRepository->countLastArtworksLocalisation();
+
         return $this->render('admin/dashboard.html.twig', [
-            'nb_artworks' => "Nombre d'oeuvre: 3758",
-            'lieux' => $lieux,
+            'count_total_artworks' => $OeuvreRepository->countTotalArtworks(),
+            'disk_space' => [
+                'total' => round(disk_total_space($this->getParameter('kernel.project_dir')) / 1073741824, 1),
+                'free' => disk_free_space('/') / 1073741824,
+                'used' => round((disk_total_space('/') - disk_free_space('/')) / 1073741824, 1)
+            ],
+            'count_localisation_type' => [
+                'labels' => array_column($countLocalisationType, 'type_name'),
+                'datasets' => array_column($countLocalisationType, 'sum')
+            ],
+            'count_artworks_by_category' => [
+                'labels' => array_column($countArtworksByCategory, 'name'),
+                'datasets' => array_column($countArtworksByCategory, 'sum')
+            ],
+            'count_artworks_by_year' => [
+                'labels' => array_column($countArtworksByYear, 'first_year'),
+                'datasets' => array_column($countArtworksByYear, 'sum')
+            ],
+
+            'count_last_artworks_localisation' => [
+                'labels' => array_column($countLastArtworksLocalisation, 'nom'),
+                'datasets' => array_column($countLastArtworksLocalisation, 'sum')
+            ]
         ]);
 
         //return parent::index();
@@ -95,7 +128,8 @@ class DashboardController extends AbstractDashboardController
         $assets = parent::configureAssets();
 
         return $assets
-            ->addCssFile('build/app.css');
+            ->addCssFile('build/app.css')
+            ->addJsFile('build/chart.js');
     }
 
     public function configureMenuItems(): iterable

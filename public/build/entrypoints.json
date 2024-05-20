@@ -5,6 +5,11 @@
         "/build/draggable-collection.js"
       ]
     },
+    "chart": {
+      "js": [
+        "/build/chart.js"
+      ]
+    },
     "app": {
       "css": [
         "/build/app.css"

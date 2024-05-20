@@ -21,6 +21,52 @@ class OeuvreRepository extends ServiceEntityRepository
         parent::__construct($registry, Oeuvre::class);
     }
 
+    public function countTotalArtworks()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT COUNT(*) AS `sum`
+            FROM `oeuvre`;
+";
+
+        return $conn->executeQuery($sql)->fetchOne();
+    }
+
+    public function countArtworksByCategory()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT
+                `ac`.`name`,
+                COUNT(`o`.`artwork_category_id`) AS `sum` 
+            FROM `oeuvre` AS `o`
+            JOIN `artwork_category` AS `ac`
+            ON `o`.`artwork_category_id` = `ac`.`id`
+            GROUP BY `o`.`artwork_category_id`
+            ORDER BY `ac`.`root_id`;
+        ";
+
+        return $conn->executeQuery($sql)->fetchAllAssociative();
+    }
+
+    public function countArtworksByYear()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT
+                `o`.`first_year`,
+                COUNT(`o`.`first_year`) AS `sum`
+            FROM `oeuvre` AS `o`
+            GROUP BY `o`.`first_year`
+            ORDER BY `o`.`first_year` DESC;
+        ";
+
+        return $conn->executeQuery($sql)->fetchAllAssociative();
+    }
+
 //    /**
 //     * @return Oeuvre[] Returns an array of Oeuvre objects
 //     */

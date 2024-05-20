@@ -2,7 +2,7 @@
 
 {% block head_javascript %}
     {{ parent() }}
-    <script src="{{ asset('build/test.js') }}"></script>
+
 {% endblock head_javascript %}
 
 {% block content_title %}Tableau de bord{% endblock %}
@@ -11,45 +11,193 @@
 {% endblock %}
 
 {% block main %}
-    <div class="row">
-        <div class="col-sm">
-            {{ nb_artworks }}
-        </div>
-        <div class="col-sm">
-            {% for lieu in lieux %}
-                <p>{{ lieu.nom }}</p>
-            {% endfor %}
-        </div>
-        <div class="col-sm">
-            <div>
-                <canvas id="myChart"></canvas>
+    <div class="row py-5">
+        <div class="col-4">
+            <div class="row pt-5">
+                <div class="col-6 py-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Total des &oelig;uvres</h6>
+                            <p class="card-text h1 text-center py-5">{{ count_total_artworks }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 py-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Total des bibliographies</h6>
+                            <p class="card-text h1 text-center py-5">2080</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 py-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Version du logiciel</h6>
+                            <p class="card-text h1 text-center py-5">0.1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 py-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Espace utilisé (en Go)</h6>
+                            <p class="card-text h1 text-center py-5">{{ disk_space.used }}/{{ disk_space.total }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-            <script>
-                const ctx = document.getElementById('myChart');
-
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                        datasets: [{
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            </script>
-
+        <div class="col-4">
+            <canvas id="disk-free-space"></canvas>
+        </div>
+        <div class="col-4">
+            <canvas id="count-artworks-by-category"></canvas>
         </div>
     </div>
+    <div class="row py-5">
+        <div class="col-12">
+            <canvas id="count-artworks-by-year"></canvas>
+        </div>
+    </div>
+    <div class="row py-5">
+        <div class="col-12">
+            <canvas id="count-last-artworks-localisation"></canvas>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        // Get HDD free space
+        const dfs = document.getElementById('disk-free-space');
+        new Chart(dfs, {
+            'type': 'doughnut',
+            'data': {
+                labels: {{ count_localisation_type.labels|json_encode|raw }},
+                datasets: [
+                    {
+                        label: '',
+                        data: {{ count_localisation_type.datasets|json_encode|raw }},
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Type de localisation des oeuvres'
+                    },
+                },
+                indexAxis: 'y',
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        })
+
+        const cabc = document.getElementById('count-artworks-by-category');
+
+        new Chart(cabc, {
+            type: 'pie',
+            data: {
+                labels: {{ count_artworks_by_category.labels|json_encode|raw }},
+                datasets: [{
+                    label: 'Catégories d\'oeuvres',
+                    data: {{ count_artworks_by_category.datasets|json_encode|raw }},
+                }]
+
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Nombre d\'oeuvres par catégorie'
+                    },
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        })
+
+        const caby = document.getElementById('count-artworks-by-year');
+
+        new Chart(caby, {
+            type: 'line',
+            data: {
+                labels: {{ count_artworks_by_year.labels|json_encode|raw }},
+                datasets: [{
+                    label: 'Nombre d\'oeuvres',
+                    data: {{ count_artworks_by_year.datasets|json_encode|raw }},
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Nombre d\'oeuvres par année'
+                    },
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        })
+
+        const clal = document.getElementById('count-last-artworks-localisation');
+
+        new Chart(clal, {
+            type: 'bar',
+            data: {
+                labels: {{ count_last_artworks_localisation.labels|json_encode|raw }},
+                datasets: [{
+                    label: 'Dernières localisations d\'oeuvres',
+                    data: {{ count_last_artworks_localisation.datasets|json_encode|raw }},
+                }]
+
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Nombre d\'oeuvres par catégorie'
+                    },
+                },
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        })
+    </script>
 {% endblock %}

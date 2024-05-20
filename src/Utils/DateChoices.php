@@ -31,7 +31,7 @@ class DateChoices
     public static function getLocalisationTypes(): array
     {
         return [
-            '' => 0,
+            'Inconnu' => 0,
             'Interne' => 2,
             'Externe' => 3,
         ];
