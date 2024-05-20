@@ -25,12 +25,31 @@
     </style>
 
     <div class="pdf-wrapper">
-        <div class="num-inventaire">Numéro d'inventaire #{{ oeuvre.numInventaire }}</div>
+        <div class="num-inventaire">{{ oeuvre.numInventaire }}</div>
         <img src="{{ base64Image }}" alt="" class="primary-media" />
-        <p><b>Titre :</b> {{ oeuvre.titre }}</p>
-        <p><b>Date de création :</b> {% if oeuvre.FirstDay %}{{ oeuvre.FirstDay }}/{% endif %}{% if oeuvre.FirstMonth %}{{ oeuvre.FirstMonth }}/{% endif %}{{ oeuvre.FirstYear }}</p>
-        <p><b>Dimensions :</b> {{ oeuvre.dimensions }}</p>
-        <p><b>Description :</b> {{ oeuvre.description }}</p>
-        <p><b>Commentaire :</b> {{ oeuvre.commentairePublic }}</p>
+        <p>{{ oeuvre.titre }}</p>
+        {% if oeuvre.FirstYear %}
+            <p>
+                {% if oeuvre.FirstDay %}
+                    {{ oeuvre.FirstDay }}/
+                {% endif %}
+                {% if oeuvre.FirstMonth %}
+                    {{ oeuvre.FirstMonth }}/
+                {% endif %}
+            {{ oeuvre.FirstYear }}
+            </p>
+        {% endif %}
+        {%  if oeuvre.dimensions %}
+            <p>{{ oeuvre.dimensions }}</p>
+        {% endif %}
+        {% if oeuvre.description %}
+            <p>{{ oeuvre.description }}</p>
+        {% endif %}
+        {% if oeuvre.commentairePublic %}
+            <p>{{ oeuvre.commentairePublic }}</p>
+        {% endif %}
+        {% if last_localisation.nom %}
+            <p>{{ last_localisation.nom }}</p>
+        {% endif %}
     </div>
 {% endblock %}

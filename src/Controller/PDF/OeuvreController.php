@@ -25,12 +25,19 @@ class OeuvreController extends AbstractController
         // Fetch data from `oeuvre` entity
         // This is just a placeholder, replace with your actual data fetching logic
         $oeuvresData = $this->entityManager->getRepository(Oeuvre::class)->findOneBy(['id' => $id]);
-        $base64Image = $this->convertImageToBase64($oeuvresData->getPrimaryMedia()[0]->getImageFile());
+        $lastLocalisation = $this->entityManager->getRepository(Oeuvre::class)->getLastLocalisation($id);
+        if (isset($oeuvresData->getPrimaryMedia()[0])) {
+            $base64Image = $this->convertImageToBase64($oeuvresData->getPrimaryMedia()[0]->getImageFile());
+        } else {
+            $base64Image = $this->convertImageToBase64('../public/dummy-image-square.jpg');
+        }
+
         $filename = $oeuvresData->getNumInventaire().' - '.$oeuvresData->getTitre();
 
         // Render HTML template
         $html = $this->renderView('pdf/oeuvre.html.twig', [
             'oeuvre' => $oeuvresData,
+            'last_localisation' => $lastLocalisation,
             'base64Image' => $base64Image
         ]);
 

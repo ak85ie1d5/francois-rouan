@@ -21,6 +21,26 @@ class OeuvreRepository extends ServiceEntityRepository
         parent::__construct($registry, Oeuvre::class);
     }
 
+    public function getLastLocalisation(int $id): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT
+                `l`.`nom`
+            FROM `oeuvre` AS `o`
+                JOIN `oeuvre_stockage` AS `os`
+                    ON `os`.`oeuvre_id` = `o`.`id`
+                JOIN `lieu` AS `l`
+                    ON `os`.`lieu_id` = `l`.`id`
+            WHERE `o`.`id` = :id
+            ORDER BY `l`.`id`
+            DESC LIMIT 1; 
+        ";
+
+        return $conn->executeQuery($sql, ['id' => $id])->fetchAssociative();
+    }
+
     public function countTotalArtworks()
     {
         $conn = $this->getEntityManager()->getConnection();
