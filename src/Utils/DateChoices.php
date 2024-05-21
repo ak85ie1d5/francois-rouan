@@ -32,8 +32,8 @@ class DateChoices
     {
         return [
             'Inconnu' => 0,
-            'Interne' => 2,
-            'Externe' => 3,
+            'Interne' => 1,
+            'Externe' => 2,
         ];
     }
 
@@ -41,9 +41,9 @@ class DateChoices
     {
         return [
             '' => 0,
-            'Collection publique' => 2,
-            'Collection particulière' => 3,
-            'Consignation' => 4
+            'Collection publique' => 1,
+            'Collection particulière' => 2,
+            'Consignation' => 3
         ];
     }
 }
