@@ -172,9 +172,6 @@
                 {% endfor %}
             </div>
 
-            {% if is_drag_and_drop %}
-                <div class="table-label-btn table-label-btn-arrows"></div>
-            {% endif %}
             {% if allow_delete %}
                 <div class="table-label-btn table-label-btn-delete"></div>
             {% endif %}
@@ -251,13 +248,7 @@
 
                                 {{ form_widget(form) }}
 
-                                {% if (form_parent(form).vars.prototype) and ('position' in form_parent(form).vars.prototype.children|keys) %}
-                                    <div class="table-drag-and-drop">
-                                        <button class="accordion-button {{ render_expanded ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#{{ id }}-contents">
-                                            <i class="fas fw fa-arrows-up-down form-collection-item-collapse-marker"></i>
-                                        </button>
-                                    </div>
-                                {% endif %}
+
                                 {% if allows_deleting_items and not disabled %}
 
                                     <div class="table-trash">

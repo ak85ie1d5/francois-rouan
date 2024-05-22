@@ -36,7 +36,8 @@ class OeuvreCrudController extends AbstractCrudController
         return $crud
             ->showEntityActionsInlined()
             ->setEntityLabelInSingular('oeuvre')
-            ->setEntityLabelInPlural('oeuvres');
+            ->setEntityLabelInPlural('oeuvres')
+            ->setPageTitle('edit', fn(Oeuvre $oeuvre) => sprintf('%s - %s', $oeuvre->getNumInventaire(), $oeuvre->getTitre()));
     }
 
     public static function getEntityFqcn(): string
@@ -100,16 +101,38 @@ class OeuvreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Create a new action to generate a PDF of the Oeuvre entity.
-        $pdf = Action::new('pdf', 'PDF', 'fa fa-file-pdf')
+        $pdf = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
             ->linkToRoute('pdf_oeuvre', function (Oeuvre $entity) {
                 return ['id' => $entity->getId()];
             })
             ->setHtmlAttributes([
                 'target' => '_blank',
-            ]);
+            ])
+            ->setCssClass('d-flex m-2');
+
+        // Create a new action to go back to the index page.
+        $goBack = Action::new('goBack', 'Retourner à la liste', 'fa fa-arrow-left')
+            ->linkToCrudAction('index')
+            ->setCssClass('btn btn-secondary');
 
         $actions
-            ->add(Crud::PAGE_INDEX, $pdf);
+            ->add(Crud::PAGE_INDEX, $pdf)
+            ->update(Crud::PAGE_INDEX, Action::EDIT,
+                function (Action $action) {
+                    return $action
+                        ->setLabel('Modifier/Visualiser')
+                        ->setIcon('fa fa-pencil-alt')
+                        ->addCssClass('d-flex m-2');
+                }
+            )
+            ->update(Crud::PAGE_INDEX, Action::DELETE,
+                function (Action $action) {
+                    return $action
+                        ->setIcon('fa fa-trash-alt')
+                        ->addCssClass('d-flex m-2');
+                }
+            )
+            ->add(Crud::PAGE_EDIT, $goBack);
 
         return parent::configureActions($actions);
     }
@@ -145,18 +168,20 @@ class OeuvreCrudController extends AbstractCrudController
             TextField::new('serie', 'Série')
                 ->stripTags()
                 ->hideOnIndex(),
-            TextareaField::new('details')
-                ->setMaxLength(15)
-                ->hideOnIndex(),
             FormField::addFieldset('Date de création'),
             ChoiceField::new('FirstMonth', 'Mois')
                 ->setChoices(DateChoices::getMonthChoices())
-                ->setColumns(4),
+                ->setColumns(4)
+                ->hideOnIndex(),
             IntegerField::new('FirstYear', 'Année')
-                ->setColumns(3),
+                ->setColumns(3)
+                ->hideOnIndex(),
+            TextField::new('FirstYearAlt', 'Année')
+                ->onlyOnIndex(),
             BooleanField::new('FirstDateUncertain', 'Date incertaine')
                 ->hideOnIndex()
                 ->setLabel('Date incertaine')
+                ->addCssClass('p-0 date-uncertain')
                 ->setColumns(5),
             ChoiceField::new('SecondMonth', 'Mois')
                 ->hideOnIndex()
@@ -167,6 +192,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->setColumns(3),
             BooleanField::new('SecondDateUncertain', 'Date incertaine')
                 ->hideOnIndex()
+                ->addCssClass('p-0 date-uncertain')
                 ->setColumns(5),
 
             FormField::addColumn('col-lg-4'),

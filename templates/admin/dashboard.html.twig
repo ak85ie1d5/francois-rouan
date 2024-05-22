@@ -88,7 +88,7 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Type de localisation des oeuvres'
+                        text: 'Nombre d\'oeuvres par type de localisation'
                     },
                 },
                 indexAxis: 'y',
@@ -153,7 +153,7 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Nombre d\'oeuvres par année'
+                        text: 'Nombre d\'oeuvres par année de création'
                     },
                 },
                 responsive: true,
@@ -175,7 +175,7 @@
             data: {
                 labels: {{ count_last_artworks_localisation.labels|json_encode|raw }},
                 datasets: [{
-                    label: 'Dernières localisations d\'oeuvres',
+                    label: 'Localisation actuelle des oeuvres',
                     data: {{ count_last_artworks_localisation.datasets|json_encode|raw }},
                 }]
 
@@ -185,7 +185,7 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Nombre d\'oeuvres par catégorie'
+                        text: 'Nombre d\'oeuvres par localisation'
                     },
                 },
                 responsive: true,

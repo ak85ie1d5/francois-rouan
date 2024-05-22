@@ -55,6 +55,10 @@
     border: none;
 }
 
+.table-collection #draggable-collection {
+    cursor: move;
+}
+
 .table-trash .field-collection-delete-button {
     position: relative !important;
     top: 0 !important;

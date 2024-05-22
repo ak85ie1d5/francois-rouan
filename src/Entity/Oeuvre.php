@@ -380,6 +380,18 @@ class Oeuvre
         return $this;
     }
 
+    public function getFirstYearAlt(): string
+    {
+        if ($this->isFirstDateUncertain()) {
+            return $this->getFirstYear().' ?';
+        }
+
+        if ($this->getFirstYear() === 0) {
+            return '?';
+        }
+
+        return $this->getFirstYear();
+    }
 
     public function isFirstDateUncertain(): ?bool
     {
