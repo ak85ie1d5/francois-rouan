@@ -13,6 +13,8 @@ use App\Form\Type\StockageCollectionType;
 use App\Utils\DateChoices;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -24,6 +26,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Umanit\EasyAdminTreeBundle\Field\TreeField;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -31,13 +36,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 
 class OeuvreCrudController extends AbstractCrudController
 {
+    private $adminUrlGenerator;
+
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->showEntityActionsInlined()
             ->setEntityLabelInSingular('oeuvre')
             ->setEntityLabelInPlural('oeuvres')
-            ->setPageTitle('edit', fn(Oeuvre $oeuvre) => sprintf('%s - %s', $oeuvre->getNumInventaire(), $oeuvre->getTitre()));
+            ->setPageTitle('edit', fn(Oeuvre $oeuvre) => sprintf('%s - %s', $oeuvre->getNumInventaire(), $oeuvre->getTitre()))
+            ->overrideTemplate('crud/edit', 'admin/oeuvre_edit.html.twig');
     }
 
     public static function getEntityFqcn(): string
@@ -53,8 +61,9 @@ class OeuvreCrudController extends AbstractCrudController
      * OeuvreCrudController constructor.
      * @param StorageInterface $storage
      */
-    public function __construct(StorageInterface $storage)
+    public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator)
     {
+        $this->adminUrlGenerator = $adminUrlGenerator;
         $this->storage = $storage;
     }
 
@@ -115,6 +124,17 @@ class OeuvreCrudController extends AbstractCrudController
             ->linkToCrudAction('index')
             ->setCssClass('btn btn-secondary');
 
+        // Create a new action to add a new location.
+        $newLocationModal = Action::new('newLieu', 'Ajouter un lieu')
+            ->linkToUrl('#')
+            ->addCssClass('btn btn-secondary')
+            ->setIcon('fa-fw fas fa-solid fa-location-dot')
+            ->setHtmlAttributes([
+                'id' => 'new-location-modal-action',
+                'data-bs-toggle' => 'modal',
+                'data-bs-target' => "#modal-new-location"
+            ]);
+
         $actions
             ->add(Crud::PAGE_INDEX, $pdf)
             ->update(Crud::PAGE_INDEX, Action::EDIT,
@@ -132,9 +152,17 @@ class OeuvreCrudController extends AbstractCrudController
                         ->addCssClass('d-flex m-2');
                 }
             )
+            ->add(Crud::PAGE_EDIT, $newLocationModal)
             ->add(Crud::PAGE_EDIT, $goBack);
 
         return parent::configureActions($actions);
+    }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        $assets = parent::configureAssets($assets);
+        return $assets
+            ->addJsFile(Asset::new('build/modal-new-location.js'));
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -144,7 +172,6 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('titre')
             ->add('sousTitre')
             ->add('dimensions')
-            ->add('FirstDay')
             ->add('FirstMonth')
             ->add('FirstYear')
             ->add('serie')
@@ -162,10 +189,10 @@ class OeuvreCrudController extends AbstractCrudController
             FormField::addColumn('col-lg-4'),
             TextField::new('numInventaire', 'N°inv'),
             TextField::new('titre'),
-            TextField::new('sousTitre')
+            TextField::new('sousTitre', 'Sous-titre')
                 ->stripTags()
                 ->hideOnIndex(),
-            TextField::new('serie', 'Série')
+            TextField::new('serie', 'Titre de la série')
                 ->stripTags()
                 ->hideOnIndex(),
             FormField::addFieldset('Date de création'),
@@ -178,9 +205,8 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             TextField::new('FirstYearAlt', 'Année')
                 ->onlyOnIndex(),
-            BooleanField::new('FirstDateUncertain', 'Date incertaine')
+            BooleanField::new('FirstDateUncertain', 'Date 1 incertaine')
                 ->hideOnIndex()
-                ->setLabel('Date incertaine')
                 ->addCssClass('p-0 date-uncertain')
                 ->setColumns(5),
             ChoiceField::new('SecondMonth', 'Mois')
@@ -190,7 +216,7 @@ class OeuvreCrudController extends AbstractCrudController
             IntegerField::new('SecondYear', 'Année')
                 ->hideOnIndex()
                 ->setColumns(3),
-            BooleanField::new('SecondDateUncertain', 'Date incertaine')
+            BooleanField::new('SecondDateUncertain', 'Date 2 incertaine')
                 ->hideOnIndex()
                 ->addCssClass('p-0 date-uncertain')
                 ->setColumns(5),

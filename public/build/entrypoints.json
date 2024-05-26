@@ -10,6 +10,11 @@
         "/build/chart.js"
       ]
     },
+    "modal-new-location": {
+      "js": [
+        "/build/modal-new-location.js"
+      ]
+    },
     "app": {
       "css": [
         "/build/app.css"

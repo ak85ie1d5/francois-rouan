@@ -417,6 +417,7 @@ class Oeuvre
         return $this;
     }
 
+
     public function __toString(): string
     {
         return "N° inv $this->numInventaire - $this->titre";
