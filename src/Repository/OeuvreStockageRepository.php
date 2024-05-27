@@ -50,27 +50,17 @@ class OeuvreStockageRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = "
-            SELECT
-                `os`.`type`,
-                NULL AS `type_name`,
-                COUNT(`os`.`type`) AS `sum`
-            FROM `oeuvre_stockage` AS `os`
-            GROUP BY `os`.`type`;
+            SELECT 
+                os.type AS type_id,
+                JSON_EXTRACT(o.value, CONCAT('$[', os.type, ']')) AS type_name,
+                COUNT(os.type) AS sum
+            FROM oeuvre_stockage AS os
+                JOIN options AS o
+                    ON o.name = 'localisation_types'
+            GROUP BY os.type;
         ";
 
-        $results = $conn->executeQuery($sql)->fetchAllAssociative();
-
-        // Get the localisation types name
-        $LocalisationTypes = DateChoices::getLocalisationTypes();
-        foreach ($results as $key => $result) {
-            foreach ($result as $k => $v) {
-                if ($k === 'type') {
-                    $results[$key]['type_name'] = array_search($v, $LocalisationTypes);
-                }
-            }
-        }
-
-        return $results;
+        return $conn->executeQuery($sql)->fetchAllAssociative();
     }
 
 //    /**

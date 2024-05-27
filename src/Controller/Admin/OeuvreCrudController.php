@@ -10,7 +10,7 @@ use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\OeuvreMediaTestType;
 use App\Form\Type\PrimaryMediaType;
 use App\Form\Type\StockageCollectionType;
-use App\Utils\DateChoices;
+use App\Service\Options;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
@@ -27,8 +27,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Umanit\EasyAdminTreeBundle\Field\TreeField;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -37,6 +35,23 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 class OeuvreCrudController extends AbstractCrudController
 {
     private $adminUrlGenerator;
+
+    private $storage;
+
+    private $options;
+
+    /**
+     * Inject the StorageInterface instance into the controller.
+     *
+     * OeuvreCrudController constructor.
+     * @param StorageInterface $storage
+     */
+    public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator, Options $options)
+    {
+        $this->adminUrlGenerator = $adminUrlGenerator;
+        $this->storage = $storage;
+        $this->options = $options;
+    }
 
     public function configureCrud(Crud $crud): Crud
     {
@@ -51,20 +66,6 @@ class OeuvreCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Oeuvre::class;
-    }
-
-    private $storage;
-
-    /**
-     * Inject the StorageInterface instance into the controller.
-     *
-     * OeuvreCrudController constructor.
-     * @param StorageInterface $storage
-     */
-    public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator)
-    {
-        $this->adminUrlGenerator = $adminUrlGenerator;
-        $this->storage = $storage;
     }
 
     /**
@@ -197,7 +198,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             FormField::addFieldset('Date de création'),
             ChoiceField::new('FirstMonth', 'Mois')
-                ->setChoices(DateChoices::getMonthChoices())
+                ->setChoices($this->options->getMonthTextual())
                 ->setColumns(4)
                 ->hideOnIndex(),
             IntegerField::new('FirstYear', 'Année')
@@ -211,7 +212,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->setColumns(5),
             ChoiceField::new('SecondMonth', 'Mois')
                 ->hideOnIndex()
-                ->setChoices(DateChoices::getMonthChoices())
+                ->setChoices($this->options->getDayNumeric())
                 ->setColumns(4),
             IntegerField::new('SecondYear', 'Année')
                 ->hideOnIndex()

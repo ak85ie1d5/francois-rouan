@@ -10,6 +10,7 @@ use App\Entity\OeuvreExposition;
 use App\Entity\OeuvreHistorique;
 use App\Entity\OeuvreMediaTest;
 use App\Entity\OeuvreStockage;
+use App\Entity\Options;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -146,6 +147,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Oeuvre Exposition', 'fa-solid fa-building-columns', OeuvreExposition::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Localisation', 'fas fa-solid fa-location-dot', OeuvreStockage::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Media', 'fa-solid fa-image', OeuvreMediaTest::class)->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Options', 'fa fa-cog', Options::class)->setPermission('ROLE_SUPERADMIN');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

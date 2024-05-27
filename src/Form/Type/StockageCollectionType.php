@@ -4,7 +4,7 @@ namespace App\Form\Type;
 
 use App\Entity\Lieu;
 use App\Entity\OeuvreStockage;
-use App\Utils\DateChoices;
+use App\Service\Options;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,25 +15,32 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StockageCollectionType extends AbstractType
 {
+    private Options $options;
+
+    public function __construct(Options $options)
+    {
+        $this->options = $options;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('FirstDay', ChoiceType::class, [
-                'choices' => DateChoices::getDayChoices(),
+                'choices' => $this->options->getDayNumeric(),
                 'label' => 'Jour'
             ])
             ->add('FirstMonth', ChoiceType::class, [
-                'choices' => DateChoices::getMonthChoices(),
+                'choices' => $this->options->getMonthTextual(),
                 'label' => 'Mois'
             ])
             ->add('FirstYear', IntegerType::class, [
                 'label' => 'Année'
             ])
             ->add('type', ChoiceType::class, [
-                'choices' => DateChoices::getLocalisationTypes()
+                'choices' => $this->options->getLocationTypes()
             ])
             ->add('precisions', ChoiceType::class, [
-                'choices' => DateChoices::getLocalisationDetails()
+                'choices' => $this->options->getLocationDetails()
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,

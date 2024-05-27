@@ -1,17 +1,12 @@
 <?php
 namespace App\Form\Type;
 
-use App\Controller\Admin\LieuCrudController;
 use App\Entity\Lieu;
 use App\Entity\OeuvreExposition;
-
-use App\Utils\DateChoices;
+use App\Service\Options;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,6 +15,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExpositionCollectionType extends AbstractType
 {
+    private $options;
+
+    public function __construct(Options $options)
+    {
+        $this->options = $options;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // Ajoutez ici les champs que vous souhaitez afficher pour chaque élément de la collection OeuvreHistorique
@@ -28,22 +30,22 @@ class ExpositionCollectionType extends AbstractType
             ->add('description', TextareaType::class)
             ->add('commentaire', TextareaType::class)
             ->add('FirstDay', ChoiceType::class, [
-                'choices' => DateChoices::getDayChoices(),
+                'choices' => $this->options->getDayNumeric(),
                 'label' => 'Jour'
             ])
             ->add('FirstMonth', ChoiceType::class, [
-                'choices' => DateChoices::getMonthChoices(),
+                'choices' => $this->options->getMonthTextual(),
                 'label' => 'Mois'
             ])
             ->add('FirstYear', IntegerType::class, [
                 'label' => 'Année'
             ])
             ->add('SecondDay', ChoiceType::class, [
-                'choices' => DateChoices::getDayChoices(),
+                'choices' => $this->options->getDayNumeric(),
                 'label' => 'Jour'
             ])
             ->add('SecondMonth', ChoiceType::class, [
-                'choices' => DateChoices::getMonthChoices(),
+                'choices' => $this->options->getMonthTextual(),
                 'label' => 'Mois'
             ])
             ->add('SecondYear', IntegerType::class, [
