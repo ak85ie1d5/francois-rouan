@@ -48,6 +48,7 @@ class DashboardController extends AbstractDashboardController
 
         // Count localisation type
         $countLocalisationType = $OeuvreStockageRepository->countLocalisationType();
+
         // Count last artworks localisation
         $countLastArtworksLocalisation = $OeuvreStockageRepository->countLastArtworksLocalisation();
 

@@ -52,11 +52,11 @@ class OeuvreStockageRepository extends ServiceEntityRepository
         $sql = "
             SELECT 
                 os.type AS type_id,
-                JSON_EXTRACT(o.value, CONCAT('$[', os.type, ']')) AS type_name,
+                 JSON_UNQUOTE(JSON_EXTRACT(o.value, CONCAT('$[', os.type, ']'))) AS type_name,
                 COUNT(os.type) AS sum
             FROM oeuvre_stockage AS os
                 JOIN options AS o
-                    ON o.name = 'localisation_types'
+                    ON o.name = 'location_types'
             GROUP BY os.type;
         ";
 
