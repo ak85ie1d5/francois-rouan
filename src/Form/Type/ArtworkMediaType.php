@@ -2,7 +2,7 @@
 
 namespace App\Form\Type;
 
-use App\Entity\OeuvreMediaTest;
+use App\Entity\ArtworkMedia;
 use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -13,33 +13,28 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
-class OeuvreMediaTestType extends AbstractType
+class ArtworkMediaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('imageFile', VichImageType::class, [
                 'allow_delete' => false,
-                'label' => ''
+                'label' => 'Image'
             ])
-            ->add('nom', TextType::class)
-            ->add('description', TextareaType::class)
+            ->add('description', TextareaType::class, [
+                'attr' => [
+                    'rows' => 5
+                ],
+            ])
             ->add('position', HiddenType::class)
-            ->add('createur', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'id',
-            ])
-            ->add('modificateur', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => OeuvreMediaTest::class,
+            'data_class' => ArtworkMedia::class,
         ]);
     }
 

@@ -3,7 +3,7 @@
 
 namespace App\Command;
 
-use App\Entity\OeuvreMediaTest;
+use App\Entity\ArtworkMedia;
 use App\Service\ThumbnailListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -36,7 +36,7 @@ class GenerateThumbnailsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $entities = $this->entityManager->getRepository(OeuvreMediaTest::class)->findAll();
+        $entities = $this->entityManager->getRepository(ArtworkMedia::class)->findAll();
 
         foreach ($entities as $entity) {
             $mapping = $this->propertyMappingFactory->fromField($entity, 'imageFile');

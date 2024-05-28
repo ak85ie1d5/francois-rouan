@@ -64,7 +64,7 @@ class Oeuvre
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist"])]
     private Collection $oeuvreHistoriques;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreMediaTest::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: ArtworkMedia::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     #[ORM\OrderBy(["position" => "ASC"])]
     private Collection $mediaTest;
 
@@ -323,14 +323,14 @@ class Oeuvre
     }
 
     /**
-     * @return Collection<int, OeuvreMediaTest>
+     * @return Collection<int, ArtworkMedia>
      */
     public function getMediaTest(): Collection
     {
         return $this->mediaTest;
     }
 
-    public function addMediaTest(OeuvreMediaTest $mediaTest): static
+    public function addMediaTest(ArtworkMedia $mediaTest): static
     {
         if (!$this->mediaTest->contains($mediaTest)) {
             $this->mediaTest->add($mediaTest);
@@ -340,7 +340,7 @@ class Oeuvre
         return $this;
     }
 
-    public function removeMediaTest(OeuvreMediaTest $mediaTest): static
+    public function removeMediaTest(ArtworkMedia $mediaTest): static
     {
         if ($this->mediaTest->removeElement($mediaTest)) {
             // set the owning side to null (unless already changed)

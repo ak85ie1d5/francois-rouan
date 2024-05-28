@@ -74,8 +74,8 @@ class UtilisateurCrudController extends AbstractCrudController
 
             FormField::addColumn('col-lg-5'),
             FormField::addColumn('col-lg-2'),
-            DateField::new('dateCreation')->setDisabled()->hideWhenCreating(),
-            DateField::new('dateModification')->setDisabled()->hideWhenCreating(),
+            DateField::new('created_at')->setDisabled()->hideWhenCreating(),
+            DateField::new('updated_at')->setDisabled()->hideWhenCreating(),
             DateField::new('derniereConnexion')->setDisabled()->hideWhenCreating()
 
         ];

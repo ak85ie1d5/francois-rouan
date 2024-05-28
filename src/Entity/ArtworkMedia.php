@@ -2,18 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\OeuvreMediaTestRepository;
+use App\Repository\ArtworkMediaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: OeuvreMediaTestRepository::class)]
+#[ORM\Entity(repositoryClass: ArtworkMediaRepository::class)]
 #[Vich\Uploadable]
 #[ORM\HasLifecycleCallbacks]
-class OeuvreMediaTest
+class ArtworkMedia
 {
+    use Trait\TimeColumnTrait, Trait\UserColumnTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -28,27 +30,8 @@ class OeuvreMediaTest
     #[ORM\Column]
     private ?int $position = 0;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $createur = null;
-
-    #[ORM\ManyToOne]
-    private ?Utilisateur $modificateur = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateModification = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
-
-    #[ORM\Column(length: 30, nullable: true)]
-    private ?string $emplacement = null;
-
-    #[ORM\Column(length: 5, nullable: true)]
-    private ?string $extension = null;
 
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $mime = null;
@@ -108,53 +91,6 @@ class OeuvreMediaTest
         return $this;
     }
 
-    public function getCreateur(): ?Utilisateur
-    {
-
-        return $this->createur;
-    }
-
-    public function setCreateur(?Utilisateur $createur): static
-    {
-        $this->createur = $createur;
-
-        return $this;
-    }
-
-    public function getModificateur(): ?Utilisateur
-    {
-        return $this->modificateur;
-    }
-
-    public function setModificateur(?Utilisateur $modificateur): static
-    {
-        $this->modificateur = $modificateur;
-
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    #[ORM\PrePersist]
-    public function setDateCreation(): void
-    {
-        $this->dateCreation = new \DateTime();
-    }
-
-    public function getDateModification(): ?\DateTimeInterface
-    {
-        return $this->dateModification;
-    }
-
-    #[ORM\PreUpdate]
-    public function setDateModification(): void
-    {
-        $this->dateModification = new \DateTime();
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -164,30 +100,6 @@ class OeuvreMediaTest
     public function setNom(string $nom = null): static
     {
         $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getEmplacement(): ?string
-    {
-        return $this->emplacement;
-    }
-
-    public function setEmplacement(?string $emplacement): static
-    {
-        $this->emplacement = $emplacement;
-
-        return $this;
-    }
-
-    public function getExtension(): ?string
-    {
-        return $this->extension;
-    }
-
-    public function setExtension(?string $extension): static
-    {
-        $this->extension = $extension;
 
         return $this;
     }
@@ -275,7 +187,7 @@ class OeuvreMediaTest
         $this->thumbnailFile = $thumbnailFile;
 
         if (null !== $thumbnailFile) {
-            $this->dateModification = new \DateTimeImmutable();
+            $this->updatedAt = new \DateTimeImmutable();
         }
     }
 

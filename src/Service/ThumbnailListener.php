@@ -1,7 +1,7 @@
 <?php
 namespace App\Service;
 
-use App\Entity\OeuvreMediaTest;
+use App\Entity\ArtworkMedia;
 use Vich\UploaderBundle\Event\Event;
 use Vich\UploaderBundle\Event\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -22,7 +22,7 @@ class ThumbnailListener implements EventSubscriberInterface
         $entity = $event->getObject();
 
         // Ensure the entity is an instance of the class that holds the uploaded file
-        if (!$entity instanceof OeuvreMediaTest) {
+        if (!$entity instanceof ArtworkMedia) {
             return;
         }
 
@@ -45,7 +45,7 @@ class ThumbnailListener implements EventSubscriberInterface
         $entity = $event->getObject();
 
         // Ensure the entity is an instance of the class that holds the uploaded file
-        if (!$entity instanceof OeuvreMediaTest) {
+        if (!$entity instanceof ArtworkMedia) {
             return;
         }
 

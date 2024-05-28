@@ -1,7 +1,7 @@
 <?php
 namespace App\Admin\Field;
 
-use App\Form\Type\OeuvreMediaTestType;
+use App\Form\Type\ArtworkMediaType;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;

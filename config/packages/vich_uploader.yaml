@@ -13,7 +13,7 @@ vich_uploader:
                 service: Vich\UploaderBundle\Naming\CurrentDateTimeDirectoryNamer
                 options:
                     date_time_format: 'Y/m'
-                    date_time_property: dateCreation
+                    date_time_property: created_at
             inject_on_load: true
             delete_on_update: true
             delete_on_remove: true

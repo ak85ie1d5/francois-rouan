@@ -3,11 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Admin\Field\VichImageField;
-use App\Entity\OeuvreMediaTest;
+use App\Entity\ArtworkMedia;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
@@ -17,11 +19,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 
-class OeuvreMediaTestCrudController extends AbstractCrudController
+class ArtworkMediaCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return OeuvreMediaTest::class;
+        return ArtworkMedia::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -36,10 +38,17 @@ class OeuvreMediaTestCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
-        $oeuvreMediaTest = new OeuvreMediaTest();
-        $oeuvreMediaTest->setCreateur($this->getUser());
+        $artworkMedia = new ArtworkMedia();
+        $artworkMedia->setCreatedBy($this->getUser());
 
-        return $oeuvreMediaTest;
+        return $artworkMedia;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setUpdatedBy($this->getUser());
+
+        parent::updateEntity($entityManager, $entityInstance);
     }
 
     public function configureFields(string $pageName): iterable
@@ -49,8 +58,6 @@ class OeuvreMediaTestCrudController extends AbstractCrudController
             TextareaField::new('description'),
             IntegerField::new('position'),
             TextField::new('nom')
-                ->hideWhenCreating(),
-            TextField::new('emplacement')
                 ->hideWhenCreating(),
             TextField::new('extension')
                 ->hideWhenCreating(),
@@ -67,16 +74,16 @@ class OeuvreMediaTestCrudController extends AbstractCrudController
                 ->setFormType(VichImageType::class)
                 ->hideOnIndex(),
             FormField::addColumn('col-lg-2'),
-            DateTimeField::new('dateCreation')
+            DateField::new('createdAt')
+                ->setDisabled()
+                ->hideWhenCreating(),
+            DateField::new('updatedAt')
+                ->setDisabled()
+                ->hideWhenCreating(),
+            AssociationField::new('createdBy')
                 ->setDisabled()
                 ->onlyOnForms(),
-            DateTimeField::new('dateModification')
-                ->setDisabled()
-                ->onlyOnForms(),
-            AssociationField::new('createur')
-                ->setDisabled()
-                ->onlyOnForms(),
-            AssociationField::new('modificateur')
+            AssociationField::new('updatedBy')
                 ->setDisabled()
                 ->onlyOnForms(),
         ];

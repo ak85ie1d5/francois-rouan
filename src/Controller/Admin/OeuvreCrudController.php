@@ -7,7 +7,7 @@ use App\Entity\Oeuvre;
 use App\Form\Type\BibliographieColectionType;
 use App\Form\Type\ExpositionCollectionType;
 use App\Form\Type\HistoryCollectionType;
-use App\Form\Type\OeuvreMediaTestType;
+use App\Form\Type\ArtworkMediaType;
 use App\Form\Type\PrimaryMediaType;
 use App\Form\Type\StockageCollectionType;
 use App\Service\Options;
@@ -275,7 +275,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->setEntryIsComplex(),
             FormField::addTab('Médias'),
             TableField::new('mediaTest', 'Image principale')
-                ->setEntryType(OeuvreMediaTestType::class)
+                ->setEntryType(ArtworkMediaType::class)
                 ->setTemplatePath('admin/vich_image_collection.html.twig')
                 ->allowAdd()
                 ->allowDelete()
