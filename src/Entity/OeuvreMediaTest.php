@@ -6,6 +6,7 @@ use App\Repository\OeuvreMediaTestRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: OeuvreMediaTestRepository::class)]
@@ -229,7 +230,7 @@ class OeuvreMediaTest
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     * @param File|null $imageFile
      */
     public function setImageFile(?File $imageFile = null): void
     {
@@ -249,6 +250,7 @@ class OeuvreMediaTest
 
     public function __toString(): string
     {
-        return $this->nom;
+        //return $this->nom;
+        return '';
     }
 }
