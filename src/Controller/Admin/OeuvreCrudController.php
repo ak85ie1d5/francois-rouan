@@ -238,6 +238,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->setEntryType(PrimaryMediaType::class)
                 ->addCssClass('primary-media')
                 ->addCssFiles('/build/primary-media.css')
+                ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-image.js'))
                 ->hideOnIndex()
                 ->allowAdd(false)
                 ->allowDelete(false)

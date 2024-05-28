@@ -4,11 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VichImageField;
 use App\Entity\OeuvreMediaTest;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -58,11 +60,12 @@ class OeuvreMediaTestCrudController extends AbstractCrudController
                 ->hideWhenCreating(),
             AssociationField::new('oeuvre')
                 ->hideWhenCreating(),
-            VichImageField::new('imageFile'),
-            TextareaField::new('imageFile')
+            FormField::addColumn('col-lg-5'),
+            ImageField::new('imageFile', 'Image')
+                ->onlyOnIndex(),
+            TextareaField::new('imageFile', 'Image')
                 ->setFormType(VichImageType::class)
                 ->hideOnIndex(),
-            FormField::addColumn('col-lg-5'),
             FormField::addColumn('col-lg-2'),
             DateTimeField::new('dateCreation')
                 ->setDisabled()

@@ -5,7 +5,7 @@
 {% if field.formattedValue %}
     {% for image in field.value %}
         {% if image.position == 1 %}
-            <img src="{{ vich_uploader_asset(image) }}" alt="{{ image.nom }}" width="200px" class="img-fluid" />
+            <img src="{{ vich_uploader_asset(image, 'thumbnailFile') }}" alt="{{ image.nom }}" width="200px" class="img-fluid" />
         {% endif %}
     {% endfor %}
 {% else %}

@@ -15,7 +15,8 @@ class VichImageField implements FieldInterface
     {
         return (new self())
             ->setProperty($propertyName)
-            ->setTemplatePath('admin/vich_image.html.twig')
+            //->setTemplatePath('admin/vich_image.html.twig')
+            ->setTemplateName('crud/field/image')
             ->setLabel($label)
             ->setFormType(VichImageType::class)
             ->setFormTypeOptions(['delete_label' => 'Delete image ?'])

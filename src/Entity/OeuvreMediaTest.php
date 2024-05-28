@@ -62,6 +62,11 @@ class OeuvreMediaTest
     #[Vich\UploadableField(mapping: 'artworks', fileNameProperty: 'nom', size: 'taille', mimeType: 'mime', originalName: 'libelle')]
     private ?File $imageFile = null;
 
+    private ?string $thumbnailName = null;
+
+    #[Vich\UploadableField(mapping: 'artworks', fileNameProperty: 'thumbnailName')]
+    private ?File $thumbnailFile = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -248,9 +253,34 @@ class OeuvreMediaTest
         return $this->imageFile;
     }
 
+    public function getThumbnailName(): string
+    {
+        return 'thumbnail_'.$this->nom;
+    }
+
+    public function setThumbnailName(string $thumbnailName = null): static
+    {
+        $this->thumbnailName = $thumbnailName;
+
+        return $this;
+    }
+
+    public function getThumbnailFile(): ?File
+    {
+        return $this->thumbnailFile;
+    }
+
+    public function setThumbnailFile(?File $thumbnailFile = null): void
+    {
+        $this->thumbnailFile = $thumbnailFile;
+
+        if (null !== $thumbnailFile) {
+            $this->dateModification = new \DateTimeImmutable();
+        }
+    }
+
     public function __toString(): string
     {
-        //return $this->nom;
-        return '';
+        return $this->nom;
     }
 }
