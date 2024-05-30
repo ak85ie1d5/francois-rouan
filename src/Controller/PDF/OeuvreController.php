@@ -12,7 +12,7 @@ use Dompdf\Options;
 
 class OeuvreController extends AbstractController
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -34,11 +34,16 @@ class OeuvreController extends AbstractController
 
         $filename = $oeuvresData->getNumInventaire().' - '.$oeuvresData->getTitre();
 
+        $monthTextual = $this->entityManager->getRepository(\App\Entity\Options::class)->findOneBy(['name' => 'month_textual'])->getValue();
+        $separator = $this->entityManager->getRepository(\App\Entity\Options::class)->findOneBy(['name' => 'date_separator'])->getValue();
+
         // Render HTML template
         $html = $this->renderView('pdf/oeuvre.html.twig', [
             'oeuvre' => $oeuvresData,
             'last_localisation' => $lastLocalisation,
-            'base64Image' => $base64Image
+            'base64Image' => $base64Image,
+            'month_textual' => $monthTextual,
+            'separator' => $separator
         ]);
 
         // Configure Dompdf according to your needs

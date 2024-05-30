@@ -30,23 +30,29 @@
         <p>{{ oeuvre.titre }}</p>
         {% if oeuvre.FirstYear %}
             <p>
-                {% if oeuvre.FirstDay %}
-                    {{ oeuvre.FirstDay }}/
-                {% endif %}
                 {% if oeuvre.FirstMonth %}
-                    {{ oeuvre.FirstMonth }}/
+                    {{ month_textual[oeuvre.FirstMonth] }}
                 {% endif %}
-            {{ oeuvre.FirstYear }}
+                {{ oeuvre.FirstYear }}
+                {% if oeuvre.dateSeparator %}
+                    {{ separator[oeuvre.dateSeparator] }}
+                {% endif %}
+                {% if oeuvre.SecondMonth %}
+                    {{ month_textual[oeuvre.SecondMonth] }}
+                {% endif %}
+                {% if oeuvre.SecondYear %}
+                    {{ oeuvre.SecondYear }}
+                {% endif %}
             </p>
         {% endif %}
         {%  if oeuvre.dimensions %}
             <p>{{ oeuvre.dimensions }}</p>
         {% endif %}
         {% if oeuvre.description %}
-            <p>{{ oeuvre.description }}</p>
+            <p>{{ oeuvre.description|nl2br }}</p>
         {% endif %}
         {% if oeuvre.commentairePublic %}
-            <p>{{ oeuvre.commentairePublic }}</p>
+            <p>{{ oeuvre.commentairePublic|nl2br }}</p>
         {% endif %}
         {% if last_localisation.nom %}
             <p>{{ last_localisation.nom }}</p>

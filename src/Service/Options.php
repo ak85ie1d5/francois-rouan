@@ -14,6 +14,8 @@ class Options
 
     private array $monthTextual = [];
 
+    private array $dateSeparator = [];
+
     public function __construct(OptionsRepository $optionsRepository)
     {
         $this->optionsRepository = $optionsRepository;
@@ -49,5 +51,14 @@ class Options
     public function getDayNumeric(): array
     {
         return range(0, 31);
+    }
+
+    public function getDateSeparator(): array
+    {
+        if ($this->optionsRepository->findOneBy(['name' => 'date_separator'])) {
+            $this->dateSeparator = array_flip($this->optionsRepository->findOneBy(['name' => 'date_separator'])->getValue());
+        }
+
+        return $this->dateSeparator;
     }
 }

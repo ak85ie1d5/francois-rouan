@@ -80,6 +80,12 @@ class Oeuvre
     #[ORM\Column]
     private ?bool $SecondDateUncertain = null;
 
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $dateSeparator = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $dateComplement = null;
+
     public function __construct(StorageInterface $storage)
     {
         $this->oeuvreBibliographies = new ArrayCollection();
@@ -387,7 +393,7 @@ class Oeuvre
         }
 
         if ($this->getFirstYear() === 0) {
-            return '?';
+            return '';
         }
 
         return $this->getFirstYear();
@@ -421,5 +427,29 @@ class Oeuvre
     public function __toString(): string
     {
         return "N° inv $this->numInventaire - $this->titre";
+    }
+
+    public function getDateSeparator(): ?int
+    {
+        return $this->dateSeparator;
+    }
+
+    public function setDateSeparator(?int $dateSeparator): static
+    {
+        $this->dateSeparator = $dateSeparator;
+
+        return $this;
+    }
+
+    public function getDateComplement(): ?string
+    {
+        return $this->dateComplement;
+    }
+
+    public function setDateComplement(?string $dateComplement): static
+    {
+        $this->dateComplement = $dateComplement;
+
+        return $this;
     }
 }

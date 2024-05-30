@@ -9,7 +9,6 @@ use App\Controller\Admin\Filter\HistoryFilter;
 use App\Controller\Admin\Filter\LocationFilter;
 use App\Entity\Oeuvre;
 use App\Form\Type\BibliographieColectionType;
-use App\Form\Type\ExhibitionFilterType;
 use App\Form\Type\ExpositionCollectionType;
 use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\ArtworkMediaType;
@@ -116,7 +115,7 @@ class OeuvreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Create a new action to generate a PDF of the Oeuvre entity.
-        $pdf = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
+        $pdfLink = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
             ->linkToRoute('pdf_oeuvre', function (Oeuvre $entity) {
                 return ['id' => $entity->getId()];
             })
@@ -124,6 +123,15 @@ class OeuvreCrudController extends AbstractCrudController
                 'target' => '_blank',
             ])
             ->setCssClass('d-flex m-2');
+
+        $pdfBtn = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
+            ->linkToRoute('pdf_oeuvre', function (Oeuvre $entity) {
+                return ['id' => $entity->getId()];
+            })
+            ->setHtmlAttributes([
+                'target' => '_blank',
+            ])
+            ->setCssClass('btn btn-danger');
 
         // Create a new action to go back to the index page.
         $goBack = Action::new('goBack', 'Retourner à la liste', 'fa fa-arrow-left')
@@ -142,7 +150,7 @@ class OeuvreCrudController extends AbstractCrudController
             ]);
 
         $actions
-            ->add(Crud::PAGE_INDEX, $pdf)
+            ->add(Crud::PAGE_INDEX, $pdfLink)
             ->update(Crud::PAGE_INDEX, Action::EDIT,
                 function (Action $action) {
                     return $action
@@ -159,6 +167,7 @@ class OeuvreCrudController extends AbstractCrudController
                 }
             )
             ->add(Crud::PAGE_EDIT, $newLocationModal)
+            ->add(Crud::PAGE_EDIT, $pdfBtn)
             ->add(Crud::PAGE_EDIT, $goBack);
 
         return parent::configureActions($actions);
@@ -212,15 +221,16 @@ class OeuvreCrudController extends AbstractCrudController
             IntegerField::new('FirstYear', 'Année')
                 ->setColumns(3)
                 ->hideOnIndex(),
-            TextField::new('FirstYearAlt', 'Année')
-                ->onlyOnIndex(),
             BooleanField::new('FirstDateUncertain', 'Date 1 incertaine')
                 ->hideOnIndex()
                 ->addCssClass('p-0 date-uncertain')
                 ->setColumns(5),
+            ChoiceField::new('dateSeparator', 'Séparateur')
+                ->hideOnIndex()
+                ->setChoices($this->options->getDateSeparator()),
             ChoiceField::new('SecondMonth', 'Mois')
                 ->hideOnIndex()
-                ->setChoices($this->options->getDayNumeric())
+                ->setChoices($this->options->getMonthTextual())
                 ->setColumns(4),
             IntegerField::new('SecondYear', 'Année')
                 ->hideOnIndex()
@@ -229,6 +239,9 @@ class OeuvreCrudController extends AbstractCrudController
                 ->hideOnIndex()
                 ->addCssClass('p-0 date-uncertain')
                 ->setColumns(5),
+            TextField::new('DateComplement', 'Complément de date'),
+            TextField::new('FirstYearAlt', 'Année')
+                ->onlyOnIndex(),
 
             FormField::addColumn('col-lg-4'),
             TextField::new('dimensions')
@@ -242,7 +255,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->stripTags()
                 ->hideOnIndex(),
             FormField::addColumn('col-lg-3'),
-            CollectionField::new('primary_media', 'Image(s) de l\'oeuvre')
+            CollectionField::new('primary_media', 'Image principale')
                 ->setEntryType(PrimaryMediaType::class)
                 ->addCssClass('primary-media')
                 ->addCssFiles('/build/primary-media.css')
@@ -268,7 +281,6 @@ class OeuvreCrudController extends AbstractCrudController
                 ->setEntryIsComplex()
                 ->hideOnIndex(),
             FormField::addTab('Exposition'),
-            FormField::addColumn('col-lg-7'),
             TableField::new('oeuvreExpositions', 'Exposition de l\'oeuvre')
                 ->setEntryType(ExpositionCollectionType::class)
                 ->allowAdd()
@@ -282,7 +294,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowDelete()
                 ->setEntryIsComplex(),
             FormField::addTab('Médias'),
-            TableField::new('mediaTest', 'Image principale')
+            TableField::new('mediaTest', 'Image de l\'oeuvre')
                 ->setEntryType(ArtworkMediaType::class)
                 ->setTemplatePath('admin/vich_image_collection.html.twig')
                 ->allowAdd()

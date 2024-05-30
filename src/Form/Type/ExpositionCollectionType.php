@@ -44,11 +44,13 @@ class ExpositionCollectionType extends AbstractType
             ])
             ->add('SecondDay', ChoiceType::class, [
                 'choices' => $this->options->getDayNumeric(),
-                'label' => 'Jour'
+                'label' => 'Jour',
+                'placeholder' => ''
             ])
             ->add('SecondMonth', ChoiceType::class, [
                 'choices' => $this->options->getMonthTextual(),
-                'label' => 'Mois'
+                'label' => 'Mois',
+                'placeholder' => ''
             ])
             ->add('SecondYear', IntegerType::class, [
                 'label' => 'Année'
