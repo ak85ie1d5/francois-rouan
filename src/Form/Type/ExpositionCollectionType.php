@@ -31,11 +31,13 @@ class ExpositionCollectionType extends AbstractType
             ->add('commentaire', TextareaType::class)
             ->add('FirstDay', ChoiceType::class, [
                 'choices' => $this->options->getDayNumeric(),
-                'label' => 'Jour'
+                'label' => 'Jour',
+                'placeholder' => ''
             ])
             ->add('FirstMonth', ChoiceType::class, [
                 'choices' => $this->options->getMonthTextual(),
-                'label' => 'Mois'
+                'label' => 'Mois',
+                'placeholder' => ''
             ])
             ->add('FirstYear', IntegerType::class, [
                 'label' => 'Année'
@@ -53,7 +55,8 @@ class ExpositionCollectionType extends AbstractType
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
-                'choice_label' => 'nom'
+                'choice_label' => 'nom',
+                'placeholder' => ''
             ]);
     }
 

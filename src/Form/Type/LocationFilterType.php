@@ -8,36 +8,22 @@ use App\Service\Options;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StockageCollectionType extends AbstractType
+class locationFilterType extends AbstractType
 {
     private Options $options;
 
     public function __construct(Options $options)
     {
-        $this->options = $options;
+        $this->options= $options;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('FirstDay', ChoiceType::class, [
-                'choices' => $this->options->getDayNumeric(),
-                'label' => 'Jour',
-                'placeholder' => ''
-            ])
-            ->add('FirstMonth', ChoiceType::class, [
-                'choices' => $this->options->getMonthTextual(),
-                'label' => 'Mois',
-                'placeholder' => ''
-            ])
-            ->add('FirstYear', IntegerType::class, [
-                'label' => 'Année'
-            ])
             ->add('type', ChoiceType::class, [
                 'choices' => $this->options->getLocationTypes(),
                 'placeholder' => ''
@@ -48,11 +34,9 @@ class StockageCollectionType extends AbstractType
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
-                'choice_label' => 'nom',
-                'placeholder' => '',
+                'placeholder' => ''
             ])
-            ->add('description', TextareaType::class)
-            ->add('commentaire', TextareaType::class);
+            ->add('description', TextareaType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

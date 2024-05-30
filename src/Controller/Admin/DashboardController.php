@@ -55,9 +55,9 @@ class DashboardController extends AbstractDashboardController
         return $this->render('admin/dashboard.html.twig', [
             'count_total_artworks' => $OeuvreRepository->countTotalArtworks(),
             'disk_space' => [
-                'total' => round(disk_total_space($this->getParameter('kernel.project_dir')) / 1073741824, 1),
+                'total' => number_format(disk_total_space($this->getParameter('kernel.project_dir')) / 1073741824, 1, ',', ' '),
                 'free' => disk_free_space('/') / 1073741824,
-                'used' => round((disk_total_space('/') - disk_free_space('/')) / 1073741824, 1)
+                'used' => number_format((disk_total_space('/') - disk_free_space('/')) / 1073741824, 1, ',', ' ')
             ],
             'count_localisation_type' => [
                 'labels' => array_column($countLocalisationType, 'type_name'),

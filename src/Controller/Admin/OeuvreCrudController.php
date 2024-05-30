@@ -3,8 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Admin\Field\TableField;
+use App\Controller\Admin\Filter\BibliographyFilter;
+use App\Controller\Admin\Filter\ExhibitionFilter;
+use App\Controller\Admin\Filter\HistoryFilter;
+use App\Controller\Admin\Filter\LocationFilter;
 use App\Entity\Oeuvre;
 use App\Form\Type\BibliographieColectionType;
+use App\Form\Type\ExhibitionFilterType;
 use App\Form\Type\ExpositionCollectionType;
 use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\ArtworkMediaType;
@@ -173,12 +178,15 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('titre')
             ->add('sousTitre')
             ->add('dimensions')
-            ->add('FirstMonth')
             ->add('FirstYear')
             ->add('serie')
             ->add('description')
             ->add('commentairePublic')
             ->add('ArtworkCategory')
+            ->add(HistoryFilter::new('oeuvreHistoriques', 'Historique'))
+            ->add(BibliographyFilter::new('oeuvreBibliographies', 'Bibliographies'))
+            ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
+            ->add(LocationFilter::new('oeuvreStockages', 'Localisation'))
             ->add(EntityFilter::new('mediaTest'));
     }
 
@@ -234,7 +242,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->stripTags()
                 ->hideOnIndex(),
             FormField::addColumn('col-lg-3'),
-            CollectionField::new('primary_media', 'Image principale')
+            CollectionField::new('primary_media', 'Image(s) de l\'oeuvre')
                 ->setEntryType(PrimaryMediaType::class)
                 ->addCssClass('primary-media')
                 ->addCssFiles('/build/primary-media.css')

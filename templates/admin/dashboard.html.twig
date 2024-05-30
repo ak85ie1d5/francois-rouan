@@ -7,7 +7,7 @@
 
 {% block content_title %}Tableau de bord{% endblock %}
 {% block page_actions %}
-    <a class="btn btn-primary" href="...">Some Action</a>
+
 {% endblock %}
 
 {% block main %}
@@ -34,7 +34,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h6 class="card-subtitle mb-2 text-muted">Version du logiciel</h6>
-                            <p class="card-text h1 text-center py-5">0.1</p>
+                            <p class="card-text h1 text-center py-5">0,91</p>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h6 class="card-subtitle mb-2 text-muted">Espace utilisé (en Go)</h6>
-                            <p class="card-text h1 text-center py-5">{{ disk_space.used }}/{{ disk_space.total }}</p>
+                            <p class="card-text h1 text-center py-4">{{ disk_space.used }} / {{ disk_space.total }}</p>
                         </div>
                     </div>
                 </div>

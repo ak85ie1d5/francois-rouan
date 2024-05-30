@@ -51,13 +51,19 @@ class OeuvreStockageRepository extends ServiceEntityRepository
 
         $sql = "
             SELECT 
-                os.type AS type_id,
-                 JSON_UNQUOTE(JSON_EXTRACT(o.value, CONCAT('$[', os.type, ']'))) AS type_name,
-                COUNT(os.type) AS sum
+                CASE 
+                    WHEN os.type IS NULL THEN 'NULL'
+                    ELSE os.type
+                    END AS type_id,
+                CASE 
+                    WHEN os.type IS NULL THEN 'Aucun'
+                    ELSE JSON_UNQUOTE(JSON_EXTRACT(o.value, CONCAT('$[', os.type, ']')))
+                    END AS type_name,
+                COUNT(*) AS sum
             FROM oeuvre_stockage AS os
                 JOIN options AS o
                     ON o.name = 'location_types'
-            GROUP BY os.type;
+            GROUP BY type_id, type_name;
         ";
 
         return $conn->executeQuery($sql)->fetchAllAssociative();
