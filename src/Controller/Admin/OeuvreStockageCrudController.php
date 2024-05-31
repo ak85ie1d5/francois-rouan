@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\OeuvreStockage;
 use App\Service\Options;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -38,21 +37,6 @@ class OeuvreStockageCrudController extends AbstractCrudController
             ->setPageTitle('edit', 'Modifier la %entity_label_singular%');
 
         return parent::configureCrud($crud);
-    }
-
-    public function createEntity(string $entityFqcn)
-    {
-        $artworkCategory = new OeuvreStockage();
-        $artworkCategory->setCreatedBy($this->getUser());
-
-        return $artworkCategory;
-    }
-
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $entityInstance->setUpdatedBy($this->getUser());
-
-        parent::updateEntity($entityManager, $entityInstance);
     }
 
     public function configureFields(string $pageName): iterable
@@ -94,7 +78,6 @@ class OeuvreStockageCrudController extends AbstractCrudController
             AssociationField::new('updatedBy', 'Modifier par')
                 ->setDisabled()
                 ->onlyOnForms(),
-
         ];
     }
 }

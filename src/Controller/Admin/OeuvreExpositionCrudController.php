@@ -32,21 +32,6 @@ class OeuvreExpositionCrudController extends AbstractCrudController
         return parent::configureCrud($crud);
     }
 
-    public function createEntity(string $entityFqcn)
-    {
-        $artworkCategory = new OeuvreExposition();
-        $artworkCategory->setCreatedBy($this->getUser());
-
-        return $artworkCategory;
-    }
-
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $entityInstance->setUpdatedBy($this->getUser());
-
-        parent::updateEntity($entityManager, $entityInstance);
-    }
-
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -97,5 +82,4 @@ class OeuvreExpositionCrudController extends AbstractCrudController
                 ->onlyOnForms(),
         ];
     }
-
 }

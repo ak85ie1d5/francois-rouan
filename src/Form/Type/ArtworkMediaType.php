@@ -27,7 +27,7 @@ class ArtworkMediaType extends AbstractType
                     'rows' => 5
                 ],
             ])
-            ->add('position', HiddenType::class)
+            ->add('position', TextType::class)
         ;
     }
 
@@ -41,6 +41,6 @@ class ArtworkMediaType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'media_test';
+        return 'artwork_media';
     }
 }

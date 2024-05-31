@@ -30,6 +30,6 @@ class PrimaryMediaType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'media_test';
+        return 'artwork_media_primary';
     }
 }

@@ -3,10 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ArtworkMediaRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ArtworkMediaRepository::class)]
@@ -39,7 +37,7 @@ class ArtworkMedia
     #[ORM\Column(nullable: true)]
     private ?int $taille = null;
 
-    #[ORM\ManyToOne(inversedBy: 'mediaTest')]
+    #[ORM\ManyToOne(inversedBy: 'ArtworkMedia')]
     private ?Oeuvre $oeuvre = null;
 
     #[Vich\UploadableField(mapping: 'artworks', fileNameProperty: 'nom', size: 'taille', mimeType: 'mime', originalName: 'libelle')]

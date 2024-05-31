@@ -61,12 +61,12 @@ class Oeuvre
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist"])]
     private Collection $oeuvreStockages;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $oeuvreHistoriques;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: ArtworkMedia::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     #[ORM\OrderBy(["position" => "ASC"])]
-    private Collection $mediaTest;
+    private Collection $ArtworkMedia;
 
     #[ORM\ManyToOne(inversedBy: 'oeuvres')]
     #[ORM\JoinColumn(nullable: true)]
@@ -92,7 +92,7 @@ class Oeuvre
         $this->oeuvreExpositions = new ArrayCollection();
         $this->oeuvreStockages = new ArrayCollection();
         $this->oeuvreHistoriques = new ArrayCollection();
-        $this->mediaTest = new ArrayCollection();
+        $this->ArtworkMedia = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,6 +216,13 @@ class Oeuvre
         return $this->oeuvreBibliographies;
     }
 
+    public function setArtworkMedia(Collection $artworkMedia): self
+    {
+        $this->ArtworkMedia = $artworkMedia;
+
+        return $this;
+    }
+
     public function addOeuvreBibliography(OeuvreBibliographie $oeuvreBibliography): static
     {
         if (!$this->oeuvreBibliographies->contains($oeuvreBibliography)) {
@@ -331,27 +338,27 @@ class Oeuvre
     /**
      * @return Collection<int, ArtworkMedia>
      */
-    public function getMediaTest(): Collection
+    public function getArtworkMedia(): Collection
     {
-        return $this->mediaTest;
+        return $this->ArtworkMedia;
     }
 
-    public function addMediaTest(ArtworkMedia $mediaTest): static
+    public function addArtworkMedia(ArtworkMedia $ArtworkMedia): static
     {
-        if (!$this->mediaTest->contains($mediaTest)) {
-            $this->mediaTest->add($mediaTest);
-            $mediaTest->setOeuvre($this);
+        if (!$this->ArtworkMedia->contains($ArtworkMedia)) {
+            $this->ArtworkMedia->add($ArtworkMedia);
+            $ArtworkMedia->setOeuvre($this);
         }
 
         return $this;
     }
 
-    public function removeMediaTest(ArtworkMedia $mediaTest): static
+    public function removeArtworkMedia(ArtworkMedia $ArtworkMedia): static
     {
-        if ($this->mediaTest->removeElement($mediaTest)) {
+        if ($this->ArtworkMedia->removeElement($ArtworkMedia)) {
             // set the owning side to null (unless already changed)
-            if ($mediaTest->getOeuvre() === $this) {
-                $mediaTest->setOeuvre(null);
+            if ($ArtworkMedia->getOeuvre() === $this) {
+                $ArtworkMedia->setOeuvre(null);
             }
         }
 
@@ -372,8 +379,8 @@ class Oeuvre
 
     public function getPrimaryMedia(): ?array
     {
-        if ($this->getMediaTest()->first()) {
-            return [$this->getMediaTest()->first()];
+        if ($this->getArtworkMedia()->first()) {
+            return [$this->getArtworkMedia()->first()];
         }
 
         return null;

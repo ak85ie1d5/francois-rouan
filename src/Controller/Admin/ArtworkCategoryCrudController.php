@@ -41,21 +41,6 @@ class ArtworkCategoryCrudController extends TreeCrudController
         return 'name';
     }
 
-    public function createEntity(string $entityFqcn)
-    {
-        $artworkCategory = new ArtworkCategory();
-        $artworkCategory->setCreatedBy($this->getUser());
-
-        return $artworkCategory;
-    }
-
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $entityInstance->setUpdatedBy($this->getUser());
-
-        parent::updateEntity($entityManager, $entityInstance);
-    }
-
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -64,6 +49,7 @@ class ArtworkCategoryCrudController extends TreeCrudController
             AssociationField::new('parent', 'Catégorie parente'),
 
             FormField::addColumn('col-lg-5'),
+
             FormField::addColumn('col-lg-2'),
             DateTimeField::new('createdAt', 'Date de creation')
                 ->setDisabled()
@@ -79,5 +65,4 @@ class ArtworkCategoryCrudController extends TreeCrudController
                 ->onlyOnForms(),
         ];
     }
-
 }

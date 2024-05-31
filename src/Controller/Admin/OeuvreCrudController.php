@@ -81,21 +81,19 @@ class OeuvreCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn): mixed
     {
         if ($entityFqcn === Oeuvre::class) {
-            $oeuvre = new Oeuvre($this->storage);
-            $oeuvre->setCreatedBy($this->getUser());
-
-            return $oeuvre;
+            return new Oeuvre($this->storage);
         }
 
         return parent::createEntity($entityFqcn);
     }
 
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    /*public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $entityInstance->setUpdatedBy($this->getUser());
+        $entityInstance
+            ->setUpdatedBy($this->getUser());
 
         parent::updateEntity($entityManager, $entityInstance);
-    }
+    }*/
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
@@ -196,7 +194,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->add(BibliographyFilter::new('oeuvreBibliographies', 'Bibliographies'))
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
             ->add(LocationFilter::new('oeuvreStockages', 'Localisation'))
-            ->add(EntityFilter::new('mediaTest'));
+            ->add(EntityFilter::new('ArtworkMedia'));
     }
 
     public function configureFields(string $pageName): iterable
@@ -294,7 +292,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowDelete()
                 ->setEntryIsComplex(),
             FormField::addTab('Médias'),
-            TableField::new('mediaTest', 'Image de l\'oeuvre')
+            TableField::new('ArtworkMedia', 'Image de l\'oeuvre')
                 ->setEntryType(ArtworkMediaType::class)
                 ->setTemplatePath('admin/vich_image_collection.html.twig')
                 ->allowAdd()

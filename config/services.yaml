@@ -25,3 +25,9 @@ services:
     App\Service\ThumbnailListener:
         tags:
             - { name: 'kernel.event_subscriber'}
+
+    App\Service\UserColumnSubscriber:
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: 'doctrine.event_subscriber'}

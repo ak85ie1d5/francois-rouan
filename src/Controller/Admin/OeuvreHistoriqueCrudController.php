@@ -3,14 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\OeuvreHistorique;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class OeuvreHistoriqueCrudController extends AbstractCrudController
 {
@@ -29,21 +27,6 @@ class OeuvreHistoriqueCrudController extends AbstractCrudController
         return parent::configureCrud($crud);
     }
 
-    public function createEntity(string $entityFqcn)
-    {
-        $artworkCategory = new OeuvreHistorique();
-        $artworkCategory->setCreatedBy($this->getUser());
-
-        return $artworkCategory;
-    }
-
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $entityInstance->setUpdatedBy($this->getUser());
-
-        parent::updateEntity($entityManager, $entityInstance);
-    }
-
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -51,20 +34,20 @@ class OeuvreHistoriqueCrudController extends AbstractCrudController
             TextareaField::new('description'),
             FormField::addColumn('col-lg-5'),
             AssociationField::new('oeuvre'),
+
             FormField::addColumn('col-lg-2'),
-            DateField::new('createdAt')
-                ->setDisabled()
-                ->hideWhenCreating(),
-            DateField::new('updatedAt')
-                ->setDisabled()
-                ->hideWhenCreating(),
-            AssociationField::new('createdBy')
+            DateTimeField::new('createdAt', 'Date de creation')
                 ->setDisabled()
                 ->onlyOnForms(),
-            AssociationField::new('updatedBy')
+            DateTimeField::new('updatedAt', 'Date de modification')
+                ->setDisabled()
+                ->onlyOnForms(),
+            AssociationField::new('createdBy', 'Créé par')
+                ->setDisabled()
+                ->onlyOnForms(),
+            AssociationField::new('updatedBy', 'Modifier par')
                 ->setDisabled()
                 ->onlyOnForms(),
         ];
     }
-
 }
