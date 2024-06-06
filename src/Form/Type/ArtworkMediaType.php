@@ -27,7 +27,9 @@ class ArtworkMediaType extends AbstractType
                     'rows' => 5
                 ],
             ])
-            ->add('position', TextType::class)
+            ->add('position', HiddenType::class, [
+                'empty_data' => 0,
+            ])
         ;
     }
 
