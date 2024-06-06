@@ -37,7 +37,7 @@ class ArtworkMedia
     #[ORM\Column(nullable: true)]
     private ?int $taille = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ArtworkMedia')]
+    #[ORM\ManyToOne(inversedBy: 'ArtworkMedias')]
     private ?Oeuvre $oeuvre = null;
 
     #[Vich\UploadableField(mapping: 'artworks', fileNameProperty: 'nom', size: 'taille', mimeType: 'mime', originalName: 'libelle')]
@@ -147,7 +147,7 @@ class ArtworkMedia
      *
      * @param File|null $imageFile
      */
-    public function setImageFile(?File $imageFile = null): void
+    /*public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
 
@@ -155,6 +155,22 @@ class ArtworkMedia
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->dateModification = new \DateTimeImmutable();
+        }
+    }*/
+
+    public function setImageFile(?File $imageFile = null, ?Oeuvre $oeuvre = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+
+            // Set the Oeuvre object
+            if (null !== $oeuvre) {
+                $this->setOeuvre($oeuvre);
+            }
         }
     }
 

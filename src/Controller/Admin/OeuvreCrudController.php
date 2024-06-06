@@ -93,7 +93,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setUpdatedBy($this->getUser());
 
         parent::updateEntity($entityManager, $entityInstance);
-    }*/
+    }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
@@ -102,7 +102,7 @@ class OeuvreCrudController extends AbstractCrudController
 
         $entityManager->persist($entityInstance);
         $entityManager->flush();
-    }
+    }*/
 
     /**
      * Configure the actions for the OeuvreCrudController.
@@ -194,7 +194,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->add(BibliographyFilter::new('oeuvreBibliographies', 'Bibliographies'))
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
             ->add(LocationFilter::new('oeuvreStockages', 'Localisation'))
-            ->add(EntityFilter::new('ArtworkMedia'));
+            ->add(EntityFilter::new('ArtworkMedias'));
     }
 
     public function configureFields(string $pageName): iterable
@@ -292,7 +292,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowDelete()
                 ->setEntryIsComplex(),
             FormField::addTab('Médias'),
-            TableField::new('ArtworkMedia', 'Image de l\'oeuvre')
+            TableField::new('ArtworkMedias', 'Image de l\'oeuvre')
                 ->setEntryType(ArtworkMediaType::class)
                 ->setTemplatePath('admin/vich_image_collection.html.twig')
                 ->allowAdd()

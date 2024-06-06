@@ -66,7 +66,7 @@ class Oeuvre
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: ArtworkMedia::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     #[ORM\OrderBy(["position" => "ASC"])]
-    private Collection $ArtworkMedia;
+    private Collection $ArtworkMedias;
 
     #[ORM\ManyToOne(inversedBy: 'oeuvres')]
     #[ORM\JoinColumn(nullable: true)]
@@ -92,7 +92,7 @@ class Oeuvre
         $this->oeuvreExpositions = new ArrayCollection();
         $this->oeuvreStockages = new ArrayCollection();
         $this->oeuvreHistoriques = new ArrayCollection();
-        $this->ArtworkMedia = new ArrayCollection();
+        $this->ArtworkMedias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,13 +216,6 @@ class Oeuvre
         return $this->oeuvreBibliographies;
     }
 
-    public function setArtworkMedia(Collection $artworkMedia): self
-    {
-        $this->ArtworkMedia = $artworkMedia;
-
-        return $this;
-    }
-
     public function addOeuvreBibliography(OeuvreBibliographie $oeuvreBibliography): static
     {
         if (!$this->oeuvreBibliographies->contains($oeuvreBibliography)) {
@@ -338,15 +331,15 @@ class Oeuvre
     /**
      * @return Collection<int, ArtworkMedia>
      */
-    public function getArtworkMedia(): Collection
+    public function getArtworkMedias(): Collection
     {
-        return $this->ArtworkMedia;
+        return $this->ArtworkMedias;
     }
 
     public function addArtworkMedia(ArtworkMedia $ArtworkMedia): static
     {
-        if (!$this->ArtworkMedia->contains($ArtworkMedia)) {
-            $this->ArtworkMedia->add($ArtworkMedia);
+        if (!$this->ArtworkMedias->contains($ArtworkMedia)) {
+            $this->ArtworkMedias->add($ArtworkMedia);
             $ArtworkMedia->setOeuvre($this);
         }
 
@@ -355,7 +348,7 @@ class Oeuvre
 
     public function removeArtworkMedia(ArtworkMedia $ArtworkMedia): static
     {
-        if ($this->ArtworkMedia->removeElement($ArtworkMedia)) {
+        if ($this->ArtworkMedias->removeElement($ArtworkMedia)) {
             // set the owning side to null (unless already changed)
             if ($ArtworkMedia->getOeuvre() === $this) {
                 $ArtworkMedia->setOeuvre(null);
@@ -379,8 +372,8 @@ class Oeuvre
 
     public function getPrimaryMedia(): ?array
     {
-        if ($this->getArtworkMedia()->first()) {
-            return [$this->getArtworkMedia()->first()];
+        if ($this->getArtworkMedias()->first()) {
+            return [$this->getArtworkMedias()->first()];
         }
 
         return null;
