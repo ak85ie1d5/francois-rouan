@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\PropertyPath;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ArtworkMediaType extends AbstractType
@@ -22,13 +23,17 @@ class ArtworkMediaType extends AbstractType
                 'allow_delete' => false,
                 'label' => 'Image'
             ])
-            ->add('description', TextareaType::class, [
+            ->add('libelle', TextType::class, [
+                'label' => 'Nom de fichier',
+            ])
+            ->add('caption', TextareaType::class, [
+                'label' => 'Légende',
                 'attr' => [
                     'rows' => 5
                 ],
             ])
             ->add('position', HiddenType::class, [
-                'empty_data' => 0,
+                'empty_data' => 1,
             ])
         ;
     }

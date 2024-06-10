@@ -40,7 +40,7 @@ trait SecondDateTrait
         return $this;
     }
 
-    public function getSecondYear(): int
+    public function getSecondYear(): ?int
     {
         return $this->SecondYear;
     }

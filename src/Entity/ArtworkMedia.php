@@ -23,10 +23,10 @@ class ArtworkMedia
     private ?string $libelle = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
+    private ?string $caption = null;
 
     #[ORM\Column]
-    private ?int $position = 0;
+    private ?int $position = 1;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
@@ -65,14 +65,14 @@ class ArtworkMedia
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getCaption(): ?string
     {
-        return $this->description;
+        return $this->caption;
     }
 
-    public function setDescription(?string $description): static
+    public function setCaption(?string $caption): static
     {
-        $this->description = $description;
+        $this->caption = $caption;
 
         return $this;
     }

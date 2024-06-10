@@ -13,6 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 
@@ -72,4 +76,6 @@ class ArtworkMediaCrudController extends AbstractCrudController
                 ->onlyOnForms(),
         ];
     }
+
+
 }
