@@ -50,7 +50,7 @@
         </div>
 
         <div class="col-4">
-            <canvas id="disk-free-space"></canvas>
+            <canvas id="count-artwork-by-location"></canvas>
         </div>
         <div class="col-4">
             <canvas id="count-artworks-by-category"></canvas>
@@ -71,8 +71,7 @@
 
 
     <script>
-        // Get HDD free space
-        const dfs = document.getElementById('disk-free-space');
+        const dfs = document.getElementById('count-artwork-by-location');
         new Chart(dfs, {
             'type': 'doughnut',
             'data': {

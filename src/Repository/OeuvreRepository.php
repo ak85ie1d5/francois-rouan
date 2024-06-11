@@ -59,13 +59,15 @@ class OeuvreRepository extends ServiceEntityRepository
 
         $sql = "
             SELECT
-                `ac`.`name`,
-                COUNT(`o`.`artwork_category_id`) AS `sum` 
-            FROM `oeuvre` AS `o`
-            JOIN `artwork_category` AS `ac`
-            ON `o`.`artwork_category_id` = `ac`.`id`
-            GROUP BY `o`.`artwork_category_id`
-            ORDER BY `ac`.`root_id`;
+    IFNULL(parent_ac.`name`, ac.`name`) AS `category_name`,
+    COUNT(DISTINCT o.`id`) AS `artwork_count`
+FROM `oeuvre` AS `o`
+JOIN `artwork_category` AS `ac`
+    ON `o`.`artwork_category_id` = `ac`.`id`
+LEFT JOIN `artwork_category` AS `parent_ac`
+    ON `ac`.`parent_id` = `parent_ac`.`id`
+GROUP BY `category_name`
+ORDER BY `category_name`;
         ";
 
         return $conn->executeQuery($sql)->fetchAllAssociative();

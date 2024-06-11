@@ -64,8 +64,8 @@ class DashboardController extends AbstractDashboardController
                 'datasets' => array_column($countLocalisationType, 'sum')
             ],
             'count_artworks_by_category' => [
-                'labels' => array_column($countArtworksByCategory, 'name'),
-                'datasets' => array_column($countArtworksByCategory, 'sum')
+                'labels' => array_column($countArtworksByCategory, 'category_name'),
+                'datasets' => array_column($countArtworksByCategory, 'artwork_count')
             ],
             'count_artworks_by_year' => [
                 'labels' => array_column($countArtworksByYear, 'first_year'),
