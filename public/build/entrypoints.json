@@ -15,6 +15,11 @@
         "/build/modal-new-location.js"
       ]
     },
+    "image-preview": {
+      "js": [
+        "/build/image-preview.js"
+      ]
+    },
     "app": {
       "css": [
         "/build/app.css"

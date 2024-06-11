@@ -176,7 +176,7 @@ class OeuvreCrudController extends AbstractCrudController
         $assets = parent::configureAssets($assets);
         return $assets
             ->addJsFile(Asset::new('build/modal-new-location.js'))
-            ->addJsFile(Asset::new('build/preview-new-image.js'));
+            ->addJsFile(Asset::new('build/image-preview.js'));
     }
 
     public function configureFilters(Filters $filters): Filters

@@ -440,7 +440,11 @@
             var fileSizeInMegabytes = newFile.size > 1024 * 1024;
             var fileSize = fileSizeInMegabytes ? newFile.size / (1024 * 1024) : newFile.size / 1024;
             document.getElementById('{{ form.file.vars.id }}_new_file_name').innerText = newFile.name + ' (' + fileSize.toFixed(2) + ' ' + (fileSizeInMegabytes ? 'MB' : 'KB') + ')';
+
+            getImagePreview(newFile, '{{ form.file.vars.id }}-preview');
         {% endset %}
+
+        <div id="{{ form.file.vars.id }}-preview"></div>
 
         <div class="ea-vich-image-actions">
             {# the container element is needed to allow customizing the <input type="file" /> #}

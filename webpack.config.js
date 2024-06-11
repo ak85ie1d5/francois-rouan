@@ -23,6 +23,7 @@ Encore
     .addEntry('draggable-collection', './assets/draggable-collection.js')
     .addEntry('chart', './assets/chart.js')
     .addEntry('modal-new-location', './assets/modal-new-location.js')
+    .addEntry('image-preview', './assets/image-preview.js')
     .addStyleEntry('app', './assets/styles/app.css')
     .addStyleEntry('table-collection', './assets/styles/table-collection.css')
     .addStyleEntry('primary-media', './assets/styles/primary-media.css')
