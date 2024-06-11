@@ -25,7 +25,7 @@ class Oeuvre
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $numInventaire = null;
 
     #[ORM\Column(length: 255)]
@@ -105,7 +105,7 @@ class Oeuvre
         return $this->numInventaire;
     }
 
-    public function setNumInventaire(?string $numInventaire): static
+    public function setNumInventaire(string $numInventaire): static
     {
         $this->numInventaire = $numInventaire;
 
