@@ -14,6 +14,7 @@ use App\Form\Type\HistoryCollectionType;
 use App\Form\Type\ArtworkMediaType;
 use App\Form\Type\PrimaryMediaType;
 use App\Form\Type\StockageCollectionType;
+use App\Repository\OeuvreRepository;
 use App\Service\Options;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -44,17 +45,20 @@ class OeuvreCrudController extends AbstractCrudController
 
     private $options;
 
+    private $oeuvreRepository;
+
     /**
      * Inject the StorageInterface instance into the controller.
      *
      * OeuvreCrudController constructor.
      * @param StorageInterface $storage
      */
-    public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator, Options $options)
+    public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator, Options $options, OeuvreRepository $oeuvreRepository)
     {
         $this->adminUrlGenerator = $adminUrlGenerator;
         $this->storage = $storage;
         $this->options = $options;
+        $this->oeuvreRepository = $oeuvreRepository;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -81,7 +85,10 @@ class OeuvreCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn): mixed
     {
         if ($entityFqcn === Oeuvre::class) {
-            return new Oeuvre($this->storage);
+            $oeuvre = new Oeuvre($this->storage);
+            $oeuvre->setNumInventaire($this->oeuvreRepository->getLastInventoryNumber() + 1);
+
+            return $oeuvre;
         }
 
         return parent::createEntity($entityFqcn);

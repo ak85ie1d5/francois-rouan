@@ -59,15 +59,15 @@ class OeuvreRepository extends ServiceEntityRepository
 
         $sql = "
             SELECT
-    IFNULL(parent_ac.`name`, ac.`name`) AS `category_name`,
-    COUNT(DISTINCT o.`id`) AS `artwork_count`
-FROM `oeuvre` AS `o`
-JOIN `artwork_category` AS `ac`
-    ON `o`.`artwork_category_id` = `ac`.`id`
-LEFT JOIN `artwork_category` AS `parent_ac`
-    ON `ac`.`parent_id` = `parent_ac`.`id`
-GROUP BY `category_name`
-ORDER BY `category_name`;
+            IFNULL(parent_ac.`name`, ac.`name`) AS `category_name`,
+            COUNT(DISTINCT o.`id`) AS `artwork_count`
+            FROM `oeuvre` AS `o`
+                JOIN `artwork_category` AS `ac`
+                    ON `o`.`artwork_category_id` = `ac`.`id`
+                LEFT JOIN `artwork_category` AS `parent_ac`
+                    ON `ac`.`parent_id` = `parent_ac`.`id`
+            GROUP BY `category_name`
+            ORDER BY `category_name`;
         ";
 
         return $conn->executeQuery($sql)->fetchAllAssociative();
@@ -87,6 +87,20 @@ ORDER BY `category_name`;
         ";
 
         return $conn->executeQuery($sql)->fetchAllAssociative();
+    }
+
+    public function getLastInventoryNumber()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT 
+                MAX(CAST(REGEXP_REPLACE(num_inventaire, '[^0-9] ', '') AS UNSIGNED)) AS max_num_inventaire
+            FROM `oeuvre`
+            WHERE num_inventaire NOT LIKE 'PH%';
+        ";
+
+        return $conn->executeQuery($sql)->fetchOne();
     }
 
 //    /**
