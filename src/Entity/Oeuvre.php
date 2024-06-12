@@ -47,9 +47,6 @@ class Oeuvre
     private ?string $commentairePublic = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $details = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaireInterne = null;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist", "remove"], orphanRemoval: true)]
@@ -180,18 +177,6 @@ class Oeuvre
     public function setCommentairePublic(?string $commentairePublic): static
     {
         $this->commentairePublic = $commentairePublic;
-
-        return $this;
-    }
-
-    public function getDetails(): ?string
-    {
-        return $this->details;
-    }
-
-    public function setDetails(?string $details): static
-    {
-        $this->details = $details;
 
         return $this;
     }
