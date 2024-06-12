@@ -4,6 +4,8 @@ namespace App\Form\Type;
 use App\Entity\Lieu;
 use App\Entity\OeuvreExposition;
 use App\Service\Options;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -57,6 +59,10 @@ class ExpositionCollectionType extends AbstractType
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nom', 'ASC');
+                },
                 'choice_label' => 'nom',
                 'placeholder' => ''
             ]);
