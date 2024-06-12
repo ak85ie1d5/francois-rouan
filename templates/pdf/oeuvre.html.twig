@@ -13,8 +13,6 @@
         }
 
         .num-inventaire {
-            font-size: 1.5em;
-            font-weight: bold;
             margin-bottom: 1em;
         }
 
@@ -22,14 +20,21 @@
             height: 500px;
             margin-bottom: 1em;
         }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+        .mt-0 {
+            margin-top: 0;
+        }
     </style>
 
     <div class="pdf-wrapper">
         <div class="num-inventaire">{{ oeuvre.numInventaire }}</div>
         <img src="{{ base64Image }}" alt="" class="primary-media" />
-        <p>{{ oeuvre.titre }}</p>
+        <p><b>{{ oeuvre.titre }}</b></p>
         {% if oeuvre.FirstYear %}
-            <p>
+            <p class="mb-0">
                 {% if oeuvre.FirstMonth %}
                     {{ month_textual[oeuvre.FirstMonth] }}
                 {% endif %}
@@ -46,13 +51,13 @@
             </p>
         {% endif %}
         {%  if oeuvre.dimensions %}
-            <p>{{ oeuvre.dimensions }}</p>
+            <p class="mt-0">{{ oeuvre.dimensions }}</p>
         {% endif %}
         {% if oeuvre.description %}
-            <p>{{ oeuvre.description|nl2br }}</p>
+            <p class="mb-0">{{ oeuvre.description|nl2br }}</p>
         {% endif %}
         {% if oeuvre.commentairePublic %}
-            <p>{{ oeuvre.commentairePublic|nl2br }}</p>
+            <p class="mt-0">{{ oeuvre.commentairePublic|nl2br }}</p>
         {% endif %}
         {% if last_localisation.nom %}
             <p>{{ last_localisation.nom }}</p>
