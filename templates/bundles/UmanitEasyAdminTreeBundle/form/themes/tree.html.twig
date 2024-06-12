@@ -23,11 +23,9 @@
     </div>
     {% if child.vars.attr['data-has-child'] is defined and child.vars.attr['data-has-child'] == true %}
       <ul class="umanit_easyadmintree_tree_field">
-    {% else %}
-      </li>
     {% endif %}
 
     {% set previous_level = level %}
-  {% endfor -%}
+  {% endfor %}
   </ul>
 {% endblock %}

@@ -16,7 +16,6 @@ use App\Form\Type\PrimaryMediaType;
 use App\Form\Type\StockageCollectionType;
 use App\Repository\OeuvreRepository;
 use App\Service\Options;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -183,7 +182,8 @@ class OeuvreCrudController extends AbstractCrudController
         $assets = parent::configureAssets($assets);
         return $assets
             ->addJsFile(Asset::new('build/modal-new-location.js'))
-            ->addJsFile(Asset::new('build/image-preview.js'));
+            ->addJsFile(Asset::new('build/image-preview.js'))
+            ->addJsFile(Asset::new('build/umanit-easyadmintree-tree-field.js'));
     }
 
     public function configureFilters(Filters $filters): Filters
