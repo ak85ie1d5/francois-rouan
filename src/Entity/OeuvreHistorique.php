@@ -21,6 +21,8 @@ class OeuvreHistorique
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    private $unmappedDescription;
+
     #[ORM\ManyToOne(inversedBy: 'oeuvreHistoriques')]
     private ?Oeuvre $oeuvre = null;
 
@@ -49,6 +51,18 @@ class OeuvreHistorique
     public function setOeuvre(?Oeuvre $oeuvre): static
     {
         $this->oeuvre = $oeuvre;
+
+        return $this;
+    }
+
+    public function getUnmappedDescription()
+    {
+        return $this->unmappedDescription;
+    }
+
+    public function setUnmappedDescription($unmappedDescription)
+    {
+        $this->unmappedDescription = $unmappedDescription;
 
         return $this;
     }
