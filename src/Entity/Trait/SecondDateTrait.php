@@ -45,7 +45,7 @@ trait SecondDateTrait
         return $this->SecondYear;
     }
 
-    public function setSecondYear(int $Secondyear): static
+    public function setSecondYear(?int $Secondyear): static
     {
         $this->SecondYear = $Secondyear;
 
