@@ -76,6 +76,4 @@ class ArtworkMediaCrudController extends AbstractCrudController
                 ->onlyOnForms(),
         ];
     }
-
-
 }

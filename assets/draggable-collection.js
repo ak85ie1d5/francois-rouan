@@ -40,13 +40,12 @@ class DraggableCollection {
     }
 
     #handleDragEnd(event) {
-        //let DraggableElements = event.target.parentElement.children
         let DraggableElements = this.#getDraggableElements(this.#getParentElement())
 
         for (let i = 0; i < DraggableElements.length; i++) {
             const element = DraggableElements[i];
             const inputPosition = element.querySelector('input[id$="_position"]')
-            inputPosition.value = i;
+            inputPosition.value = i + 1;
         }
     }
 

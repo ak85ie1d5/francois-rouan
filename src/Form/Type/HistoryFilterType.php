@@ -20,6 +20,7 @@ class HistoryFilterType extends AbstractType
     {
         $builder
             ->add('unmappedDescription', ChoiceType::class, [
+                'label' => 'Description',
                 'choices' => [
                     'Oeuvres avec description' => '1',
                     'Oeuvres sans description' => '0'
