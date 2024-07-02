@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Admin\Field\TableField;
+use App\Controller\Admin\Filter\ArtworkMediaFilter;
 use App\Controller\Admin\Filter\BibliographyFilter;
 use App\Controller\Admin\Filter\ExhibitionFilter;
 use App\Controller\Admin\Filter\HistoryFilter;
@@ -202,7 +203,8 @@ class OeuvreCrudController extends AbstractCrudController
             ->add(BibliographyFilter::new('oeuvreBibliographies', 'Bibliographies'))
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
             ->add(LocationFilter::new('oeuvreStockages', 'Localisation'))
-            ->add(EntityFilter::new('ArtworkMedias'));
+            ->add(ArtworkMediaFilter::new('ArtworkMedias', 'Médias'));
+        //->add(EntityFilter::new('ArtworkMedias'));
     }
 
     public function configureFields(string $pageName): iterable

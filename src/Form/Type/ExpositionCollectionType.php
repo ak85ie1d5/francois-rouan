@@ -28,9 +28,8 @@ class ExpositionCollectionType extends AbstractType
     {
         // Ajoutez ici les champs que vous souhaitez afficher pour chaque élément de la collection OeuvreHistorique
         $builder
-            ->add('titre', TextType::class)
+            ->add('titre', TextareaType::class)
             ->add('description', TextareaType::class)
-            ->add('commentaire', TextareaType::class)
             ->add('FirstDay', ChoiceType::class, [
                 'choices' => $this->options->getDayNumeric(),
                 'label' => 'Jour',

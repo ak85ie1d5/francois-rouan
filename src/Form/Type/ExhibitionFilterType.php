@@ -13,6 +13,7 @@ class ExhibitionFilterType extends AbstractType
     {
         // Ajoutez ici les champs que vous souhaitez afficher pour chaque élément de la collection OeuvreHistorique
         $builder
+            ->add('titre', TextareaType::class)
             ->add('description', TextareaType::class);
     }
 

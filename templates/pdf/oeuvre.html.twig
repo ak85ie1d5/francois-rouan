@@ -39,7 +39,7 @@
                     {{ month_textual[oeuvre.FirstMonth] }}
                 {% endif %}
                 {{ oeuvre.FirstYear }}
-                {% if oeuvre.dateSeparator %}
+                {% if oeuvre.dateSeparator != '' %}
                     {{ separator[oeuvre.dateSeparator] }}
                 {% endif %}
                 {% if oeuvre.SecondMonth %}

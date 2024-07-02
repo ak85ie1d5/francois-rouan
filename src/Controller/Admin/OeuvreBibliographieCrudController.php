@@ -37,7 +37,7 @@ class OeuvreBibliographieCrudController extends AbstractCrudController
             FormField::addColumn('col-lg-5'),
             IdField::new('id')
                 ->hideOnForm(),
-            TextField::new('titre'),
+            TextareaField::new('titre'),
             IntegerField::new('Year')
                 ->setLabel('Année')
                 ->setColumns('col-lg-2'),

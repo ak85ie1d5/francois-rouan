@@ -14,7 +14,7 @@
      public function buildForm(FormBuilderInterface $builder, array $options)
      {
          $builder
-             ->add('titre', TextType::class)
+             ->add('titre', TextareaType::class)
              ->add('Year', IntegerType::class, ['label' => 'Année'])
              ->add('description', TextareaType::class)
              ->add('commentaire', TextareaType::class);

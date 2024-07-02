@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Filter;
 
-use App\Form\Type\HistoryFilterType;
+use App\Form\Type\ArtworkMediaFilterType;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Filter\FilterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
@@ -10,7 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FilterDataDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\FilterTrait;
 
-class HistoryFilter implements FilterInterface
+class ArtworkMediaFilter implements FilterInterface
 {
     use FilterTrait;
 
@@ -20,29 +20,22 @@ class HistoryFilter implements FilterInterface
             ->setFilterFqcn(__CLASS__)
             ->setProperty($propertyName)
             ->setLabel($label)
-            ->setFormType(HistoryFilterType::class);
+            ->setFormType(ArtworkMediaFilterType::class);
     }
 
     public function apply(QueryBuilder $queryBuilder, FilterDataDto $filterDataDto, ?FieldDto $fieldDto, EntityDto $entityDto): void
     {
-
         $values = $filterDataDto->getValue();
 
         if ($values !== null) {
-            $queryBuilder->leftJoin($filterDataDto->getEntityAlias() . '.oeuvreHistoriques', 'oh');
+            $queryBuilder->leftJoin($filterDataDto->getEntityAlias() . '.ArtworkMedias', 'am');
 
-            if ($values->getUnmappedDescription() === '0') {
-                $queryBuilder->andWhere('oh.oeuvre IS NULL');
+            if ($values->getNom() === '0') {
+                $queryBuilder->andWhere('am.id IS NULL');
             }
 
-            if ($values->getUnmappedDescription() === '1') {
-                $queryBuilder->andWhere('oh.oeuvre IS NOT NULL');
-            }
-
-            if ($values->getDescription() !== null) {
-                $queryBuilder
-                    ->andWhere('oh.description LIKE :description')
-                    ->setParameter('description', '%' . $values->getDescription() . '%');
+            if ($values->getNom() === '1') {
+                $queryBuilder->andWhere('am.id IS NOT NULL');
             }
         }
     }

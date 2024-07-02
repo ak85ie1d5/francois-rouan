@@ -37,7 +37,7 @@ class OeuvreExpositionCrudController extends AbstractCrudController
         return [
             FormField::addColumn('col-lg-5'),
             IdField::new('id')->hideOnForm(),
-            TextField::new('titre'),
+            TextareaField::new('titre'),
 
             FormField::addFieldset('Date de début'),
             IntegerField::new('FirstDay', 'Jour')

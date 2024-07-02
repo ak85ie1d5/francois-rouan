@@ -13,6 +13,7 @@ class BibliographyFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('titre', TextareaType::class)
             ->add('description', TextareaType::class);
     }
 
