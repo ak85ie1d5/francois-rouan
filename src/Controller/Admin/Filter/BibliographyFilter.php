@@ -31,6 +31,12 @@ class BibliographyFilter implements FilterInterface
         if ($values !== null) {
             $queryBuilder->leftJoin($filterDataDto->getEntityAlias() . '.oeuvreBibliographies', 'ob');
 
+            if ($values->getTitre() !== null) {
+                $queryBuilder
+                    ->andWhere('ob.titre LIKE :titre')
+                    ->setParameter('titre', '%' . $values->getTitre() . '%');
+            }
+
             if ($values->getDescription() !== null) {
                 $queryBuilder
                     ->andWhere('ob.description LIKE :description')

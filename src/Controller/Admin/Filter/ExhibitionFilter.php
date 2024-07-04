@@ -30,6 +30,13 @@ class ExhibitionFilter implements FilterInterface
         if ($values !== null) {
             $queryBuilder->leftJoin($filterDataDto->getEntityAlias() . '.oeuvreExpositions', 'oe');
 
+            if ($values->getTitre() !== null) {
+                $queryBuilder
+                    ->andWhere('oe.titre LIKE :titre')
+                    ->setParameter('titre', '%' . $values->getTitre() . '%');
+            }
+
+
             if ($values->getDescription() !== null) {
                 $queryBuilder
                     ->andWhere('oe.description LIKE :description')
