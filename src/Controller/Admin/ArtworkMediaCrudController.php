@@ -41,7 +41,7 @@ class ArtworkMediaCrudController extends AbstractCrudController
     {
         return [
             FormField::addColumn('col-lg-5'),
-            TextareaField::new('description'),
+            TextareaField::new('libelle'),
             IntegerField::new('position'),
             TextField::new('nom')
                 ->setDisabled()
