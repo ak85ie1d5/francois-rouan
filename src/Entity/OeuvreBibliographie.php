@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimeColumnTrait;
+use App\Entity\Trait\UserColumnTrait;
 use App\Repository\OeuvreBibliographieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OeuvreBibliographieRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class OeuvreBibliographie
 {
+    use TimeColumnTrait, UserColumnTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -17,29 +21,17 @@ class OeuvreBibliographie
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateModification = null;
-
-    #[ORM\Column]
-    private array $createur = [];
-
-    #[ORM\Column]
-    private array $modificateur = [];
-
     #[ORM\ManyToOne(inversedBy: 'oeuvreBibliographies')]
     private ?Oeuvre $oeuvre = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $Year = null;
 
     public function getId(): ?int
     {
@@ -54,18 +46,6 @@ class OeuvreBibliographie
     public function setTitre(string $titre): static
     {
         $this->titre = $titre;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(?\DateTimeInterface $date): static
-    {
-        $this->date = $date;
 
         return $this;
     }
@@ -94,54 +74,6 @@ class OeuvreBibliographie
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-
-    public function getDateModification(): ?\DateTimeInterface
-    {
-        return $this->dateModification;
-    }
-
-    public function setDateModification(?\DateTimeInterface $dateModification): static
-    {
-        $this->dateModification = $dateModification;
-
-        return $this;
-    }
-
-    public function getCreateur(): array
-    {
-        return $this->createur;
-    }
-
-    public function setCreateur(array $createur): static
-    {
-        $this->createur = $createur;
-
-        return $this;
-    }
-
-    public function getModificateur(): array
-    {
-        return $this->modificateur;
-    }
-
-    public function setModificateur(array $modificateur): static
-    {
-        $this->modificateur = $modificateur;
-
-        return $this;
-    }
-
     public function getOeuvre(): ?Oeuvre
     {
         return $this->oeuvre;
@@ -150,6 +82,23 @@ class OeuvreBibliographie
     public function setOeuvre(?Oeuvre $oeuvre): static
     {
         $this->oeuvre = $oeuvre;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->titre;
+    }
+
+    public function getYear(): ?int
+    {
+        return $this->Year;
+    }
+
+    public function setYear(?int $Year): static
+    {
+        $this->Year = $Year;
 
         return $this;
     }

@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimeColumnTrait;
+use App\Entity\Trait\UserColumnTrait;
 use App\Repository\UtilisateurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -14,8 +14,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\HasLifecycleCallbacks]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use TimeColumnTrait;
+    use UserColumnTrait;
+
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
@@ -40,27 +43,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateModification = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $derniereConnexion = null;
 
-    #[ORM\Column]
-    private array $createur = [];
-
-    #[ORM\Column]
-    private array $modificateur = [];
-
-    #[ORM\ManyToMany(targetEntity: Groupe::class, inversedBy: 'utilisateur_id')]
-    private Collection $groupe;
-
-    public function __construct()
+    public function setId(int $id): self
     {
-        $this->groupe = new ArrayCollection();
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getId(): ?int
@@ -174,28 +164,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    #[ORM\PrePersist]
-    public function setDateCreation(): void
-    {
-        $this->dateCreation = new \DateTime();
-    }
-
-    public function getDateModification(): ?\DateTimeInterface
-    {
-        return $this->dateModification;
-    }
-
-    #[ORM\PreUpdate]
-    public function setDateModification(): void
-    {
-        $this->dateModification = new \DateTime();
-    }
-
     public function getDerniereConnexion(): ?\DateTimeInterface
     {
         return $this->derniereConnexion;
@@ -204,54 +172,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDerniereConnexion(?\DateTimeInterface $derniereConnexion): static
     {
         $this->derniereConnexion = $derniereConnexion;
-
-        return $this;
-    }
-
-    public function getCreateur(): array
-    {
-        return $this->createur;
-    }
-
-    public function setCreateur(array $createur): static
-    {
-        $this->createur = $createur;
-
-        return $this;
-    }
-
-    public function getModificateur(): array
-    {
-        return $this->modificateur;
-    }
-
-    public function setModificateur(array $modificateur): static
-    {
-        $this->modificateur = $modificateur;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Groupe>
-     */
-    public function getGroupe(): Collection
-    {
-        return $this->groupe;
-    }
-
-    public function addGroupe(Groupe $groupe): static
-    {
-        if (!$this->groupe->contains($groupe)) {
-            $this->groupe->add($groupe);
-        }
-
-        return $this;
-    }
-
-    public function removeGroupe(Groupe $groupe): static
-    {
-        $this->groupe->removeElement($groupe);
 
         return $this;
     }
@@ -274,5 +194,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->identifiant;
     }
 }

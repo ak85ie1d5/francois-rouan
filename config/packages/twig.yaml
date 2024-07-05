@@ -1,5 +1,8 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    paths:
+        '%kernel.project_dir%/templates/bundles/UmanitEasyAdminTreeBundle': UmanitEasyAdminTreeBundle
+        '%kernel.project_dir%/vendor/umanit/easyadmin-tree-bundle/Resources/views': UmanitEasyAdminTreeBundle
 
 when@test:
     twig:

@@ -1,3 +1,0 @@
-ranky_media:
-  user_entity: App\Entity\Utilisateur
-  api_prefix: /admin

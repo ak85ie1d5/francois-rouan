@@ -1,3 +1,0 @@
-ranky_media:
-  resource: "@RankyMediaBundle/config/routes.php"
-  prefix: /admin # Optional: The same prefix you use when importing the routes must be the "api_prefix" in the bundle options.

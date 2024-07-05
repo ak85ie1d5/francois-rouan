@@ -2,21 +2,30 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\FirstDateTrait;
+use App\Entity\Trait\SecondDateTrait;
+use App\Entity\Trait\TimeColumnTrait;
+use App\Entity\Trait\UserColumnTrait;
 use App\Repository\OeuvreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Vich\Uploadable]
 class Oeuvre
 {
+    use TimeColumnTrait, UserColumnTrait, FirstDateTrait, SecondDateTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $numInventaire = null;
 
     #[ORM\Column(length: 255)]
@@ -28,12 +37,6 @@ class Oeuvre
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $serie = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $dateComplement = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $dimensions = null;
 
@@ -43,54 +46,50 @@ class Oeuvre
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentairePublic = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $sousCategorie = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $details = null;
-
-    #[ORM\Column]
-    private ?int $nbMedias = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateModification = null;
-
-    #[ORM\Column]
-    private array $createur = [];
-
-    #[ORM\Column]
-    private array $modificateur = [];
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaireInterne = null;
 
-    #[ORM\ManyToOne(inversedBy: 'oeuvres')]
-    private ?OeuvreCategorie $categorie = null;
-
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $oeuvreBibliographies;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist"])]
     private Collection $oeuvreExpositions;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist"])]
     private Collection $oeuvreStockages;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class)]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $oeuvreHistoriques;
 
-    #[ORM\Column(name: 'media', type: Types::JSON, nullable: true)]
-    private ?array $media;
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: ArtworkMedia::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[ORM\OrderBy(["position" => "ASC"])]
+    private Collection $ArtworkMedias;
 
-    public function __construct()
+    #[ORM\ManyToOne(inversedBy: 'oeuvres')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?ArtworkCategory $ArtworkCategory = null;
+
+    private ?array $primaryMedia;
+
+    #[ORM\Column]
+    private ?bool $FirstDateUncertain = null;
+
+    #[ORM\Column]
+    private ?bool $SecondDateUncertain = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $dateSeparator = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $dateComplement = null;
+
+    public function __construct(StorageInterface $storage)
     {
         $this->oeuvreBibliographies = new ArrayCollection();
         $this->oeuvreExpositions = new ArrayCollection();
         $this->oeuvreStockages = new ArrayCollection();
         $this->oeuvreHistoriques = new ArrayCollection();
+        $this->ArtworkMedias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,7 +102,7 @@ class Oeuvre
         return $this->numInventaire;
     }
 
-    public function setNumInventaire(?string $numInventaire): static
+    public function setNumInventaire(string $numInventaire): static
     {
         $this->numInventaire = $numInventaire;
 
@@ -146,30 +145,6 @@ class Oeuvre
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(?\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getDateComplement(): ?string
-    {
-        return $this->dateComplement;
-    }
-
-    public function setDateComplement(?string $dateComplement): static
-    {
-        $this->dateComplement = $dateComplement;
-
-        return $this;
-    }
-
     public function getDimensions(): ?string
     {
         return $this->dimensions;
@@ -206,90 +181,6 @@ class Oeuvre
         return $this;
     }
 
-    public function getSousCategorie(): ?int
-    {
-        return $this->sousCategorie;
-    }
-
-    public function setSousCategorie(?int $sousCategorie): static
-    {
-        $this->sousCategorie = $sousCategorie;
-
-        return $this;
-    }
-
-    public function getDetails(): ?string
-    {
-        return $this->details;
-    }
-
-    public function setDetails(?string $details): static
-    {
-        $this->details = $details;
-
-        return $this;
-    }
-
-    public function getNbMedias(): ?int
-    {
-        return $this->nbMedias;
-    }
-
-    public function setNbMedias(int $nbMedias): static
-    {
-        $this->nbMedias = $nbMedias;
-
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-
-    public function getDateModification(): ?\DateTimeInterface
-    {
-        return $this->dateModification;
-    }
-
-    public function setDateModification(?\DateTimeInterface $dateModification): static
-    {
-        $this->dateModification = $dateModification;
-
-        return $this;
-    }
-
-    public function getCreateur(): array
-    {
-        return $this->createur;
-    }
-
-    public function setCreateur(array $createur): static
-    {
-        $this->createur = $createur;
-
-        return $this;
-    }
-
-    public function getModificateur(): array
-    {
-        return $this->modificateur;
-    }
-
-    public function setModificateur(array $modificateur): static
-    {
-        $this->modificateur = $modificateur;
-
-        return $this;
-    }
-
     public function getCommentaireInterne(): ?string
     {
         return $this->commentaireInterne;
@@ -298,18 +189,6 @@ class Oeuvre
     public function setCommentaireInterne(?string $commentaireInterne): static
     {
         $this->commentaireInterne = $commentaireInterne;
-
-        return $this;
-    }
-
-    public function getCategorie(): ?OeuvreCategorie
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(?OeuvreCategorie $categorie): static
-    {
-        $this->categorie = $categorie;
 
         return $this;
     }
@@ -434,14 +313,127 @@ class Oeuvre
         return $this;
     }
 
-    public function getMedia(): ?array
+    /**
+     * @return Collection<int, ArtworkMedia>
+     */
+    public function getArtworkMedias(): Collection
     {
-        return $this->media;
+        return $this->ArtworkMedias;
     }
 
-    public function setMedia(?array $media): static
+    public function addArtworkMedia(ArtworkMedia $ArtworkMedia): static
     {
-        $this->media = $media;
+        if (!$this->ArtworkMedias->contains($ArtworkMedia)) {
+            $this->ArtworkMedias->add($ArtworkMedia);
+            $ArtworkMedia->setOeuvre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArtworkMedia(ArtworkMedia $ArtworkMedia): static
+    {
+        if ($this->ArtworkMedias->removeElement($ArtworkMedia)) {
+            // set the owning side to null (unless already changed)
+            if ($ArtworkMedia->getOeuvre() === $this) {
+                $ArtworkMedia->setOeuvre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getArtworkCategory(): ?ArtworkCategory
+    {
+        return $this->ArtworkCategory;
+    }
+
+    public function setArtworkCategory(?ArtworkCategory $ArtworkCategory): static
+    {
+        $this->ArtworkCategory = $ArtworkCategory;
+
+        return $this;
+    }
+
+    public function getPrimaryMedia(): ?array
+    {
+        if ($this->getArtworkMedias()->first()) {
+            return [$this->getArtworkMedias()->first()];
+        }
+
+        return null;
+    }
+
+    public function setPrimaryMedia($primaryMedia): static
+    {
+        $this->primaryMedia = $primaryMedia;
+
+        return $this;
+    }
+
+    public function getFirstYearAlt(): string
+    {
+        if ($this->isFirstDateUncertain()) {
+            return $this->getFirstYear().' ?';
+        }
+
+        if ($this->getFirstYear() === 0) {
+            return '';
+        }
+
+        return $this->getFirstYear();
+    }
+
+    public function isFirstDateUncertain(): ?bool
+    {
+        return $this->FirstDateUncertain;
+    }
+
+    public function setFirstDateUncertain(bool $FirstDateUncertain): static
+    {
+        $this->FirstDateUncertain = $FirstDateUncertain;
+
+        return $this;
+    }
+
+    public function isSecondDateUncertain(): ?bool
+    {
+        return $this->SecondDateUncertain;
+    }
+
+    public function setSecondDateUncertain(bool $SecondDateUncertain): static
+    {
+        $this->SecondDateUncertain = $SecondDateUncertain;
+
+        return $this;
+    }
+
+
+    public function __toString(): string
+    {
+        return "N° inv $this->numInventaire - $this->titre";
+    }
+
+    public function getDateSeparator(): ?int
+    {
+        return $this->dateSeparator;
+    }
+
+    public function setDateSeparator(?int $dateSeparator): static
+    {
+        $this->dateSeparator = $dateSeparator;
+
+        return $this;
+    }
+
+    public function getDateComplement(): ?string
+    {
+        return $this->dateComplement;
+    }
+
+    public function setDateComplement(?string $dateComplement): static
+    {
+        $this->dateComplement = $dateComplement;
 
         return $this;
     }

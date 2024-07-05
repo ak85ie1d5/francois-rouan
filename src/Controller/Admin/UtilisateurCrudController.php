@@ -3,18 +3,18 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -32,9 +32,34 @@ class UtilisateurCrudController extends AbstractCrudController
         return Utilisateur::class;
     }
 
+    public function createEntity(string $entityFqcn)
+    {
+        $artworkCategory = new Utilisateur();
+        $artworkCategory->setCreatedBy($this->getUser());
+
+        return $artworkCategory;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setUpdatedBy($this->getUser());
+
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud
+            ->setEntityLabelInSingular('utilisateur')
+            ->setEntityLabelInPlural('utilisateurs');
+
+        return parent::configureCrud($crud);
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
+            FormField::addColumn('col-lg-5'),
             IdField::new('id')->hideOnForm(),
             TextField::new('prenom'),
             TextField::new('nom'),
@@ -46,8 +71,11 @@ class UtilisateurCrudController extends AbstractCrudController
             EmailField::new('email'),
             ArrayField::new('roles')->setHelp("ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_UTILISATEUR, ROLE_USER"),
             BooleanField::new('actif')->setValue(true),
-            DateField::new('dateCreation')->setDisabled()->hideWhenCreating(),
-            DateField::new('dateModification')->setDisabled()->hideWhenCreating(),
+
+            FormField::addColumn('col-lg-5'),
+            FormField::addColumn('col-lg-2'),
+            DateField::new('created_at')->setDisabled()->hideWhenCreating(),
+            DateField::new('updated_at')->setDisabled()->hideWhenCreating(),
             DateField::new('derniereConnexion')->setDisabled()->hideWhenCreating()
 
         ];

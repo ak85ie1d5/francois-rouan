@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% endblock %}
+
+{% block body %}
+    <style>
+        .pdf-wrapper {
+            color: #292929;
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .num-inventaire {
+            margin-bottom: 1em;
+        }
+
+        .primary-media {
+            height: 500px;
+            margin-bottom: 1em;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+        .mt-0 {
+            margin-top: 0;
+        }
+    </style>
+
+    <div class="pdf-wrapper">
+        <div class="num-inventaire">{{ oeuvre.numInventaire }}</div>
+        <img src="{{ base64Image }}" alt="" class="primary-media" />
+        <p><b>{{ oeuvre.titre }}</b></p>
+        {% if oeuvre.FirstYear %}
+            <p class="mb-0">
+                {% if oeuvre.FirstMonth %}
+                    {{ month_textual[oeuvre.FirstMonth] }}
+                {% endif %}
+                {{ oeuvre.FirstYear }}
+                {% if oeuvre.dateSeparator != '' %}
+                    {{ separator[oeuvre.dateSeparator] }}
+                {% endif %}
+                {% if oeuvre.SecondMonth %}
+                    {{ month_textual[oeuvre.SecondMonth] }}
+                {% endif %}
+                {% if oeuvre.SecondYear %}
+                    {{ oeuvre.SecondYear }}
+                {% endif %}
+            </p>
+        {% endif %}
+        {%  if oeuvre.dimensions %}
+            <p class="mt-0">{{ oeuvre.dimensions }}</p>
+        {% endif %}
+        {% if oeuvre.description %}
+            <p class="mb-0">{{ oeuvre.description|nl2br }}</p>
+        {% endif %}
+        {% if oeuvre.commentairePublic %}
+            <p class="mt-0">{{ oeuvre.commentairePublic|nl2br }}</p>
+        {% endif %}
+        {% if last_localisation.nom %}
+            <p>{{ last_localisation.nom }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

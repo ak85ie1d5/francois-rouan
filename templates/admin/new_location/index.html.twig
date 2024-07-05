@@ -1,0 +1,24 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+<form name="lieu_collection" method="post" class="container-fluid">
+    <div id="lieu_collection" class="row">
+        <div class="col-6">
+            {{ form_row(form.nom) }}
+            {{ form_row(form.adresse) }}
+            {{ form_row(form.ville) }}
+            {{ form_row(form.codePostal) }}
+            {{ form_row(form.pays) }}
+            {{ form_row(form.email) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.tel1) }}
+            {{ form_row(form.tel2) }}
+            {{ form_row(form.tel3) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.commentaire) }}
+        </div>
+
+        {{ form_row(form.save) }}
+        {{ form_row(form._token) }}
+    </div>
+</form>
