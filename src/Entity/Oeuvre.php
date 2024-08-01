@@ -52,10 +52,10 @@ class Oeuvre
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $oeuvreBibliographies;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $oeuvreExpositions;
 
-    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private Collection $oeuvreStockages;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreHistorique::class, cascade: ["persist", "remove"], orphanRemoval: true)]
