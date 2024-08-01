@@ -34,7 +34,6 @@ class LieuCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addTab('Général'),
             FormField::addColumn('col-lg-5'),
             TextField::new('nom'),
             TextField::new('adresse'),
@@ -70,14 +69,6 @@ class LieuCrudController extends AbstractCrudController
             AssociationField::new('updatedBy', 'Modifier par')
                 ->setDisabled()
                 ->onlyOnForms(),
-
-            FormField::addTab('Expositions'),
-            CollectionField::new('oeuvreExpositions')
-                ->hideOnIndex(),
-
-            FormField::addTab('Localisations'),
-            CollectionField::new('oeuvreStockages')
-                ->hideOnIndex(),
         ];
     }
 }
