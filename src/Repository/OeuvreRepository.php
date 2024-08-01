@@ -21,7 +21,7 @@ class OeuvreRepository extends ServiceEntityRepository
         parent::__construct($registry, Oeuvre::class);
     }
 
-    public function getLastLocalisation(int $id): array
+    public function getLastLocalisation(int $id)
     {
         $conn = $this->getEntityManager()->getConnection();
 

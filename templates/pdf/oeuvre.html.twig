@@ -59,7 +59,7 @@
         {% if oeuvre.commentairePublic %}
             <p class="mt-0">{{ oeuvre.commentairePublic|nl2br }}</p>
         {% endif %}
-        {% if last_localisation.nom %}
+        {% if last_localisation %}
             <p>{{ last_localisation.nom }}</p>
         {% endif %}
     </div>
