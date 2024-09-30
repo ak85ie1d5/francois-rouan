@@ -51,9 +51,6 @@ class ModalNewLocation {
                                 });
                             });
                         }
-
-                        // Show the modal after the new HTML has been added to the modal body
-                        modalInstance.show();
                     }
                 });
         });

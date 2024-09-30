@@ -37,7 +37,6 @@ final class TableField implements FieldInterface
             ->setTemplatePath('admin/table.html.twig')
             ->setFormType(TableType::class)
             ->addCssClass('field-collection table-collection')
-            ->addJsFiles('build/draggable-collection.js')
             ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-collection.js')->onlyOnForms())
             ->addCssFiles('build/table-collection.css')
             ->setDefaultColumns('col-12')

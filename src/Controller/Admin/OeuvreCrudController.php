@@ -182,9 +182,9 @@ class OeuvreCrudController extends AbstractCrudController
     {
         $assets = parent::configureAssets($assets);
         return $assets
-            ->addJsFile(Asset::new('build/modal-new-location.js'))
-            ->addJsFile(Asset::new('build/image-preview.js'))
-            ->addJsFile(Asset::new('build/umanit-easyadmintree-tree-field.js'));
+            ->addJsFile(Asset::new('image-preview.js'))
+            ->addAssetMapperEntry('modal-new-location')
+            ->addAssetMapperEntry('umanit-easyadmintree-tree-field');
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -266,7 +266,6 @@ class OeuvreCrudController extends AbstractCrudController
             CollectionField::new('primary_media', 'Image principale')
                 ->setEntryType(PrimaryMediaType::class)
                 ->addCssClass('primary-media')
-                ->addCssFiles('/build/primary-media.css')
                 ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-image.js'))
                 ->hideOnIndex()
                 ->allowAdd(false)

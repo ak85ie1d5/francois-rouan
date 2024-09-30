@@ -14,4 +14,5 @@ return [
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     Umanit\EasyAdminTreeBundle\UmanitEasyAdminTreeBundle::class => ['all' => true],
     Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
+    Wgg\MinifyBundle\WggMinifyBundle::class => ['all' => true],
 ];

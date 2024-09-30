@@ -70,133 +70,136 @@
 
 
 
-    <script>
-        const dfs = document.getElementById('count-artwork-by-location');
-        new Chart(dfs, {
-            'type': 'doughnut',
-            'data': {
-                labels: {{ count_localisation_type.labels|json_encode|raw }},
-                datasets: [
-                    {
-                        label: '',
-                        data: {{ count_localisation_type.datasets|json_encode|raw }},
-                    }
-                ]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Nombre d\'oeuvres par type de localisation'
-                    },
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dfs = document.getElementById('count-artwork-by-location');
+            new Chart(dfs, {
+                'type': 'doughnut',
+                'data': {
+                    labels: {{ count_localisation_type.labels|json_encode|raw }},
+                    datasets: [
+                        {
+                            label: '',
+                            data: {{ count_localisation_type.datasets|json_encode|raw }},
+                        }
+                    ]
                 },
-                indexAxis: 'y',
-                responsive: true,
-                scales: {
-                    x: {
-                        stacked: true,
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Nombre d\'oeuvres par type de localisation'
+                        },
                     },
-                    y: {
-                        stacked: true
+                    indexAxis: 'y',
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true
+                        }
                     }
                 }
-            }
-        })
+            })
 
-        const cabc = document.getElementById('count-artworks-by-category');
+            const cabc = document.getElementById('count-artworks-by-category');
 
-        new Chart(cabc, {
-            type: 'pie',
-            data: {
-                labels: {{ count_artworks_by_category.labels|json_encode|raw }},
-                datasets: [{
-                    label: 'Catégories d\'oeuvres',
-                    data: {{ count_artworks_by_category.datasets|json_encode|raw }},
-                }]
+            new Chart(cabc, {
+                type: 'pie',
+                data: {
+                    labels: {{ count_artworks_by_category.labels|json_encode|raw }},
+                    datasets: [{
+                        label: 'Catégories d\'oeuvres',
+                        data: {{ count_artworks_by_category.datasets|json_encode|raw }},
+                    }]
 
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Nombre d\'oeuvres par catégorie'
-                    },
                 },
-                responsive: true,
-                scales: {
-                    x: {
-                        stacked: true,
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Nombre d\'oeuvres par catégorie'
+                        },
                     },
-                    y: {
-                        stacked: true
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true
+                        }
                     }
                 }
-            }
-        })
+            })
 
-        const caby = document.getElementById('count-artworks-by-year');
+            const caby = document.getElementById('count-artworks-by-year');
 
-        new Chart(caby, {
-            type: 'line',
-            data: {
-                labels: {{ count_artworks_by_year.labels|json_encode|raw }},
-                datasets: [{
-                    label: 'Nombre d\'oeuvres',
-                    data: {{ count_artworks_by_year.datasets|json_encode|raw }},
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Nombre d\'oeuvres par année de création'
-                    },
+            new Chart(caby, {
+                type: 'line',
+                data: {
+                    labels: {{ count_artworks_by_year.labels|json_encode|raw }},
+                    datasets: [{
+                        label: 'Nombre d\'oeuvres',
+                        data: {{ count_artworks_by_year.datasets|json_encode|raw }},
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
                 },
-                responsive: true,
-                scales: {
-                    x: {
-                        stacked: true,
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Nombre d\'oeuvres par année de création'
+                        },
                     },
-                    y: {
-                        stacked: true
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true
+                        }
                     }
                 }
-            }
-        })
+            })
 
-        const clal = document.getElementById('count-last-artworks-localisation');
+            const clal = document.getElementById('count-last-artworks-localisation');
 
-        new Chart(clal, {
-            type: 'bar',
-            data: {
-                labels: {{ count_last_artworks_localisation.labels|json_encode|raw }},
-                datasets: [{
-                    label: 'Localisation actuelle des oeuvres',
-                    data: {{ count_last_artworks_localisation.datasets|json_encode|raw }},
-                }]
+            new Chart(clal, {
+                type: 'bar',
+                data: {
+                    labels: {{ count_last_artworks_localisation.labels|json_encode|raw }},
+                    datasets: [{
+                        label: 'Localisation actuelle des oeuvres',
+                        data: {{ count_last_artworks_localisation.datasets|json_encode|raw }},
+                    }]
 
-            },
-            options: {
-                indexAxis: 'y',
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Nombre d\'oeuvres par localisation'
-                    },
                 },
-                responsive: true,
-                scales: {
-                    x: {
-                        stacked: true,
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Nombre d\'oeuvres par localisation'
+                        },
                     },
-                    y: {
-                        stacked: true
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true
+                        }
                     }
                 }
-            }
-        })
+            })
+        });
+
     </script>
 {% endblock %}
