@@ -196,6 +196,9 @@ class ArtworkMedia
 
     public function __toString(): string
     {
+        if (!$this->nom) {
+            return "";
+        }
         return $this->nom;
     }
 }
