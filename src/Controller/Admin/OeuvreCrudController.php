@@ -154,7 +154,16 @@ class OeuvreCrudController extends AbstractCrudController
                 'data-bs-target' => "#modal-new-location"
             ]);
 
+        $exportToCsv = Action::new('export_to_csv', 'Exporter en CSV')
+            ->linkToRoute('app_list_to_csv', ['ids' => 'entity.getId()'])
+            ->setHtmlAttributes([
+                'target' => '_blank',
+            ])
+            ->setIcon('fa fa-file-csv')
+            ->setCssClass('btn btn-success');
+
         $actions
+            ->addBatchAction($exportToCsv)
             ->add(Crud::PAGE_INDEX, $pdfLink)
             ->update(Crud::PAGE_INDEX, Action::EDIT,
                 function (Action $action) {

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Oeuvre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -101,6 +102,34 @@ class OeuvreRepository extends ServiceEntityRepository
         ";
 
         return $conn->executeQuery($sql)->fetchOne();
+    }
+
+    public function getMultipleLastLocalisation(array $ids): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT
+                `o`.`id`,
+                `l`.`nom`
+            FROM `oeuvre` AS `o`
+                JOIN `oeuvre_stockage` AS `os`
+                    ON `os`.`oeuvre_id` = `o`.`id`
+                JOIN `lieu` AS `l`
+                    ON `os`.`lieu_id` = `l`.`id`
+            WHERE `o`.`id` IN (:ids)
+            ORDER BY `o`.`id`, `l`.`id`
+            DESC;
+        ";
+
+        $stmt = $conn->executeQuery($sql, ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER]);
+
+        $multipleLastLocalisation = [];
+        while ($row = $stmt->fetchAssociative()) {
+            $multipleLastLocalisation[$row['id']] = $row['nom'];
+        }
+
+        return $multipleLastLocalisation;
     }
 
 //    /**
