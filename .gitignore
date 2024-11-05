@@ -11,4 +11,5 @@
 
 ###> symfony/asset-mapper ###
 /public/assets
+/public/bundles
 ###< symfony/asset-mapper ###
