@@ -23,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -32,6 +33,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\Routing\Annotation\Route;
 use Umanit\EasyAdminTreeBundle\Field\TreeField;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -158,9 +160,12 @@ class OeuvreCrudController extends AbstractCrudController
             ->linkToRoute('app_list_to_csv', ['ids' => 'entity.getId()'])
             ->setHtmlAttributes([
                 'target' => '_blank',
+                'id' => 'export-to-csv-action',
+                'override-data-bs-target' => '#modal-batch-action-csv',
             ])
             ->setIcon('fa fa-file-csv')
-            ->setCssClass('btn btn-success');
+            ->setCssClass('btn btn-success')
+            ->setTemplatePath('admin/button/action.html.twig');
 
         $actions
             ->addBatchAction($exportToCsv)
@@ -193,6 +198,8 @@ class OeuvreCrudController extends AbstractCrudController
         return $assets
             ->addJsFile(Asset::new('image-preview.js'))
             ->addAssetMapperEntry('modal-new-location')
+            //->addJsFile(Asset::new('modal-export-to-csv.js'))
+            ->addAssetMapperEntry('modal-export-to-csv')
             ->addAssetMapperEntry('umanit-easyadmintree-tree-field');
     }
 

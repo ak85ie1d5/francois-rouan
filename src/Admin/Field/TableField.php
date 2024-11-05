@@ -38,7 +38,7 @@ final class TableField implements FieldInterface
             ->setFormType(TableType::class)
             ->addCssClass('field-collection table-collection')
             ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-collection.js')->onlyOnForms())
-            ->addCssFiles('build/table-collection.css')
+            //->addCssFiles('/assets/styles/table-collection.css')
             ->setDefaultColumns('col-12')
             ->setCustomOption(self::OPTION_ALLOW_ADD, true)
             ->setCustomOption(self::OPTION_ALLOW_DELETE, true)
