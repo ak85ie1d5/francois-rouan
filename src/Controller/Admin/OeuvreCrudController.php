@@ -167,7 +167,19 @@ class OeuvreCrudController extends AbstractCrudController
             ->setCssClass('btn btn-success')
             ->setTemplatePath('admin/button/action.html.twig');
 
+        $exportToPdf = Action::new('export_to_pdf', 'Exporter en PDF')
+            ->linkToRoute('app_list_to_pdf', ['ids' => 'entity.getId()'])
+            ->setHtmlAttributes([
+                'target' => '_blank',
+                'id' => 'export-to-pdf-action',
+                'override-data-bs-target' => '#modal-batch-action-pdf',
+            ])
+            ->setIcon('fa fa-file-pdf')
+            ->setCssClass('btn btn-danger')
+            ->setTemplatePath('admin/button/action.html.twig');
+
         $actions
+            ->addBatchAction($exportToPdf)
             ->addBatchAction($exportToCsv)
             ->add(Crud::PAGE_INDEX, $pdfLink)
             ->update(Crud::PAGE_INDEX, Action::EDIT,
