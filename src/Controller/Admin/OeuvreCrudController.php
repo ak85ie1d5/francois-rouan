@@ -210,7 +210,7 @@ class OeuvreCrudController extends AbstractCrudController
         return $assets
             ->addJsFile(Asset::new('image-preview.js'))
             ->addAssetMapperEntry('modal-new-location')
-            //->addJsFile(Asset::new('modal-export-to-csv.js'))
+            ->addAssetMapperEntry('modal-export-to-pdf')
             ->addAssetMapperEntry('modal-export-to-csv')
             ->addAssetMapperEntry('umanit-easyadmintree-tree-field');
     }

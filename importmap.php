@@ -36,4 +36,8 @@ return [
         'path' => './assets/modal-export-to-csv.js',
         'entrypoint' => true,
     ],
+    'modal-export-to-pdf' => [
+        'path' => './assets/modal-export-to-pdf.js',
+        'entrypoint' => true,
+    ],
 ];

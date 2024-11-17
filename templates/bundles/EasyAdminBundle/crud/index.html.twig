@@ -239,5 +239,6 @@
     {% if has_batch_actions %}
         {{ include('@EasyAdmin/crud/includes/_batch_action_modal.html.twig', {}, with_context = false) }}
         {{ include('admin/modal/batch_action/export_to_csv.html.twig', {}, with_context = false) }}
+        {{ include('admin/modal/batch_action/export_to_pdf.html.twig', {}, with_context = false) }}
     {% endif %}
 {% endblock main %}
