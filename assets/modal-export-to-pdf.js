@@ -34,7 +34,7 @@ class ModalExportToPdf {
                         'batchActionUrl': actionElement.getAttribute('data-action-url'),
                         'batchActionCsrfToken': actionElement.getAttribute('data-action-csrf-token'),
                     };
-                    console.log(batchFormFields);
+
                     selectedItems.forEach((item, i) => {
                         batchFormFields[`batchActionEntityIds[${i}]`] = item.value;
                     });
