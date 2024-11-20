@@ -2,8 +2,7 @@
 
 namespace App\Service;
 
-
-
+use App\Entity\Options;
 use App\Entity\Oeuvre;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -27,6 +26,7 @@ class CsvExportService
     {
         $artworks = $this->entityManager->getRepository(Oeuvre::class)->findBy(['id' => $ids]);
         $multipleLastLocalisation = $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation($ids);
+        $monthTextual = $this->entityManager->getRepository(Options::class)->findOneBy(['name' => 'month_textual'])->getValue();
 
         $csvData = [];
 
@@ -44,6 +44,10 @@ class CsvExportService
                     // Remove line breaks from description and commentairePublic fields
                     if ($field === 'description' || $field === 'commentairePublic') {
                         $value = str_replace(["\r", "\n", ";"], ' ', $value);
+                    }
+
+                    if ($field === 'FirstMonth') {
+                        $value = $monthTextual[$value] ?? 'haaa';
                     }
 
                     $row[] = $value;
