@@ -47,7 +47,7 @@ class CsvExportService
                     }
 
                     if ($field === 'FirstMonth') {
-                        $value = $monthTextual[$value] ?? 'haaa';
+                        $value = $monthTextual[$value] ?? '';
                     }
 
                     $row[] = $value;
