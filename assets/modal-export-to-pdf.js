@@ -10,7 +10,6 @@ class ModalExportToPdf {
 
     #createExportToPdfBatchActions() {
 
-
         const modalTitle = document.querySelector('#batch-action-confirmation-title-pdf');
         const titleContentWithPlaceholders = modalTitle.textContent;
 
@@ -38,6 +37,10 @@ class ModalExportToPdf {
                     selectedItems.forEach((item, i) => {
                         batchFormFields[`batchActionEntityIds[${i}]`] = item.value;
                     });
+
+                    // Add checkbox values
+                    batchFormFields['includeBibliography'] = document.querySelector('#bibliography').checked;
+                    batchFormFields['includeExhibition'] = document.querySelector('#exhibition').checked;
 
                     const batchForm = document.createElement('form');
                     batchForm.setAttribute('method', 'POST');

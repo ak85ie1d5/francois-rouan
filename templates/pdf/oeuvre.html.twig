@@ -11,21 +11,27 @@
             width: 95%;
             font: 18px/1.5 sans-serif;
         }
-
         .num-inventaire {
             margin-bottom: 1em;
         }
-
         .primary-media {
             height: 500px;
             margin-bottom: 1em;
         }
-
         .mb-0 {
             margin-bottom: 0;
         }
         .mt-0 {
             margin-top: 0;
+        }
+        .w-100 {
+            width: 100%;
+        }
+        .text-left {
+            text-align: left;
+        }
+        .page_break {
+            page-break-before: always;
         }
     </style>
 
@@ -61,6 +67,53 @@
         {% endif %}
         {% if last_localisation %}
             <p>{{ last_localisation.nom }}</p>
+        {% endif %}
+        {% if bibliographies is defined and bibliographies is not empty or exhibitions is defined and exhibitions is not empty %}
+            <div class="page_break"></div>
+        {% endif %}
+        {% if bibliographies is defined and bibliographies is not empty %}
+            <p><b>Bibliographie</b></p>
+            <table class="w-100">
+                <tr>
+                    <th class="text-left">Titre</th>
+                    <th class="text-left">Description</th>
+                    <th class="text-left">Commentaire</th>
+                    <th class="text-left">Année</th>
+                </tr>
+
+                {% for bibliography in bibliographies %}
+                    <tr>
+                        <td>{{ bibliography.titre|nl2br }}</td>
+                        <td>{{ bibliography.description|nl2br }}</td>
+                        <td>{{ bibliography.commentaire|nl2br }}</td>
+                        <td>{{ bibliography.Year|nl2br }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        {% endif %}
+        {% if exhibitions is defined and exhibitions is not empty %}
+            <p><b>Expositions</b></p>
+            <table class="w-100">
+                <tr>
+                    <th class="text-left">Titre</th>
+                    <th class="text-left">Description</th>
+                    <th class="text-left">Date de début</th>
+                    <th class="text-left">Date de fin</th>
+                    <th class="text-left">Lieu</th>
+                </tr>
+
+                {% for exhibition in exhibitions %}
+                    <tr>
+                        <td>{{ exhibition.titre|nl2br }}</td>
+                        <td>{{ exhibition.description|nl2br }}</td>
+                        <td>{{ exhibition.FirstDay|nl2br }}/{{ exhibition.FirstMonth|nl2br }}/{{ exhibition.FirstYear|nl2br }}</td>
+                        <td>{{ exhibition.SecondDay|nl2br }}/{{ exhibition.SecondMonth|nl2br }}/{{ exhibition.SecondYear|nl2br }}</td>
+                        <td>{{ exhibition.lieu.nom|nl2br }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
         {% endif %}
     </div>
 {% endblock %}

@@ -4,6 +4,8 @@ namespace App\Service;
 
 
 use App\Entity\Oeuvre;
+use App\Entity\OeuvreBibliographie;
+use App\Entity\OeuvreExposition;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -125,5 +127,27 @@ class PdfExportService
         $data = file_get_contents($imagePath);
 
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
+    }
+
+    /**
+     * Retrieve the bibliography for the Oeuvre entity
+     *
+     * @param int $artworkId
+     * @return OeuvreBibliographie[]
+     */
+    public function getBibliography(int $artworkId): array
+    {
+        return $this->entityManager->getRepository(OeuvreBibliographie::class)->findBy(['oeuvre' => $artworkId]);
+    }
+
+    /**
+     * Retrieve the exhibition for the Oeuvre entity
+     *
+     * @param int $artworkId
+     * @return OeuvreExposition[]
+     */
+    public function getExhibition(int $artworkId): array
+    {
+        return $this->entityManager->getRepository(OeuvreExposition::class)->findBy(['oeuvre' => $artworkId]);
     }
 }

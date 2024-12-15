@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin\BatchAction;
 
-use App\Controller\PDF\OeuvreController;
 use App\Service\PdfExportService;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,13 +14,10 @@ use Twig\Error\SyntaxError;
 
 class ListToPdfController extends AbstractController
 {
-    private OeuvreController $oeuvreController;
-
     private PdfExportService $pdfExportService;
 
-    public function __construct(PdfExportService $pdfExportService, OeuvreController $oeuvreController)
+    public function __construct(PdfExportService $pdfExportService)
     {
-        $this->oeuvreController = $oeuvreController;
         $this->pdfExportService = $pdfExportService;
     }
 
@@ -46,8 +42,17 @@ class ListToPdfController extends AbstractController
 
         foreach ($ids as $id) {
             $fields = $this->pdfExportService->getPdfContent($id);
+
+            if ($request->request->get('includeBibliography') === 'true') {
+                $fields['bibliographies'] = $this->pdfExportService->getBibliography($id);
+            }
+
+            if ($request->request->get('includeExhibition') === 'true') {
+                $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
+            }
+
             $pdfContent = $this->pdfExportService->generatePdf($fields, false);
-            $pdfFilename = 'oeuvre_' . $id . '.pdf';
+            $pdfFilename =$fields['oeuvre']->getNumInventaire().' - '.$fields['oeuvre']->getTitre().'.pdf';
 
             $zip->addFromString($pdfFilename, $pdfContent);
         }

@@ -3,6 +3,16 @@
         <div class="modal-content">
             <div class="modal-body">
                 <h4 id="batch-action-confirmation-title-pdf">{{ 'batch_action_modal.title'|trans(domain = 'EasyAdminBundle') }}</h4>
+                <div class="">
+                    <label for="bibliography">
+                        <input id="bibliography" type="checkbox" name="additional_data" value="true" />
+                        <span>Bibliographie</span>
+                    </label>
+                    <label for="exhibition">
+                        <input id="exhibition" type="checkbox" name="additional_data" value="true" />
+                        <span>Exposition</span>
+                    </label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">
