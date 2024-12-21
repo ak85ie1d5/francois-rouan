@@ -50,9 +50,11 @@ class Oeuvre
     private ?string $commentaireInterne = null;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[ORM\OrderBy(["Year" => "DESC"])]
     private Collection $oeuvreBibliographies;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[ORM\OrderBy(["Year" => "DESC"])]
     private Collection $oeuvreExpositions;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist", "remove"], orphanRemoval: true)]
