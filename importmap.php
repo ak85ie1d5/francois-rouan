@@ -40,4 +40,8 @@ return [
         'path' => './assets/modal-export-to-pdf.js',
         'entrypoint' => true,
     ],
+    'scroll-auto' => [
+        'path' => './assets/scroll-auto.js',
+        'entrypoint' => true,
+    ]
 ];

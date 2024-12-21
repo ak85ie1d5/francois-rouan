@@ -119,7 +119,7 @@ class OeuvreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Create a new action to generate a PDF of the Oeuvre entity.
-        $pdfLink = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
+        $pdfLink = Action::new('pdf', 'Exporter&nbsp;en&nbsp;PDF', 'fa fa-file-pdf')
             ->linkToRoute('pdf_oeuvre', function (Oeuvre $entity) {
                 return ['id' => $entity->getId()];
             })
@@ -140,7 +140,7 @@ class OeuvreCrudController extends AbstractCrudController
         // Create a new action to go back to the index page.
         $goBack = Action::new('goBack', 'Retourner à la liste', 'fa fa-arrow-left')
             ->linkToCrudAction('index')
-            ->setCssClass('btn btn-secondary');
+            ->setCssClass('btn btn-secondary action-goBack');
 
         // Create a new action to add a new location.
         $newLocationModal = Action::new('newLieu', 'Ajouter un lieu')
@@ -182,7 +182,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->update(Crud::PAGE_INDEX, Action::EDIT,
                 function (Action $action) {
                     return $action
-                        ->setLabel('Modifier/Visualiser')
+                        ->setLabel('Modifier&nbsp;/&nbsp;Visualiser')
                         ->setIcon('fa fa-pencil-alt')
                         ->addCssClass('d-flex m-2');
                 }
@@ -206,6 +206,7 @@ class OeuvreCrudController extends AbstractCrudController
         $assets = parent::configureAssets($assets);
         return $assets
             ->addJsFile(Asset::new('image-preview.js'))
+            ->addAssetMapperEntry('scroll-auto')
             ->addAssetMapperEntry('modal-new-location')
             ->addAssetMapperEntry('modal-export-to-pdf')
             ->addAssetMapperEntry('modal-export-to-csv')
@@ -229,7 +230,6 @@ class OeuvreCrudController extends AbstractCrudController
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
             ->add(LocationFilter::new('oeuvreStockages', 'Localisation'))
             ->add(ArtworkMediaFilter::new('ArtworkMedias', 'Médias'));
-        //->add(EntityFilter::new('ArtworkMedias'));
     }
 
     public function configureFields(string $pageName): iterable
