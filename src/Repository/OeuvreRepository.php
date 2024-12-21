@@ -35,7 +35,7 @@ class OeuvreRepository extends ServiceEntityRepository
                 JOIN `lieu` AS `l`
                     ON `os`.`lieu_id` = `l`.`id`
             WHERE `o`.`id` = :id
-            ORDER BY `l`.`id`
+            ORDER BY `os`.`id`
             DESC LIMIT 1; 
         ";
 
