@@ -45,16 +45,16 @@ class PdfExportService
      *
      * @param array $fields
      * @param bool $isSingle
+     * @param string $combinedHtml
      * @return string
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function generatePdf(array $fields, bool $isSingle): string
+    public function generatePdf(array $fields, bool $isSingle, string $combinedHtml = ''): string
     {
-        $filename = $fields['oeuvre']->getNumInventaire().' - '.$fields['oeuvre']->getTitre();
         // Render HTML template
-        $html = $this->twig->render('pdf/oeuvre.html.twig', $fields);
+        $html = $isSingle ? $this->twig->render('pdf/oeuvre.html.twig', $fields) : $combinedHtml;
 
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
@@ -72,6 +72,7 @@ class PdfExportService
 
         if ($isSingle) {
             // Output the generated PDF to Browser (inline view)
+            $filename = $fields['oeuvre']->getNumInventaire().' - '.$fields['oeuvre']->getTitre();
             $dompdf->stream($filename, ["Attachment" => false]);
             return new Response('', Response::HTTP_OK, ['Content-Type' => 'application/pdf']);
         } else {
@@ -149,5 +150,16 @@ class PdfExportService
     public function getExhibition(int $artworkId): array
     {
         return $this->entityManager->getRepository(OeuvreExposition::class)->findBy(['oeuvre' => $artworkId]);
+    }
+
+    /**
+     * Generate HTML from the fields
+     *
+     * @param array $fields
+     * @return string
+     */
+    public function generateHtml(array $fields): string
+    {
+        return $this->twig->render('pdf/oeuvre.html.twig', $fields);
     }
 }
