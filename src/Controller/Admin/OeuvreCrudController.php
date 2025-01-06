@@ -164,6 +164,17 @@ class OeuvreCrudController extends AbstractCrudController
             ->setCssClass('btn btn-success')
             ->setTemplatePath('admin/button/action.html.twig');
 
+        $exportToZip = Action::new('export_to_zip', 'Exporter dans un ZIP')
+            ->linkToRoute('app_list_to_pdf', ['ids' => 'entity.getId()'])
+            ->setHtmlAttributes([
+                'target' => '_blank',
+                'id' => 'export-to-zip-action',
+                'override-data-bs-target' => '#modal-batch-action-pdf',
+            ])
+            ->setIcon('fa fa-file-zip')
+            ->setCssClass('btn btn-warning')
+            ->setTemplatePath('admin/button/action.html.twig');
+
         $exportToPdf = Action::new('export_to_pdf', 'Exporter en PDF')
             ->linkToRoute('app_list_to_pdf', ['ids' => 'entity.getId()'])
             ->setHtmlAttributes([
@@ -176,6 +187,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $actions
+            ->addBatchAction($exportToZip)
             ->addBatchAction($exportToPdf)
             ->addBatchAction($exportToCsv)
             ->add(Crud::PAGE_INDEX, $pdfLink)
