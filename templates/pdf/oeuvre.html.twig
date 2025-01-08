@@ -13,6 +13,7 @@
         }
         .num-inventaire {
             margin-bottom: 1em;
+            font-weight: bold;
         }
         .primary-media {
             height: 500px;
@@ -20,6 +21,9 @@
         }
         .mb-0 {
             margin-bottom: 0;
+        }
+        .gap {
+            height: 15px;
         }
         .mt-0 {
             margin-top: 0;
@@ -80,16 +84,21 @@
                     <th class="text-left">Commentaire</th>
                     <th class="text-left">Année</th>
                 </tr>
+                <tr>
+                    <td colspan="4" class="gap"></td>
+                </tr>
 
                 {% for bibliography in bibliographies %}
                     <tr>
-                        <td>{{ bibliography.titre|nl2br }}</td>
-                        <td>{{ bibliography.description|nl2br }}</td>
-                        <td>{{ bibliography.commentaire|nl2br }}</td>
-                        <td>{{ bibliography.Year|nl2br }}</td>
+                        <td class="pb-30">{{ bibliography.titre|nl2br }}</td>
+                        <td class="pb-30">{{ bibliography.description|nl2br }}</td>
+                        <td class="pb-30">{{ bibliography.commentaire|nl2br }}</td>
+                        <td class="pb-30">{{ bibliography.Year|nl2br }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="gap"></td>
                     </tr>
                 {% endfor %}
-
             </table>
         {% endif %}
         {% if exhibitions is defined and exhibitions is not empty %}
@@ -102,14 +111,20 @@
                     <th class="text-left">Date de fin</th>
                     <th class="text-left">Lieu</th>
                 </tr>
+                <tr>
+                    <td colspan="4" class="gap"></td>
+                </tr>
 
                 {% for exhibition in exhibitions %}
-                    <tr>
+                    <tr class="mb-20">
                         <td>{{ exhibition.titre|nl2br }}</td>
                         <td>{{ exhibition.description|nl2br }}</td>
                         <td>{{ exhibition.FirstDay|nl2br }}/{{ exhibition.FirstMonth|nl2br }}/{{ exhibition.FirstYear|nl2br }}</td>
                         <td>{{ exhibition.SecondDay|nl2br }}/{{ exhibition.SecondMonth|nl2br }}/{{ exhibition.SecondYear|nl2br }}</td>
                         <td>{{ exhibition.lieu.nom|nl2br }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="gap"></td>
                     </tr>
                 {% endfor %}
 
