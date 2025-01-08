@@ -165,7 +165,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToZip = Action::new('export_to_zip', 'Exporter dans un ZIP')
-            ->linkToRoute('app_list_to_pdf', ['ids' => 'entity.getId()'])
+            ->linkToRoute('app_list_to_zip', ['ids' => 'entity.getId()'])
             ->setHtmlAttributes([
                 'target' => '_blank',
                 'id' => 'export-to-zip-action',
