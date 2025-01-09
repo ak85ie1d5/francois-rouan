@@ -7,6 +7,7 @@ use App\Service\PdfExportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for handling PDF export of Oeuvre entities.
@@ -33,13 +34,17 @@ class OeuvreController extends AbstractController
      *
      * @param int $id The ID of the Oeuvre entity.
      *
-     * @return string
+     * @return Response
      */
     #[Route('/pdf/oeuvre/{id}', name: 'pdf_oeuvre')]
-    public function index(int $id): string
+    public function index(int $id): Response
     {
         $fields = $this->pdfExportService->getPdfContent($id);
+        $pdfContent = $this->pdfExportService->generatePdf($fields, true);
 
-        return $this->pdfExportService->generatePdf($fields, true);
+        return new Response($pdfContent, Response::HTTP_OK, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="oeuvre_' . $id . '.pdf"',
+        ]);
     }
 }

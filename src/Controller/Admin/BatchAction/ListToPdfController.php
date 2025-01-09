@@ -51,8 +51,8 @@ class ListToPdfController extends AbstractController
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
             }
 
-            $pdfContent = $this->pdfExportService->generatePdf($fields, false);
-            $pdfFilename =$fields['oeuvre']->getNumInventaire().' - '.$fields['oeuvre']->getTitre().'.pdf';
+            $pdfContent = $this->pdfExportService->generatePdf($fields, true);
+            $pdfFilename = $fields['oeuvre']->getNumInventaire().' - '.$fields['oeuvre']->getTitre().'.pdf';
 
             $zip->addFromString($pdfFilename, $pdfContent);
         }
