@@ -5,6 +5,8 @@ namespace App\Controller\Admin\BatchAction;
 use App\Service\PdfExportService;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,9 +18,13 @@ class ListToPdfController extends AbstractController
 {
     private PdfExportService $pdfExportService;
 
+    private $selectedArtworks;
+
     public function __construct(PdfExportService $pdfExportService)
     {
         $this->pdfExportService = $pdfExportService;
+
+        $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true) : [];
     }
 
     /**
@@ -31,7 +37,6 @@ class ListToPdfController extends AbstractController
     #[Route('/list/to/zip', name: 'app_list_to_zip')]
     public function indexZip(Request $request, BatchActionDto $batchActionDto): Response
     {
-        $ids = $batchActionDto->getEntityIds();
         $zip = new \ZipArchive();
         $zipFilename = 'export_oeuvres_' . date('Y-m-d_His') . '.zip';
         $tempDir = sys_get_temp_dir();
@@ -40,7 +45,7 @@ class ListToPdfController extends AbstractController
             return new Response('Cannot open the zip file', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        foreach ($ids as $id) {
+        foreach ($this->selectedArtworks as $id) {
             $fields = $this->pdfExportService->getPdfContent($id);
 
             if ($request->request->get('includeBibliography') === 'true') {
@@ -72,10 +77,9 @@ class ListToPdfController extends AbstractController
     #[Route('/list/to/pdf', name: 'app_list_to_pdf')]
     public function indexPdf(Request $request, BatchActionDto $batchActionDto): Response
     {
-        $ids = $batchActionDto->getEntityIds();
         $htmlContent = '';
 
-        foreach ($ids as $id) {
+        foreach ($this->selectedArtworks as $id) {
             $fields = $this->pdfExportService->getPdfContent($id);
 
             if ($request->request->get('includeBibliography') === 'true') {

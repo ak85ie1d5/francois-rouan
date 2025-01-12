@@ -43,5 +43,9 @@ return [
     'scroll-auto' => [
         'path' => './assets/scroll-auto.js',
         'entrypoint' => true,
-    ]
+    ],
+    'selection-multiple' => [
+        'path' => './assets/selection-multiple.js',
+        'entrypoint' => true,
+    ],
 ];

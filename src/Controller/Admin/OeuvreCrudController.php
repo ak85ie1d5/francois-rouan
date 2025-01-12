@@ -171,7 +171,7 @@ class OeuvreCrudController extends AbstractCrudController
                 'id' => 'export-to-zip-action',
                 'override-data-bs-target' => '#modal-batch-action-pdf',
             ])
-            ->setIcon('fa fa-file-zip')
+            ->setIcon('fa fa-file-zipper')
             ->setCssClass('btn btn-warning')
             ->setTemplatePath('admin/button/action.html.twig');
 
@@ -187,6 +187,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $actions
+            ->addBatchAction($uncheckAll)
             ->addBatchAction($exportToZip)
             ->addBatchAction($exportToPdf)
             ->addBatchAction($exportToCsv)
@@ -222,7 +223,8 @@ class OeuvreCrudController extends AbstractCrudController
             ->addAssetMapperEntry('modal-new-location')
             ->addAssetMapperEntry('modal-export-to-pdf')
             ->addAssetMapperEntry('modal-export-to-csv')
-            ->addAssetMapperEntry('umanit-easyadmintree-tree-field');
+            ->addAssetMapperEntry('umanit-easyadmintree-tree-field')
+            ->addAssetMapperEntry('selection-multiple');
     }
 
     public function configureFilters(Filters $filters): Filters
