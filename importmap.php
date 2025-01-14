@@ -40,6 +40,10 @@ return [
         'path' => './assets/modal-export-to-pdf.js',
         'entrypoint' => true,
     ],
+    'modal-uncheck-all' => [
+        'path' => './assets/modal-uncheck-all.js',
+        'entrypoint' => true,
+    ],
     'scroll-auto' => [
         'path' => './assets/scroll-auto.js',
         'entrypoint' => true,

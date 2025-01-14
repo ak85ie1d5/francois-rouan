@@ -9,6 +9,7 @@ class SelectionMultiple {
         this.#loadSelections();
         this.#getSelection();
         this.#displayBatchActions();
+        this.#attachUncheckAllHandler();
     }
 
     // Function to load selected checkboxes from cookies
@@ -75,5 +76,28 @@ class SelectionMultiple {
         } else {
             batchActions.classList.add('d-none');
         }
+    }
+
+    // Function to attach the uncheck all handler
+    #attachUncheckAllHandler() {
+        let uncheckAllButton = document.querySelector('#modal-batch-action-button-uncheck-all');
+        if (uncheckAllButton) {
+            uncheckAllButton.addEventListener('click', () => {
+                this.#clearSelection();
+            });
+        }
+    }
+
+    // Function to clear the selection
+    #clearSelection() {
+        this.selectedArtworks = [];
+        this.#setCookie('selectedArtworks', JSON.stringify(this.selectedArtworks), 1);
+
+        let checkboxes = document.querySelectorAll('.form-batch-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        this.#displayBatchActions();
     }
 }

@@ -153,6 +153,17 @@ class OeuvreCrudController extends AbstractCrudController
                 'data-bs-target' => "#modal-new-location"
             ]);
 
+        $uncheckAll = Action::new('uncheckAll', '')
+            ->linkToUrl('#')
+            ->setHtmlAttributes([
+                'id' => 'uncheck-all-action',
+                'title' => 'Désélectionner toutes les lignes',
+                'override-data-bs-target' => '#modal-batch-action-uncheck-all',
+            ])
+            ->setIcon('fa fa-check')
+            ->addCssClass('btn btn-light')
+            ->setTemplatePath('admin/button/action.html.twig');
+
         $exportToCsv = Action::new('export_to_csv', 'Exporter en CSV')
             ->linkToRoute('app_list_to_csv', ['ids' => 'entity.getId()'])
             ->setHtmlAttributes([
@@ -223,6 +234,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->addAssetMapperEntry('modal-new-location')
             ->addAssetMapperEntry('modal-export-to-pdf')
             ->addAssetMapperEntry('modal-export-to-csv')
+            ->addAssetMapperEntry('modal-uncheck-all')
             ->addAssetMapperEntry('umanit-easyadmintree-tree-field')
             ->addAssetMapperEntry('selection-multiple');
     }

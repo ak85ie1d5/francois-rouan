@@ -18,7 +18,7 @@ class ListToPdfController extends AbstractController
 {
     private PdfExportService $pdfExportService;
 
-    private $selectedArtworks;
+    private mixed $selectedArtworks;
 
     public function __construct(PdfExportService $pdfExportService)
     {
