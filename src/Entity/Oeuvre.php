@@ -85,6 +85,9 @@ class Oeuvre
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $dateComplement = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $DimensionWithFrame = null;
+
     public function __construct(StorageInterface $storage)
     {
         $this->oeuvreBibliographies = new ArrayCollection();
@@ -436,6 +439,18 @@ class Oeuvre
     public function setDateComplement(?string $dateComplement): static
     {
         $this->dateComplement = $dateComplement;
+
+        return $this;
+    }
+
+    public function getDimensionWithFrame(): ?string
+    {
+        return $this->DimensionWithFrame;
+    }
+
+    public function setDimensionWithFrame(?string $DimensionWithFrame): static
+    {
+        $this->DimensionWithFrame = $DimensionWithFrame;
 
         return $this;
     }

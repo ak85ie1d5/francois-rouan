@@ -63,6 +63,9 @@
         {%  if oeuvre.dimensions %}
             <p class="mt-0">{{ oeuvre.dimensions }}</p>
         {% endif %}
+        {%  if oeuvre.DimensionWithFrame %}
+            <p class="mt-0">{{ oeuvre.DimensionWithFrame }}</p>
+        {% endif %}
         {% if oeuvre.description %}
             <p class="mb-0">{{ oeuvre.description|nl2br }}</p>
         {% endif %}

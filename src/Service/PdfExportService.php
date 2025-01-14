@@ -55,7 +55,6 @@ class PdfExportService
     {
         // Render HTML template
         $html = $isSingle ? $this->twig->render('pdf/oeuvre.html.twig', $fields) : $combinedHtml;
-        //$html = $this->twig->render('pdf/oeuvre.html.twig', $fields);
 
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
@@ -72,16 +71,6 @@ class PdfExportService
         $dompdf->render();
 
         return $dompdf->output();
-
-        /*if ($isSingle) {
-            // Output the generated PDF to Browser (inline view)
-            $filename = $fields['oeuvre']->getNumInventaire().' - '.$fields['oeuvre']->getTitre();
-            $dompdf->stream($filename, ["Attachment" => false]);
-            return new Response('', Response::HTTP_OK, ['Content-Type' => 'application/pdf']);
-        } else {
-            // Output the generated PDF to a file
-            return $dompdf->output();
-        }*/
     }
 
     /**

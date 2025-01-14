@@ -246,6 +246,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('titre')
             ->add('sousTitre')
             ->add('dimensions')
+            ->add('DimensionWithFrame')
             ->add('FirstYear')
             ->add('serie')
             ->add('description')
@@ -304,6 +305,8 @@ class OeuvreCrudController extends AbstractCrudController
 
             FormField::addColumn('col-lg-4'),
             TextField::new('dimensions')
+                ->hideOnIndex(),
+            TextField::new('DimensionWithFrame', 'Dimensions avec cadre')
                 ->hideOnIndex(),
             TextareaField::new('description')
                 ->stripTags(),
