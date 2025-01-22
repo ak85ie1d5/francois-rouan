@@ -8,6 +8,26 @@ class ModalUncheckAll {
         this.#createBatchActions();
     }
 
+    #getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    #countSelectedArtworks() {
+        const cookieValue = this.#getCookie('selectedArtworks');
+        if (cookieValue) {
+            try {
+                const artworksArray = JSON.parse(cookieValue);
+                return Array.isArray(artworksArray) ? artworksArray.length : 0;
+            } catch (e) {
+                console.error('Error parsing selectedArtworks cookie:', e);
+                return 0;
+            }
+        }
+        return 0;
+    }
+
     #createBatchActions() {
         const modalTitle = document.querySelector('#batch-action-confirmation-title-uncheck-all');
         const titleContentWithPlaceholders = modalTitle.textContent;
@@ -18,10 +38,10 @@ class ModalUncheckAll {
 
                 const actionElement = event.currentTarget;
                 const actionName = actionElement.textContent.trim() || actionElement.getAttribute('title');
-                const selectedItems = document.querySelectorAll('input[type="checkbox"].form-batch-checkbox:checked');
+                const selectedItems = this.#countSelectedArtworks();
                 modalTitle.textContent = titleContentWithPlaceholders
                     .replace('%action_name%', actionName)
-                    .replace('%num_items%', selectedItems.length.toString());
+                    .replace('%num_items%', selectedItems.toString());
 
                 document.querySelector('#modal-batch-action-button-uncheck-all').addEventListener('click', () => {
                     actionElement.setAttribute('disabled', 'disabled');
