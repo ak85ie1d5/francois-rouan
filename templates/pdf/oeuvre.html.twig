@@ -61,10 +61,10 @@
             </p>
         {% endif %}
         {%  if oeuvre.dimensions %}
-            <p class="mt-0">{{ oeuvre.dimensions }}</p>
+            <p class="mb-0">{{ oeuvre.dimensions }} (sans cadre)</p>
         {% endif %}
         {%  if oeuvre.DimensionWithFrame %}
-            <p class="mt-0">{{ oeuvre.DimensionWithFrame }}</p>
+            <p class="mt-0">{{ oeuvre.DimensionWithFrame }} (avec cadre)</p>
         {% endif %}
         {% if oeuvre.description %}
             <p class="mb-0">{{ oeuvre.description|nl2br }}</p>
