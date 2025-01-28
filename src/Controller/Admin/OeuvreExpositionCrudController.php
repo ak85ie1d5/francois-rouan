@@ -3,10 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\OeuvreExposition;
+use App\Service\Options;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -16,6 +18,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class OeuvreExpositionCrudController extends AbstractCrudController
 {
+
+    private Options $options;
+
+    public function __construct(Options $options)
+    {
+        $this->options = $options;
+    }
+
     public static function getEntityFqcn(): string
     {
         return OeuvreExposition::class;
@@ -42,7 +52,8 @@ class OeuvreExpositionCrudController extends AbstractCrudController
             FormField::addFieldset('Date de début'),
             IntegerField::new('FirstDay', 'Jour')
                 ->setColumns(4),
-            IntegerField::new('FirstMonth', 'Mois')
+            ChoiceField::new('FirstMonth', 'Mois')
+                ->setChoices($this->options->getMonthTextual())
                 ->setColumns(4),
             IntegerField::new('FirstYear', 'Année')
                 ->setColumns(4),
@@ -51,7 +62,8 @@ class OeuvreExpositionCrudController extends AbstractCrudController
             IntegerField::new('SecondDay', 'Jour')
                 ->hideOnIndex()
                 ->setColumns(4),
-            IntegerField::new('SecondMonth', 'Mois')
+            ChoiceField::new('SecondMonth', 'Mois')
+                ->setChoices($this->options->getMonthTextual())
                 ->hideOnIndex()
                 ->setColumns(4),
             IntegerField::new('SecondYear', 'Année')

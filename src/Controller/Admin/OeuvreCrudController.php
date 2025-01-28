@@ -30,7 +30,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Umanit\EasyAdminTreeBundle\Field\TreeField;
 use Vich\UploaderBundle\Storage\StorageInterface;
@@ -120,7 +119,7 @@ class OeuvreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Create a new action to generate a PDF of the Oeuvre entity.
-        $pdfLink = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
+        $pdfLink = Action::new('pdf', 'Exporter&nbsp;en&nbsp;PDF', 'fa fa-file-pdf')
             ->linkToRoute('pdf_oeuvre', function (Oeuvre $entity) {
                 return ['id' => $entity->getId()];
             })
@@ -141,7 +140,7 @@ class OeuvreCrudController extends AbstractCrudController
         // Create a new action to go back to the index page.
         $goBack = Action::new('goBack', 'Retourner à la liste', 'fa fa-arrow-left')
             ->linkToCrudAction('index')
-            ->setCssClass('btn btn-secondary');
+            ->setCssClass('btn btn-secondary action-goBack');
 
         // Create a new action to add a new location.
         $newLocationModal = Action::new('newLieu', 'Ajouter un lieu')
@@ -154,12 +153,60 @@ class OeuvreCrudController extends AbstractCrudController
                 'data-bs-target' => "#modal-new-location"
             ]);
 
+        $uncheckAll = Action::new('uncheckAll', '')
+            ->linkToUrl('#')
+            ->setHtmlAttributes([
+                'id' => 'uncheck-all-action',
+                'title' => 'Désélectionner toutes les lignes',
+                'override-data-bs-target' => '#modal-batch-action-uncheck-all',
+            ])
+            ->setIcon('fa fa-check')
+            ->addCssClass('btn btn-light')
+            ->setTemplatePath('admin/button/action.html.twig');
+
+        $exportToCsv = Action::new('export_to_csv', 'Exporter en CSV')
+            ->linkToRoute('app_list_to_csv', ['ids' => 'entity.getId()'])
+            ->setHtmlAttributes([
+                'target' => '_blank',
+                'id' => 'export-to-csv-action',
+                'override-data-bs-target' => '#modal-batch-action-csv',
+            ])
+            ->setIcon('fa fa-file-csv')
+            ->setCssClass('btn btn-success')
+            ->setTemplatePath('admin/button/action.html.twig');
+
+        $exportToZip = Action::new('export_to_zip', 'Exporter dans un ZIP')
+            ->linkToRoute('app_list_to_zip', ['ids' => 'entity.getId()'])
+            ->setHtmlAttributes([
+                'target' => '_blank',
+                'id' => 'export-to-zip-action',
+                'override-data-bs-target' => '#modal-batch-action-pdf',
+            ])
+            ->setIcon('fa fa-file-zipper')
+            ->setCssClass('btn btn-warning')
+            ->setTemplatePath('admin/button/action.html.twig');
+
+        $exportToPdf = Action::new('export_to_pdf', 'Exporter en PDF')
+            ->linkToRoute('app_list_to_pdf', ['ids' => 'entity.getId()'])
+            ->setHtmlAttributes([
+                'target' => '_blank',
+                'id' => 'export-to-pdf-action',
+                'override-data-bs-target' => '#modal-batch-action-pdf',
+            ])
+            ->setIcon('fa fa-file-pdf')
+            ->setCssClass('btn btn-danger')
+            ->setTemplatePath('admin/button/action.html.twig');
+
         $actions
+            ->addBatchAction($uncheckAll)
+            ->addBatchAction($exportToZip)
+            ->addBatchAction($exportToPdf)
+            ->addBatchAction($exportToCsv)
             ->add(Crud::PAGE_INDEX, $pdfLink)
             ->update(Crud::PAGE_INDEX, Action::EDIT,
                 function (Action $action) {
                     return $action
-                        ->setLabel('Modifier/Visualiser')
+                        ->setLabel('Modifier&nbsp;/&nbsp;Visualiser')
                         ->setIcon('fa fa-pencil-alt')
                         ->addCssClass('d-flex m-2');
                 }
@@ -182,9 +229,14 @@ class OeuvreCrudController extends AbstractCrudController
     {
         $assets = parent::configureAssets($assets);
         return $assets
-            ->addJsFile(Asset::new('build/modal-new-location.js'))
-            ->addJsFile(Asset::new('build/image-preview.js'))
-            ->addJsFile(Asset::new('build/umanit-easyadmintree-tree-field.js'));
+            ->addJsFile(Asset::new('image-preview.js'))
+            ->addAssetMapperEntry('scroll-auto')
+            ->addAssetMapperEntry('modal-new-location')
+            ->addAssetMapperEntry('modal-export-to-pdf')
+            ->addAssetMapperEntry('modal-export-to-csv')
+            ->addAssetMapperEntry('modal-uncheck-all')
+            ->addAssetMapperEntry('umanit-easyadmintree-tree-field')
+            ->addAssetMapperEntry('selection-multiple');
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -194,6 +246,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->add('titre')
             ->add('sousTitre')
             ->add('dimensions')
+            ->add('DimensionWithFrame')
             ->add('FirstYear')
             ->add('serie')
             ->add('description')
@@ -204,7 +257,6 @@ class OeuvreCrudController extends AbstractCrudController
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
             ->add(LocationFilter::new('oeuvreStockages', 'Localisation'))
             ->add(ArtworkMediaFilter::new('ArtworkMedias', 'Médias'));
-        //->add(EntityFilter::new('ArtworkMedias'));
     }
 
     public function configureFields(string $pageName): iterable
@@ -254,6 +306,8 @@ class OeuvreCrudController extends AbstractCrudController
             FormField::addColumn('col-lg-4'),
             TextField::new('dimensions')
                 ->hideOnIndex(),
+            TextField::new('DimensionWithFrame', 'Dimensions avec cadre')
+                ->hideOnIndex(),
             TextareaField::new('description')
                 ->stripTags(),
             TextareaField::new('commentairePublic', 'Commentaire public')
@@ -266,7 +320,6 @@ class OeuvreCrudController extends AbstractCrudController
             CollectionField::new('primary_media', 'Image principale')
                 ->setEntryType(PrimaryMediaType::class)
                 ->addCssClass('primary-media')
-                ->addCssFiles('/build/primary-media.css')
                 ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-image.js'))
                 ->hideOnIndex()
                 ->allowAdd(false)

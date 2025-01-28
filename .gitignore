@@ -3,9 +3,13 @@
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
 /public/uploads
 /public/oeuvre-medias
+
+###> symfony/asset-mapper ###
+/public/assets
+/public/bundles
+###< symfony/asset-mapper ###

@@ -50,9 +50,11 @@ class Oeuvre
     private ?string $commentaireInterne = null;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreBibliographie::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[ORM\OrderBy(["Year" => "DESC"])]
     private Collection $oeuvreBibliographies;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[ORM\OrderBy(["FirstYear" => "DESC"])]
     private Collection $oeuvreExpositions;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist", "remove"], orphanRemoval: true)]
@@ -82,6 +84,9 @@ class Oeuvre
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $dateComplement = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $DimensionWithFrame = null;
 
     public function __construct(StorageInterface $storage)
     {
@@ -434,6 +439,18 @@ class Oeuvre
     public function setDateComplement(?string $dateComplement): static
     {
         $this->dateComplement = $dateComplement;
+
+        return $this;
+    }
+
+    public function getDimensionWithFrame(): ?string
+    {
+        return $this->DimensionWithFrame;
+    }
+
+    public function setDimensionWithFrame(?string $DimensionWithFrame): static
+    {
+        $this->DimensionWithFrame = $DimensionWithFrame;
 
         return $this;
     }

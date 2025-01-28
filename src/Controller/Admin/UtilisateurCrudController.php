@@ -70,7 +70,7 @@ class UtilisateurCrudController extends AbstractCrudController
                 ->onlyOnForms(),
             EmailField::new('email'),
             ArrayField::new('roles')->setHelp("ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_UTILISATEUR, ROLE_USER"),
-            BooleanField::new('actif')->setValue(true),
+            BooleanField::new('actif'),
 
             FormField::addColumn('col-lg-5'),
             FormField::addColumn('col-lg-2'),
