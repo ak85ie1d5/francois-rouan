@@ -27,7 +27,7 @@ class ListToCsvController extends AbstractController
     {
         $ids = $batchActionDto->getEntityIds();
 
-        $fields = ["numInventaire", "titre", "FirstMonth", "FirstYear", "SecondMonth", "SecondYear", "dimensions", "description", "commentairePublic", "lastLocalisation"];
+        $fields = ["numInventaire", "titre", "FirstMonth", "FirstYear", "SecondMonth", "SecondYear", "dimensions", "DimensionWithFrame", "description", "commentairePublic", "lastLocalisation"];
         $csvContent = $this->csvExportService->generateCsv($this->selectedArtworks, $fields);
 
         $filename = 'export_oeuvres_'.date('Y-m-d').'.csv';
