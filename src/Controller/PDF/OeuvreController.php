@@ -44,7 +44,7 @@ class OeuvreController extends AbstractController
 
         return new Response($pdfContent, Response::HTTP_OK, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="oeuvre_' . $id . '.pdf"',
+            'Content-Disposition' => 'inline; filename="' . $fields['oeuvre']->getNumInventaire() . ' - ' . $fields['oeuvre']->getTitre() . '.pdf"',
         ]);
     }
 }
