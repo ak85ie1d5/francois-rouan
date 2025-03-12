@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    window.EasyAdminApp = new ModalExportToCsv();
+    if (document.querySelector('#batch-action-confirmation-title-csv')) {
+        window.EasyAdminApp = new ModalExportToCsv();
+    }
 });
 
 class ModalExportToCsv {

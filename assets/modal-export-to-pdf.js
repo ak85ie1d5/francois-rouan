@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    window.EasyAdminApp = new ModalExportToPdf();
+    if (document.querySelector('#batch-action-confirmation-title-pdf')) {
+        window.EasyAdminApp = new ModalExportToPdf();
+    }
 });
 
 class ModalExportToPdf {
