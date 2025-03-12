@@ -236,7 +236,8 @@ class OeuvreCrudController extends AbstractCrudController
             ->addAssetMapperEntry('modal-export-to-csv')
             ->addAssetMapperEntry('modal-uncheck-all')
             ->addAssetMapperEntry('umanit-easyadmintree-tree-field')
-            ->addAssetMapperEntry('selection-multiple');
+            ->addAssetMapperEntry('selection-multiple')
+            ->addAssetMapperEntry('draggable-collection');
     }
 
     public function configureFilters(Filters $filters): Filters
