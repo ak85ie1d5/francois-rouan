@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    window.EasyAdminApp = new ModalUncheckAll();
+    if (document.querySelector('#batch-action-confirmation-title-uncheck-all')) {
+        window.EasyAdminApp = new ModalUncheckAll();
+    }
 });
 
 class ModalUncheckAll {
@@ -19,7 +21,7 @@ class ModalUncheckAll {
         if (cookieValue) {
             try {
                 const artworksArray = JSON.parse(cookieValue);
-                return Array.isArray(artworksArray) ? artworksArray.length : 0;
+                return Array.isArray(artworksArray) ? artworksArray : [];
             } catch (e) {
                 console.error('Error parsing selectedArtworks cookie:', e);
                 return 0;

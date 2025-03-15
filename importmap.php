@@ -18,7 +18,7 @@ return [
     ],
     'chart' => [
         'path' => './assets/chart.js',
-        'entrypoint' => true
+        'entrypoint' => true,
     ],
     'draggable-collection' => [
         'path' => './assets/draggable-collection.js',
@@ -51,5 +51,8 @@ return [
     'selection-multiple' => [
         'path' => './assets/selection-multiple.js',
         'entrypoint' => true,
+    ],
+    'sortablejs' => [
+        'version' => '1.15.6',
     ],
 ];

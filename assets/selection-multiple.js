@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    new SelectionMultiple();
+    if (document.querySelector('.batch-actions')) {
+        new SelectionMultiple();
+    }
 });
 
 class SelectionMultiple {
