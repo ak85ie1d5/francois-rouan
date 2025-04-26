@@ -50,6 +50,7 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('reset_password/request.html.twig', [
             'requestForm' => $form,
+            'page_title' => $translator->trans('Reset password')
         ]);
     }
 
@@ -157,7 +158,7 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('no-reply@theta-alerie.fr', 'Acme Mail Bot'))
+            ->from(new Address('jspaeth@agence-theta.fr', 'Acme Mail Bot'))
             ->to((string) $user->getEmail())
             ->subject('Your password reset request')
             ->htmlTemplate('reset_password/email.html.twig')
