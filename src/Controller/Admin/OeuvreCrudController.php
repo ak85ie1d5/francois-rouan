@@ -23,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -31,7 +32,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Umanit\EasyAdminTreeBundle\Field\TreeField;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 
@@ -235,7 +235,6 @@ class OeuvreCrudController extends AbstractCrudController
             ->addAssetMapperEntry('modal-export-to-pdf')
             ->addAssetMapperEntry('modal-export-to-csv')
             ->addAssetMapperEntry('modal-uncheck-all')
-            ->addAssetMapperEntry('umanit-easyadmintree-tree-field')
             ->addAssetMapperEntry('selection-multiple')
             ->addAssetMapperEntry('draggable-collection');
     }
@@ -326,7 +325,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowAdd(false)
                 ->allowDelete(false)
                 ->renderExpanded(),
-            TreeField::new('ArtworkCategory', 'Catégorie')
+            AssociationField::new('ArtworkCategory', 'Catégorie')
                 ->hideOnIndex(),
             FormField::addTab('Historique'),
             CollectionField::new('oeuvreHistoriques', 'Historique de l\'oeuvre')

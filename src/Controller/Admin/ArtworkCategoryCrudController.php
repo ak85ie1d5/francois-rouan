@@ -3,16 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArtworkCategory;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Umanit\EasyAdminTreeBundle\Controller\TreeCrudController;
 
 
-class ArtworkCategoryCrudController extends TreeCrudController
+class ArtworkCategoryCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
@@ -28,17 +27,6 @@ class ArtworkCategoryCrudController extends TreeCrudController
             ->setPageTitle('edit', 'Modifier la %entity_label_singular%');;
 
         return parent::configureCrud($crud);
-    }
-
-    /**
-     * Return the property of the category to use as a label in tree display
-     *
-     * @return string
-     */
-    protected function getEntityLabelProperty(): string
-    {
-
-        return 'name';
     }
 
     public function configureFields(string $pageName): iterable
