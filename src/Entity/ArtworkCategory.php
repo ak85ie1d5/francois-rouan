@@ -46,7 +46,6 @@ class ArtworkCategory
     private ?self $parent = null;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
-    #[ORM\OrderBy(['lft' => 'ASC'])]
     private Collection $children;
 
     /**

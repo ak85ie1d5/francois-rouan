@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArtworkCategory;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -24,9 +25,21 @@ class ArtworkCategoryCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('catégorie d\'oeuvres')
             ->setEntityLabelInPlural('catégories d\'oeuvres')
             ->setPageTitle('new', 'Créer une %entity_label_singular%')
-            ->setPageTitle('edit', 'Modifier la %entity_label_singular%');;
+            ->setPageTitle('edit', 'Modifier la %entity_label_singular%')
+            ->overrideTemplate('crud/index', 'bundles/UmanitEasyAdminTreeBundle/crud/field/index.html.twig')
+            ->setPaginatorPageSize(9999999)
+            ->showEntityActionsInlined()
+            ->setDefaultSort(['root' => 'ASC', 'lft' => 'ASC'])
+            ->setSearchFields(null);
 
         return parent::configureCrud($crud);
+    }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        $assets = parent::configureAssets($assets);
+        return $assets
+            ->addCssFile('styles/tree.css');
     }
 
     public function configureFields(string $pageName): iterable
