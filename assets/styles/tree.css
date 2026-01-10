@@ -15,11 +15,11 @@
 .umanit_easyadmintree_tree-item-actions {
     display: inline-block;
     position: absolute;
-    top: 9px;
+    top: 3px;
     right: 10px;
 }
 .umanit_easyadmintree_tree-item-action {
-    padding: 0px 2px;
+    padding: 0 2px;
 }
 .umanit_easyadmintree_tree-item-label:hover {
     background-color: var(--table-hover-cell-bg);

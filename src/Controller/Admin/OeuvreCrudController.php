@@ -126,6 +126,8 @@ class OeuvreCrudController extends AbstractCrudController
             ->setHtmlAttributes([
                 'target' => '_blank',
             ])
+            ->asTextLink()
+            ->asPrimaryAction()
             ->setCssClass('d-flex m-2');
 
         $pdfBtn = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
@@ -208,6 +210,8 @@ class OeuvreCrudController extends AbstractCrudController
                     return $action
                         ->setLabel('Modifier&nbsp;/&nbsp;Visualiser')
                         ->setIcon('fa fa-pencil-alt')
+                        ->asTextLink()
+                        ->asPrimaryAction()
                         ->addCssClass('d-flex m-2');
                 }
             )

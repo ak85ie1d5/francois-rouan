@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArtworkCategory;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -65,5 +67,17 @@ class ArtworkCategoryCrudController extends AbstractCrudController
                 ->setDisabled()
                 ->onlyOnForms(),
         ];
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $actions
+            ->update(Crud::PAGE_INDEX, Action::EDIT,
+            function (Action $action) {
+                return $action
+                    ->asTextLink()
+                    ->asPrimaryAction();
+            });
+        return parent::configureActions($actions);
     }
 }
