@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Admin\Field\TableField;
+use App\Admin\Field\TreeField;
 use App\Controller\Admin\Filter\ArtworkMediaFilter;
 use App\Controller\Admin\Filter\BibliographyFilter;
 use App\Controller\Admin\Filter\ExhibitionFilter;
@@ -329,7 +330,7 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowAdd(false)
                 ->allowDelete(false)
                 ->renderExpanded(),
-            AssociationField::new('ArtworkCategory', 'Catégorie')
+            TreeField::new('ArtworkCategory', 'Catégorie')
                 ->hideOnIndex(),
             FormField::addTab('Historique'),
             CollectionField::new('oeuvreHistoriques', 'Historique de l\'oeuvre')
