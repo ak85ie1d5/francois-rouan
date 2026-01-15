@@ -1,0 +1,27 @@
+.umanit_easyadmintree_tree_field {
+    list-style-type: none;
+    background-color: var(--secondary-bg);
+}
+.umanit_easyadmintree_tree_field-container {
+    padding: 15px 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.umanit_easyadmintree_tree_field-item-label {
+    display: inline-block;
+    padding-bottom: 0 !important;
+}
+.umanit_easyadmintree_tree_field-item {
+    margin-top: 10px;
+    padding: 10px 10px;
+    width: 100%;
+    background-color: var(--tertiary-bg);
+}
+.umanit_easyadmintree_tree_field-item--active {
+    background-color: var(--link-color);
+}
+
+.umanit_easyadmintree_tree_field-item--active .umanit_easyadmintree_tree_field-item-label {
+    color: var(--button-primary-color) !important;
+}
