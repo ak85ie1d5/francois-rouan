@@ -2,7 +2,7 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
 {# @var action \EasyCorp\Bundle\EasyAdminBundle\Dto\ActionDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
-{% if 'a' == action.htmlElement %}
+{% if 'a' == action.htmlElement.value %}
     <a class="{{ isIncludedInDropdown|default(false) ? 'dropdown-item' }} {{ action.cssClass }}"
        href="{{ action.linkUrl }}"
     {% for name, value in action.htmlAttributes %}
@@ -18,7 +18,7 @@
     {%- if action.icon %}<i class="action-icon {{ action.icon }}"></i> {% endif -%}
     {%- if action.label is not empty -%}<span class="action-label">{{ action.label|trans|raw }}</span>{%- endif -%}
     </a>
-{% elseif 'button' == action.htmlElement %}
+{% elseif 'button' == action.htmlElement.value %}
     <button class="{{ action.cssClass }}" {% for name, value in action.htmlAttributes %}
 
         {# Override default data-bs-target value by the override-data-bs-target attribute #}

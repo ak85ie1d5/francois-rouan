@@ -167,7 +167,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToCsv = Action::new('export_to_csv', 'Exporter en CSV')
-            ->linkToRoute('app_list_to_csv', ['ids' => 'entity.getId()'])
+            ->linkToRoute('app_list_to_csv')
             ->setHtmlAttributes([
                 'target' => '_blank',
                 'id' => 'export-to-csv-action',
@@ -178,7 +178,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToZip = Action::new('export_to_zip', 'Exporter dans un ZIP')
-            ->linkToRoute('app_list_to_zip', ['ids' => 'entity.getId()'])
+            ->linkToRoute('app_list_to_zip')
             ->setHtmlAttributes([
                 'target' => '_blank',
                 'id' => 'export-to-zip-action',
@@ -189,7 +189,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToPdf = Action::new('export_to_pdf', 'Exporter en PDF')
-            ->linkToRoute('app_list_to_pdf', ['ids' => 'entity.getId()'])
+            ->linkToRoute('app_list_to_pdf')
             ->setHtmlAttributes([
                 'target' => '_blank',
                 'id' => 'export-to-pdf-action',
