@@ -148,6 +148,60 @@
     {{ block('form_row') }}
 {% endblock collection_row %}
 
+{% block table_widget %}
+    {% if form.vars.prototype.children %}
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                        <th>
+                            <span>
+                                {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
+                            </span>
+                        </th>
+                    {% endfor %}
+
+                    {% if allow_delete %}
+                        <th></th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for child in form.children %}
+                <tr>
+                    {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                        <td>
+                            {{ form_widget(child[prototype_key]) }}
+                        </td>
+                    {% endfor %}
+
+                    {% if allow_delete %}
+                        <td>
+                            <button type="button" class="btn btn-link btn-link-danger"
+                                    title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+            {% if allow_add|default(false) and not disabled %}
+                <button type="button" class="btn btn-link field-collection-add-button">
+                    <i class="fa fa-plus pr-1"></i>
+                    {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
+                </button>
+            {% endif %}
+
+
+        </table>
+    {% else %}
+        Le tableau ne peut pas être affiché, car aucun champ n'a été défini.
+    {% endif %}
+{% endblock table_widget %}
+
+
+
 {% block collection_widget %}
     {# the "is iterable" check is needed because if an object implements __toString() and
                returns an empty string, "is empty" returns true even if it's not a collection #}
@@ -155,7 +209,6 @@
     {% set is_array_field = 'EasyCorp\\Bundle\\EasyAdminBundle\\Field\\ArrayField' == form.vars.ea_vars.field.fieldFqcn ?? false %}
     {% set is_table_field = 'App\\Admin\\Field\\TableField' == form.vars.ea_vars.field.fieldFqcn ?? false %}
     {% set is_drag_and_drop = false %}
-
     {% if is_table_field %}
         <div class="table-label d-flex">
             <div class="row w-100">

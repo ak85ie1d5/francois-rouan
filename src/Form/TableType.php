@@ -34,7 +34,8 @@ class TableType extends AbstractType
             'entry_options' => [],
             'prototype_options' => [],
             'delete_empty' => false,
-            'invalid_message' => 'The collection is invalid.'
+            'invalid_message' => 'The collection is invalid.',
+            'block_prefixes' => 'table',
         ]);
 
         $resolver->setNormalizer('entry_options', $entryOptionsNormalizer);
@@ -131,6 +132,6 @@ class TableType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'collection';
+        return 'table';
     }
 }
