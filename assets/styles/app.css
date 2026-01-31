@@ -27,3 +27,8 @@
 .filter-content .form-widget-compound label {
     display: block !important;
 }
+
+.table-actions .field-collection-delete-button
+{
+    position: relative !important;
+}

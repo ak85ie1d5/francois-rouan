@@ -148,27 +148,46 @@
     {{ block('form_row') }}
 {% endblock collection_row %}
 
-{% block table_widget %}
+{% block table_row %}
     {% if form.vars.prototype.children %}
+
+        {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
+        {% if isEmptyCollection or form.vars.prototype is defined %}
+            {% set attr = attr|merge({'data-empty-collection': block('empty_collection') }) %}
+            {% set attr = attr|merge({'class': 'form-group processed'}) %}
+            {% set attr = attr|merge({'data-ea-collection-field': 'true'}) %}
+            {% set attr = attr|merge({'data-entry-is-complex': 'false'}) %}
+            {% set attr = attr|merge({'data-allow-add': 'true'}) %}
+        {% endif %}
+
+        {% if allow_add|default(false) and not disabled %}
+            <div class="form_widget">
+                <button type="button" class="btn btn-link field-collection-add-button">
+                    <i class="fa fa-plus pr-1"></i>
+                    Ajouter un nouvel élément
+                </button>
+            </div>
+        {% endif %}
+
         <table class="table datagrid">
             <thead>
-                <tr>
-                    {% for prototype_key, prototype_value in form.vars.prototype.children %}
-                        <th>
-                            <span>
-                                {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
-                            </span>
-                        </th>
-                    {% endfor %}
+            <tr>
+                {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                    <th class="searchable header-for-field-text">
+                        <span>
+                            {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
+                        </span>
+                    </th>
+                {% endfor %}
 
-                    {% if allow_delete %}
-                        <th></th>
-                    {% endif %}
-                </tr>
+                {% if allow_delete %}
+                    <th></th>
+                {% endif %}
+            </tr>
             </thead>
-            <tbody>
+            <tbody {{ block('attributes') }}>
             {% for child in form.children %}
-                <tr>
+                <tr class="field-collection-item{% if loop.first %} field-collection-item-first{% endif %}{% if loop.last %} field-collection-item-last{% endif %}">
                     {% for prototype_key, prototype_value in form.vars.prototype.children %}
                         <td>
                             {{ form_widget(child[prototype_key]) }}
@@ -177,7 +196,7 @@
 
                     {% if allow_delete %}
                         <td>
-                            <button type="button" class="btn btn-link btn-link-danger"
+                            <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
                                     title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
                                 <i class="far fa-trash-alt"></i>
                             </button>
@@ -186,19 +205,13 @@
                 </tr>
             {% endfor %}
             </tbody>
-            {% if allow_add|default(false) and not disabled %}
-                <button type="button" class="btn btn-link field-collection-add-button">
-                    <i class="fa fa-plus pr-1"></i>
-                    {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
-                </button>
-            {% endif %}
-
-
         </table>
     {% else %}
         Le tableau ne peut pas être affiché, car aucun champ n'a été défini.
     {% endif %}
-{% endblock table_widget %}
+
+
+{% endblock table_row %}
 
 
 
