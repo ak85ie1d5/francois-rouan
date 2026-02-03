@@ -34,8 +34,7 @@ class TableType extends AbstractType
             'entry_options' => [],
             'prototype_options' => [],
             'delete_empty' => false,
-            'invalid_message' => 'The collection is invalid.',
-            'block_prefixes' => 'table',
+            'invalid_message' => 'The collection is invalid.'
         ]);
 
         $resolver->setNormalizer('entry_options', $entryOptionsNormalizer);
