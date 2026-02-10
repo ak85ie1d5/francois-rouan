@@ -136,6 +136,7 @@
         {% set row_attr = row_attr|merge({ 'data-prototype': form_row(prototype) }) %}
     {% endif %}
 
+
     {% set row_attr = row_attr|merge({
         'data-ea-collection-field': 'true',
         'data-entry-is-complex': form.vars.ea_vars.field and form.vars.ea_vars.field.customOptions.get('entryIsComplex') ? 'true' : 'false',
@@ -145,6 +146,7 @@
         'data-form-type-name-placeholder': prototype is defined ? prototype.vars.name : '',
     }) %}
 
+
     {{ block('form_row') }}
 {% endblock collection_row %}
 
@@ -153,63 +155,88 @@
 
         {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
         {% if isEmptyCollection or form.vars.prototype is defined %}
-            {% set attr = attr|merge({'data-empty-collection': block('empty_collection') }) %}
-            {% set attr = attr|merge({'class': 'field-array form-group processed'}) %}
-            {% set attr = attr|merge({'data-ea-collection-field': 'true'}) %}
-            {% set attr = attr|merge({'data-entry-is-complex': 'false'}) %}
-            {% set attr = attr|merge({'data-allow-add': 'true'}) %}
-            {% set attr = attr|merge({'data-prototype': '<div>OK</div>'}) %}
+            {# Générer le prototype HTML pour les nouvelles lignes #}
+            {% set prototypeHtml %}
+                <tr class="field-collection-item">
+                    {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                        <td>
+                            {{ form_widget(form.vars.prototype[prototype_key]) }}
+                        </td>
+                    {% endfor %}
+                    {% if allow_delete %}
+                        <td>
+                            <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
+                                    title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endset %}
+
+            {% set tbody_attr = {
+                'class': 'ea-form-collection-items',
+                'data-prototype': prototypeHtml|e('html_attr'),
+                'data-ea-collection-field': 'true',
+                'data-entry-is-complex': 'false',
+                'data-allow-add': 'true',
+                'data-empty-collection': block('empty_collection'),
+                'data-num-items': form.children is empty ? 0 : max(form.children|keys) + 1,
+                'data-form-type-name-placeholder': form.vars.prototype is defined ? form.vars.prototype.vars.name : ''
+            } %}
         {% endif %}
 
+        <div class="row">
+            <div class="field-array form-group">
+            <table class="table datagrid">
+                <thead>
+                <tr>
+                    {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                        <th class="searchable header-for-field-text">
+                            <span>
+                                {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
+                            </span>
+                        </th>
+                    {% endfor %}
 
+                    {% if allow_delete %}
+                        <th></th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody {% for attrname, attrvalue in tbody_attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}>
+                    {% for child in form.children %}
+                        <tr class="field-collection-item{% if loop.first %} field-collection-item-first{% endif %}{% if loop.last %} field-collection-item-last{% endif %}">
+                            {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                                <td>
+                                    {{ form_widget(child[prototype_key]) }}
+                                </td>
+                            {% endfor %}
 
-        <table class="table datagrid">
-            <thead>
-            <tr>
-                {% for prototype_key, prototype_value in form.vars.prototype.children %}
-                    <th class="searchable header-for-field-text">
-                        <span>
-                            {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
-                        </span>
-                    </th>
-                {% endfor %}
+                            {% if allow_delete %}
+                                <td>
+                                    <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
+                                            title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
 
-                {% if allow_delete %}
-                    <th></th>
-                {% endif %}
-            </tr>
-            </thead>
-            <tbody {{ block('attributes') }}>
-                {% for child in form.children %}
-                    <tr class="field-collection-item{% if loop.first %} field-collection-item-first{% endif %}{% if loop.last %} field-collection-item-last{% endif %}">
-                        {% for prototype_key, prototype_value in form.vars.prototype.children %}
-                            <td>
-                                {{ form_widget(child[prototype_key]) }}
-                            </td>
-                        {% endfor %}
+            </table>
 
-                        {% if allow_delete %}
-                            <td>
-                                <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
-                                        title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-
-                {% if allow_add|default(false) and not disabled %}
-                    <div class="form-widget">
-                        <button type="button" class="btn btn-link field-collection-add-button">
-                            <i class="fa fa-plus pr-1"></i>
-                            {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
-                        </button>
-                    </div>
-                {% endif %}
-            </tbody>
-
-        </table>
+            {% if allow_add|default(false) and not disabled %}
+                <div class="form-widget">
+                    <button type="button" class="btn btn-link field-collection-add-button">
+                        <i class="fa fa-plus pr-1"></i>
+                        {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
+                    </button>
+                </div>
+            {% endif %}
+            </div>
+        </div>
     {% else %}
         Le tableau ne peut pas être affiché, car aucun champ n'a été défini.
     {% endif %}
