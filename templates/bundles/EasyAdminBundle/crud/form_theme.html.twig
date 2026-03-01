@@ -157,7 +157,7 @@
         {% if isEmptyCollection or form.vars.prototype is defined %}
             {# Générer le prototype HTML pour les nouvelles lignes #}
             {% set prototypeHtml %}
-                <tr class="field-collection-item">
+                <tr class="field-collection-item d-table-row">
                     {% for prototype_key, prototype_value in form.vars.prototype.children %}
                         <td>
                             {{ form_widget(form.vars.prototype[prototype_key]) }}
@@ -184,29 +184,35 @@
                 'data-form-type-name-placeholder': form.vars.prototype is defined ? form.vars.prototype.vars.name : ''
             }) %}
             {% set attr = attr|merge({'class': (attr.class|default('') ~ ' field-array form-group')|trim}) %}
+            {% set is_drag_and_drop = false %}
         {% endif %}
 
-        <div class="row">
-            <div{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue|raw }}"{% endfor %}>
-            <table class="table datagrid">
+        <div{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue|raw }}"{% endfor %}>
+            <table class="table datagrid mb-3">
                 <thead>
-                <tr>
-                    {% for prototype_key, prototype_value in form.vars.prototype.children %}
-                        <th class="searchable header-for-field-text">
-                            <span>
-                                {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
-                            </span>
-                        </th>
-                    {% endfor %}
+                    <tr>
+                        {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                            {% set child_type = prototype_value.vars.block_prefixes|slice(-2)|first %}
 
-                    {% if allow_delete %}
-                        <th></th>
-                    {% endif %}
-                </tr>
+                            {% if prototype_key == 'position' %}
+                                {% set is_drag_and_drop = true %}
+                            {% endif %}
+
+                             <th class="searchable header-for-field-{{ child_type }} {{ prototype_value.vars.label_attr.class|default('') }}" data-column="{{ prototype_value.vars.name }}" dir="ltr">
+                                <span>
+                                    {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
+                                </span>
+                            </th>
+                        {% endfor %}
+
+                        {% if allow_delete %}
+                            <th class="actions-as-dropdown-table-head" dir="ltr"></th>
+                        {% endif %}
+                    </tr>
                 </thead>
-                <tbody class="ea-form-collection-items">
+                <tbody {{ is_drag_and_drop ? 'id=draggable-collection' }} class="ea-form-collection-items">
                     {% for child in form.children %}
-                        <tr class="field-collection-item{% if loop.first %} field-collection-item-first{% endif %}{% if loop.last %} field-collection-item-last{% endif %}">
+                        <tr class="field-collection-item {{ loop.first ? 'field-collection-item-first' }}{{ loop.last ? 'field-collection-item-last' }} d-table-row">
                             {% for prototype_key, prototype_value in form.vars.prototype.children %}
                                 <td>
                                     {{ form_widget(child[prototype_key]) }}
@@ -224,7 +230,7 @@
                         </tr>
                     {% endfor %}
                 </tbody>
-
+                <tfoot></tfoot>
             </table>
 
             {% if allow_add|default(false) and not disabled %}
@@ -235,7 +241,6 @@
                     </button>
                 </div>
             {% endif %}
-            </div>
         </div>
     {% else %}
         Le tableau ne peut pas être affiché, car aucun champ n'a été défini.
@@ -262,7 +267,6 @@
                     {% else %}
                         <div class="table-label-col col">
                             {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
-
                         </div>
                     {% endif %}
 

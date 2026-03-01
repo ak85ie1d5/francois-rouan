@@ -33,6 +33,9 @@ class ArtworkMediaType extends AbstractType
                 ],
             ])
             ->add('position', HiddenType::class, [
+                'label_attr' => [
+                    'class' => 'd-none'
+                ],
                 'empty_data' => 1,
             ])
         ;

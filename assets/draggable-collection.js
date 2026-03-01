@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 class DraggableCollection {
+
     constructor() {
         this.#sortableJSInit(this.#getParentElement())
         this.#updatePositions(this.#getDraggableElements(this.#getParentElement()))
@@ -35,13 +36,12 @@ class DraggableCollection {
     #updatePositions(draggableElements) {
         for (let i = 0; i < draggableElements.length; i++) {
             const element = draggableElements[i];
-            element.addEventListener('dragend', this.#handleDragEnd);
+            element.addEventListener('dragend', () => this.#handleDragEnd());
         }
     }
 
-    #handleDragEnd(event) {
+    #handleDragEnd() {
         let DraggableElements = this.#getDraggableElements(this.#getParentElement())
-
         for (let i = 0; i < DraggableElements.length; i++) {
             const element = DraggableElements[i];
             const inputPosition = element.querySelector('input[id$="_position"]')
@@ -50,7 +50,8 @@ class DraggableCollection {
     }
 
     #getParentElement() {
-        return document.getElementById('draggable-collection').children[0].children[0];
+        console.log(document.getElementById('draggable-collection').children);
+        return document.getElementById('draggable-collection');
     }
 
     #getDraggableElements(ParentElement) {
