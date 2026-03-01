@@ -41,3 +41,15 @@
 .btn-link-danger, .btn-link-danger:active, .btn-link-danger:active:focus, .btn-link-danger:focus, .btn-link-danger:hover {
     color: var(--link-danger-color);
 }
+
+.btn-light {
+    --button-box-shadow: var(--button-danger-box-shadow);
+    --button-bg: var(--button-danger-bg);
+    --button-border-color: var(--button-danger-border-color);
+    --button-hover-bg: var(--text-color);
+    --button-hover-color: var(--button-danger-hover-color);
+}
+
+.actions a {
+    width: max-content;
+}

@@ -204,6 +204,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->addBatchAction($exportToPdf)
             ->addBatchAction($exportToZip)
             ->addBatchAction($uncheckAll)
+
             ->add(Crud::PAGE_INDEX, $pdfLink)
             ->update(Crud::PAGE_INDEX, Action::EDIT,
                 function (Action $action) {
@@ -222,6 +223,7 @@ class OeuvreCrudController extends AbstractCrudController
                         ->addCssClass('d-flex m-2');
                 }
             )
+            ->reorder(Crud::PAGE_INDEX, ['export_to_csv', 'export_to_pdf', 'export_to_zip', 'uncheckAll', Action::BATCH_DELETE, 'pdf', Action::EDIT, Action::DELETE])
             ->add(Crud::PAGE_EDIT, $newLocationModal)
             ->add(Crud::PAGE_EDIT, $pdfBtn)
             ->add(Crud::PAGE_EDIT, $goBack);
