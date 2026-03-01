@@ -4,6 +4,11 @@
     font-weight: 700 !important;
 }
 
+.datagrid .ea-lightbox-thumbnail img {
+    max-block-size: 300px !important;
+    max-inline-size: 100% !important;
+}
+
 .badge-outline {
     display: none;
 }
@@ -31,4 +36,8 @@
 .table-actions .field-collection-delete-button
 {
     position: relative !important;
+}
+
+.btn-link-danger, .btn-link-danger:active, .btn-link-danger:active:focus, .btn-link-danger:focus, .btn-link-danger:hover {
+    color: var(--link-danger-color);
 }
