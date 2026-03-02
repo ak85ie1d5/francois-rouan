@@ -55,7 +55,7 @@
     border: none;
 }
 
-.table-collection #draggable-collection {
+#draggable-collection tr {
     cursor: move;
 }
 

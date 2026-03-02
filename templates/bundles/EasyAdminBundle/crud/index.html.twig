@@ -38,8 +38,8 @@
 {% block content_title %}
     {%- set custom_page_title = ea.crud.customPageTitle('index', null, ea.i18n.translationParameters, ea.i18n.translationDomain) -%}
     {{- custom_page_title is null
-        ? ea.crud.defaultPageTitle('index', null, ea.i18n.translationParameters)|trans|raw
-        : custom_page_title|trans|raw -}}
+    ? ea.crud.defaultPageTitle('index', null, ea.i18n.translationParameters)|trans|raw
+    : custom_page_title|trans|raw -}}
 {% endblock %}
 
 {% set has_batch_actions = batch_actions|length > 0 %}
@@ -215,8 +215,8 @@
         </tbody>
 
         <tfoot>
-        {% block table_footer %}
-        {% endblock table_footer %}
+            {% block table_footer %}
+            {% endblock table_footer %}
         </tfoot>
     </table>
 

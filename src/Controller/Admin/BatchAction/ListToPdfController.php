@@ -3,10 +3,7 @@
 namespace App\Controller\Admin\BatchAction;
 
 use App\Service\PdfExportService;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,7 +21,7 @@ class ListToPdfController extends AbstractController
     {
         $this->pdfExportService = $pdfExportService;
 
-        $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true) : [];
+        $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true, 512, JSON_THROW_ON_ERROR) : [];
     }
 
     /**
@@ -34,8 +31,8 @@ class ListToPdfController extends AbstractController
      * @throws RuntimeError
      * @throws LoaderError
      */
-    #[Route('/list/to/zip', name: 'app_list_to_zip')]
-    public function indexZip(Request $request, BatchActionDto $batchActionDto): Response
+    #[Route('/list/to/zip', name: 'app_list_to_zip', methods: ['POST'])]
+    public function indexZip(Request $request): Response
     {
         $zip = new \ZipArchive();
         $zipFilename = 'export_oeuvres_' . date('Y-m-d_His') . '.zip';
@@ -74,8 +71,8 @@ class ListToPdfController extends AbstractController
      * @throws RuntimeError
      * @throws LoaderError
      */
-    #[Route('/list/to/pdf', name: 'app_list_to_pdf')]
-    public function indexPdf(Request $request, BatchActionDto $batchActionDto): Response
+    #[Route('/list/to/pdf', name: 'app_list_to_pdf', methods: ['POST'])]
+    public function indexPdf(Request $request): Response
     {
         $htmlContent = '';
 

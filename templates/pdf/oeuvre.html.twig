@@ -124,7 +124,9 @@
                         <td>{{ exhibition.description|nl2br }}</td>
                         <td>{{ exhibition.FirstDay|nl2br }}/{{ exhibition.FirstMonth|nl2br }}/{{ exhibition.FirstYear|nl2br }}</td>
                         <td>{{ exhibition.SecondDay|nl2br }}/{{ exhibition.SecondMonth|nl2br }}/{{ exhibition.SecondYear|nl2br }}</td>
-                        <td>{{ exhibition.lieu.nom|nl2br }}</td>
+                        {% if exhibition.lieu %}
+                            <td>{{ exhibition.lieu.nom|nl2br }}</td>
+                        {% endif %}
                     </tr>
                     <tr>
                         <td colspan="4" class="gap"></td>

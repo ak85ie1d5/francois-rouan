@@ -3,16 +3,18 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArtworkCategory;
-use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Umanit\EasyAdminTreeBundle\Controller\TreeCrudController;
 
 
-class ArtworkCategoryCrudController extends TreeCrudController
+class ArtworkCategoryCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
@@ -25,20 +27,21 @@ class ArtworkCategoryCrudController extends TreeCrudController
             ->setEntityLabelInSingular('catégorie d\'oeuvres')
             ->setEntityLabelInPlural('catégories d\'oeuvres')
             ->setPageTitle('new', 'Créer une %entity_label_singular%')
-            ->setPageTitle('edit', 'Modifier la %entity_label_singular%');;
+            ->setPageTitle('edit', 'Modifier la %entity_label_singular%')
+            ->overrideTemplate('crud/index', 'bundles/UmanitEasyAdminTreeBundle/crud/field/index.html.twig')
+            ->setPaginatorPageSize(9999999)
+            ->showEntityActionsInlined()
+            ->setDefaultSort(['root' => 'ASC', 'lft' => 'ASC'])
+            ->setSearchFields(null);
 
         return parent::configureCrud($crud);
     }
 
-    /**
-     * Return the property of the category to use as a label in tree display
-     *
-     * @return string
-     */
-    protected function getEntityLabelProperty(): string
+    public function configureAssets(Assets $assets): Assets
     {
-
-        return 'name';
+        $assets = parent::configureAssets($assets);
+        return $assets
+            ->addCssFile('styles/tree.css');
     }
 
     public function configureFields(string $pageName): iterable
@@ -64,5 +67,17 @@ class ArtworkCategoryCrudController extends TreeCrudController
                 ->setDisabled()
                 ->onlyOnForms(),
         ];
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $actions
+            ->update(Crud::PAGE_INDEX, Action::EDIT,
+            function (Action $action) {
+                return $action
+                    ->asTextLink()
+                    ->asPrimaryAction();
+            });
+        return parent::configureActions($actions);
     }
 }
