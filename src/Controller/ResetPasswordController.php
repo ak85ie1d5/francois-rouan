@@ -128,6 +128,7 @@ class ResetPasswordController extends AbstractController
 
         return $this->render('reset_password/reset.html.twig', [
             'resetForm' => $form,
+            'page_title' => 'Choisissez un nouveau mot de passe',
         ]);
     }
 

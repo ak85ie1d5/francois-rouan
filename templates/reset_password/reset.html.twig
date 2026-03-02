@@ -1,12 +1,74 @@
-{% extends 'base.html.twig' %}
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider #}
+{% set ea = ea() %}
+{% extends null != ea ? ea.templatePath('layout') : '@EasyAdmin/page/login_minimal.html.twig' %}
+{% trans_default_domain null != ea ? ea.i18n.translationDomain : (translation_domain is defined ? translation_domain ?? 'messages') %}
 
-{% block title %}Reset your password{% endblock %}
+{% block body_class 'page-login' %}
+{% block page_title %}{{ page_title is defined ? page_title|raw : (null != ea ? ea.dashboardTitle|raw : '') }}{% endblock %}
 
-{% block body %}
-    <h1>Reset your password</h1>
+{% block head_favicon %}
+    {% if favicon_path|default(false) %}
+        <link rel="shortcut icon" href="{{ favicon_path }}">
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
 
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
-    {{ form_end(resetForm) }}
+{% block wrapper_wrapper %}
+    {% set page_title = block('page_title') %}
+    {% set _username_label = username_label is defined ? username_label|trans : 'login_page.username'|trans({}, 'EasyAdminBundle') %}
+    {% set _password_label = password_label is defined ? password_label|trans : 'login_page.password'|trans({}, 'EasyAdminBundle') %}
+    {% set _forgot_password_label = forgot_password_label is defined ? forgot_password_label|trans : 'login_page.forgot_password'|trans({}, 'EasyAdminBundle') %}
+    {% set _remember_me_label = remember_me_label is defined ? remember_me_label|trans : 'login_page.remember_me'|trans({}, 'EasyAdminBundle') %}
+    {% set _sign_in_label = sign_in_label is defined ? sign_in_label|trans : 'login_page.sign_in'|trans({}, 'EasyAdminBundle') %}
+
+    {{ include('@EasyAdmin/flash_messages.html.twig') }}
+
+    <div class="login-wrapper">
+        <header class="main-header">
+            <div id="header-logo" class="h4">
+                {% block header_logo %}
+                    {% if page_title %}
+                        {% if null != ea %}
+                            <a class="logo {{ page_title|length > 14 ? 'logo-long' }}" title="{{ page_title|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+                                {{ page_title|raw }}
+                            </a>
+                        {% else %}
+                            <div class="logo {{ page_title|length > 14 ? 'logo-long' }}">
+                                {{ page_title|raw }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endblock header_logo %}
+            </div>
+        </header>
+
+        <section class="content">
+            {% if error|default(false) %}
+                <div class="w-100 alert alert-danger rounded mb-3">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            {{ form_start(resetForm) }}
+                <div class="form-group">
+                    {{ form_label(resetForm.plainPassword.first) }}
+                    <div class="form-widget">
+                        {{ form_widget(resetForm.plainPassword.first) }}
+                    </div>
+                    {{ form_help(resetForm.plainPassword.first) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(resetForm.plainPassword.second) }}
+                    <div class="form-widget">
+                        {{ form_widget(resetForm.plainPassword.second) }}
+                    </div>
+                    {{ form_help(resetForm.plainPassword.second) }}
+                </div>
+
+                {{ form_widget(resetForm.submit) }}
+            {{ form_end(resetForm) }}
+        </section>
+    </div>
 {% endblock %}
