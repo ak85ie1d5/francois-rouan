@@ -24,7 +24,12 @@ class StockageCollectionType extends AbstractType
         $this->options = $options;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface<FormBuilderInterface> $builder
+     * @param array<string, mixed> $options
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('FirstDay', ChoiceType::class, [
@@ -61,7 +66,11 @@ class StockageCollectionType extends AbstractType
             ->add('commentaire', TextareaType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => OeuvreStockage::class

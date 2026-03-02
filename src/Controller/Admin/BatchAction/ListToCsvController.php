@@ -19,14 +19,12 @@ class ListToCsvController extends AbstractController
     {
         $this->csvExportService = $csvExportService;
 
-        $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true) : [];
+        $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true, 512, JSON_THROW_ON_ERROR) : [];
     }
 
-    #[Route('/list/to/csv', name: 'app_list_to_csv')]
-    public function index(Request $request, BatchActionDto $batchActionDto): Response
+    #[Route('/list/to/csv', name: 'app_list_to_csv', methods: ['POST'])]
+    public function index(Request $request): Response
     {
-        $ids = $batchActionDto->getEntityIds();
-
         $fields = ["numInventaire", "titre", "FirstMonth", "FirstYear", "SecondMonth", "SecondYear", "dimensions", "DimensionWithFrame", "description", "commentairePublic", "lastLocalisation"];
         $csvContent = $this->csvExportService->generateCsv($this->selectedArtworks, $fields);
 

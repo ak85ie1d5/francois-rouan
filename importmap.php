@@ -28,10 +28,6 @@ return [
         'path' => './assets/modal-new-location.js',
         'entrypoint' => true,
     ],
-    'umanit-easyadmintree-tree-field' => [
-        'path' => './assets/umanit-easyadmintree-tree-field.js',
-        'entrypoint' => true,
-    ],
     'modal-export-to-csv' => [
         'path' => './assets/modal-export-to-csv.js',
         'entrypoint' => true,

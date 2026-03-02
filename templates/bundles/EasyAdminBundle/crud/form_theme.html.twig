@@ -136,6 +136,7 @@
         {% set row_attr = row_attr|merge({ 'data-prototype': form_row(prototype) }) %}
     {% endif %}
 
+
     {% set row_attr = row_attr|merge({
         'data-ea-collection-field': 'true',
         'data-entry-is-complex': form.vars.ea_vars.field and form.vars.ea_vars.field.customOptions.get('entryIsComplex') ? 'true' : 'false',
@@ -145,8 +146,110 @@
         'data-form-type-name-placeholder': prototype is defined ? prototype.vars.name : '',
     }) %}
 
+
     {{ block('form_row') }}
 {% endblock collection_row %}
+
+{% block table_row %}
+    {% if form.vars.prototype.children %}
+
+        {% set isEmptyCollection = value is null or (value is iterable and value is empty) %}
+        {% if isEmptyCollection or form.vars.prototype is defined %}
+            {# Générer le prototype HTML pour les nouvelles lignes #}
+            {% set prototypeHtml %}
+                <tr class="field-collection-item d-table-row">
+                    {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                        <td>
+                            {{ form_widget(form.vars.prototype[prototype_key]) }}
+                        </td>
+                    {% endfor %}
+                    {% if allow_delete %}
+                        <td>
+                            <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
+                                    title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endset %}
+
+            {% set attr = attr|merge({
+                'data-prototype': prototypeHtml|e('html_attr'),
+                'data-ea-collection-field': 'true',
+                'data-entry-is-complex': 'false',
+                'data-allow-add': 'true',
+                'data-empty-collection': block('empty_collection')|e('html_attr'),
+                'data-num-items': form.children is empty ? 0 : max(form.children|keys) + 1,
+                'data-form-type-name-placeholder': form.vars.prototype is defined ? form.vars.prototype.vars.name : ''
+            }) %}
+            {% set attr = attr|merge({'class': (attr.class|default('') ~ ' field-array form-group')|trim}) %}
+            {% set is_drag_and_drop = false %}
+        {% endif %}
+
+        <div{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue|raw }}"{% endfor %}>
+            <table class="table datagrid mb-3">
+                <thead>
+                    <tr>
+                        {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                            {% set child_type = prototype_value.vars.block_prefixes|slice(-2)|first %}
+
+                            {% if prototype_key == 'position' %}
+                                {% set is_drag_and_drop = true %}
+                            {% endif %}
+
+                             <th class="searchable header-for-field-{{ child_type }} {{ prototype_value.vars.label_attr.class|default('') }}" data-column="{{ prototype_value.vars.name }}" dir="ltr">
+                                <span>
+                                    {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
+                                </span>
+                            </th>
+                        {% endfor %}
+
+                        {% if allow_delete %}
+                            <th class="actions-as-dropdown-table-head" dir="ltr"></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody {{ is_drag_and_drop ? 'id=draggable-collection' }} class="ea-form-collection-items">
+                    {% for child in form.children %}
+                        <tr class="field-collection-item {{ loop.first ? 'field-collection-item-first' }}{{ loop.last ? 'field-collection-item-last' }} d-table-row">
+                            {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                                <td>
+                                    {{ form_widget(child[prototype_key]) }}
+                                </td>
+                            {% endfor %}
+
+                            {% if allow_delete %}
+                                <td>
+                                    <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
+                                            title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+
+            {% if allow_add|default(false) and not disabled %}
+                <div class="form-widget">
+                    <button type="button" class="btn btn-link field-collection-add-button">
+                        <i class="fa fa-plus pr-1"></i>
+                        {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        Le tableau ne peut pas être affiché, car aucun champ n'a été défini.
+    {% endif %}
+
+
+{% endblock table_row %}
+
+
 
 {% block collection_widget %}
     {# the "is iterable" check is needed because if an object implements __toString() and
@@ -155,7 +258,6 @@
     {% set is_array_field = 'EasyCorp\\Bundle\\EasyAdminBundle\\Field\\ArrayField' == form.vars.ea_vars.field.fieldFqcn ?? false %}
     {% set is_table_field = 'App\\Admin\\Field\\TableField' == form.vars.ea_vars.field.fieldFqcn ?? false %}
     {% set is_drag_and_drop = false %}
-
     {% if is_table_field %}
         <div class="table-label d-flex">
             <div class="row w-100">
@@ -165,7 +267,6 @@
                     {% else %}
                         <div class="table-label-col col">
                             {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
-
                         </div>
                     {% endif %}
 

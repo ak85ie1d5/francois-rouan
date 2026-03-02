@@ -23,7 +23,12 @@ class LocationFilterType extends AbstractType
         $this->options= $options;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface<FormBuilderInterface> $builder
+     * @param array<string, mixed> $options
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('type', ChoiceType::class, [
@@ -45,7 +50,11 @@ class LocationFilterType extends AbstractType
             ->add('description', TextareaType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => OeuvreStockage::class

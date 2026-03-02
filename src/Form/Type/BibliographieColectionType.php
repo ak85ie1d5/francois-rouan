@@ -11,7 +11,7 @@
 
  class BibliographieColectionType extends AbstractType
  {
-     public function buildForm(FormBuilderInterface $builder, array $options)
+     public function buildForm(FormBuilderInterface $builder, array $options): void
      {
          $builder
              ->add('titre', TextareaType::class)
@@ -20,7 +20,7 @@
              ->add('commentaire', TextareaType::class);
      }
 
-     public function configureOptions(OptionsResolver $resolver)
+     public function configureOptions(OptionsResolver $resolver): void
      {
          $resolver->setDefaults([
              'data_class' => OeuvreBibliographie::class
