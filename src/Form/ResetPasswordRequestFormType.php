@@ -5,6 +5,7 @@ namespace App\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -15,6 +16,7 @@ class ResetPasswordRequestFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
+                'required' => true,
                 'attr' => [
                     'autocomplete' => 'email',
                     'class' => 'form-control',
@@ -23,11 +25,15 @@ class ResetPasswordRequestFormType extends AbstractType
                 'label_attr' => ['class' => 'form-control-label'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your email',
+                        'message' => 'Veuillez saisir votre adresse e-mail.',
                     ]),
                 ],
-                'help' => 'Enter your email address, and we will send you a link to reset your password.',
+                'help' => 'Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.',
                 'help_attr' => ['class' => 'form-text'],
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Envoyer',
+                'attr' => ['class' => 'btn btn-primary btn-lg btn-block'],
             ])
         ;
     }
