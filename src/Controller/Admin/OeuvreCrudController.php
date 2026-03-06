@@ -242,7 +242,8 @@ class OeuvreCrudController extends AbstractCrudController
             ->addAssetMapperEntry('modal-export-to-csv')
             ->addAssetMapperEntry('modal-uncheck-all')
             ->addAssetMapperEntry('selection-multiple')
-            ->addAssetMapperEntry('draggable-collection');
+            ->addAssetMapperEntry('draggable-collection')
+            ->addAssetMapperEntry('table-field-sortable');
     }
 
     public function configureFilters(Filters $filters): Filters

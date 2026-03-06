@@ -43,7 +43,10 @@ class StockageCollectionType extends AbstractType
                 'placeholder' => ''
             ])
             ->add('FirstYear', IntegerType::class, [
-                'label' => 'Année'
+                'label' => 'Année',
+                'label_attr' => [
+                    'aria-sort-default' => 'desc'
+                ]
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => $this->options->getLocationTypes(),

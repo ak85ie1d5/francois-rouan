@@ -51,4 +51,8 @@ return [
     'sortablejs' => [
         'version' => '1.15.6',
     ],
+    'table-field-sortable' => [
+        'path' => './assets/table-field-sortable.js',
+        'entrypoint' => true,
+    ],
 ];

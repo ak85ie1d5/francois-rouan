@@ -53,3 +53,34 @@
 .actions a {
     width: max-content;
 }
+
+.table-sortable th {
+    cursor: pointer;
+}
+
+.table-sortable th[data-table-sortable-th] span i {
+    --fa: "\f0dc";
+    --fa--fa: "\f0dc\f0dc";
+}
+
+
+.table-sortable th[aria-sort="desc"] span i,
+.table-sortable th[aria-sort-default="desc"] span i {
+    --fa: "\f063";
+    --fa--fa: "\f063\f063";
+    color: var(--table-thead-sorted-marker-color);
+}
+
+.table-sortable th[aria-sort="asc"] span i,
+.table-sortable th[aria-sort-default="asc"] span i {
+    --fa: "\f062";
+    --fa--fa: "\f062\f062";
+    color: var(--table-thead-sorted-marker-color);
+}
+
+.table-sortable th[aria-sort="desc"],
+.table-sortable th[aria-sort-default="desc"],
+.table-sortable th[aria-sort="asc"],
+.table-sortable th[aria-sort-default="asc"] {
+    box-shadow: inset 0 -2px 0 var(--color-primary)
+}

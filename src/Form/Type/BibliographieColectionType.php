@@ -15,7 +15,12 @@
      {
          $builder
              ->add('titre', TextareaType::class)
-             ->add('Year', IntegerType::class, ['label' => 'Année'])
+             ->add('Year', IntegerType::class, [
+                 'label' => 'Année',
+                 'label_attr' => [
+                     'aria-sort-default' => 'desc',
+                 ]
+             ])
              ->add('description', TextareaType::class)
              ->add('commentaire', TextareaType::class);
      }

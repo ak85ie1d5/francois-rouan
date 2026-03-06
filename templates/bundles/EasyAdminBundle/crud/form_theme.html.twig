@@ -188,7 +188,7 @@
         {% endif %}
 
         <div{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue|raw }}"{% endfor %}>
-            <table class="table datagrid mb-3">
+            <table class="table table-sortable datagrid mb-3">
                 <thead>
                     <tr>
                         {% for prototype_key, prototype_value in form.vars.prototype.children %}
@@ -198,10 +198,12 @@
                                 {% set is_drag_and_drop = true %}
                             {% endif %}
 
-                             <th class="searchable header-for-field-{{ child_type }} {{ prototype_value.vars.label_attr.class|default('') }}" data-column="{{ prototype_value.vars.name }}" dir="ltr">
+                             <th class="searchable header-for-field-{{ child_type }} {{ prototype_value.vars.label_attr.class|default('') }}" data-column="{{ prototype_value.vars.name }}" data-table-sortable-th="{{ loop.index0 }}" {% if prototype_value.vars.label_attr['aria-sort-default']|default(false) %}aria-sort-default="{{ prototype_value.vars.label_attr['aria-sort-default'] }}"{% endif %} dir="ltr">
                                 <span>
                                     {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
+                                    <i class="fas fa-fw fa-sort"></i>
                                 </span>
+
                             </th>
                         {% endfor %}
 
@@ -213,16 +215,15 @@
                 <tbody {{ is_drag_and_drop ? 'id=draggable-collection' }} class="ea-form-collection-items">
                     {% for child in form.children %}
                         <tr class="field-collection-item {{ loop.first ? 'field-collection-item-first' }}{{ loop.last ? 'field-collection-item-last' }} d-table-row">
-                            {% for prototype_key, prototype_value in form.vars.prototype.children %}
+                            {% for child_field in child %}
                                 <td>
-                                    {{ form_widget(child[prototype_key]) }}
+                                    {{ form_widget(child_field) }}
                                 </td>
                             {% endfor %}
 
                             {% if allow_delete %}
                                 <td>
-                                    <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button"
-                                            title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
+                                    <button type="button" class="btn btn-link btn-link-danger field-collection-delete-button" title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </td>

@@ -41,7 +41,10 @@ class ExpositionCollectionType extends AbstractType
                 'placeholder' => ''
             ])
             ->add('FirstYear', IntegerType::class, [
-                'label' => 'Année'
+                'label' => 'Année',
+                'label_attr' => [
+                    'aria-sort-default' => 'desc'
+                ]
             ])
             ->add('SecondDay', ChoiceType::class, [
                 'choices' => $this->options->getDayNumeric(),
