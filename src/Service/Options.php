@@ -16,6 +16,8 @@ class Options
 
     private array $dateSeparator = [];
 
+    private array $photoCredit = [];
+
     public function __construct(OptionsRepository $optionsRepository)
     {
         $this->optionsRepository = $optionsRepository;
@@ -60,5 +62,14 @@ class Options
         }
 
         return $this->dateSeparator;
+    }
+
+    public function getPhotoCredit(): array
+    {
+        if ($this->optionsRepository->findOneBy(['name' => 'photo_credit'])) {
+            $this->photoCredit = array_flip($this->optionsRepository->findOneBy(['name' => 'photo_credit'])->getValue());
+        }
+
+        return $this->photoCredit;
     }
 }

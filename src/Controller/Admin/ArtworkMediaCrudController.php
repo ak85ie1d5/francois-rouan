@@ -3,25 +3,30 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArtworkMedia;
+use App\Service\Options;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 
 class ArtworkMediaCrudController extends AbstractCrudController
 {
+
+    private Options $options;
+
+    public function __construct(Options $options)
+    {
+        $this->options = $options;
+    }
+
     public static function getEntityFqcn(): string
     {
         return ArtworkMedia::class;
@@ -55,6 +60,9 @@ class ArtworkMediaCrudController extends AbstractCrudController
             AssociationField::new('oeuvre')
                 ->hideWhenCreating(),
             FormField::addColumn('col-lg-5'),
+            ChoiceField::new('photoCredit', 'Crédit photo')
+                ->setChoices($this->options->getPhotoCredit()),
+            TextField::new('photographerName', 'Nom du photographe'),
             ImageField::new('imageFile', 'Image')
                 ->onlyOnIndex(),
             TextareaField::new('imageFile', 'Image')

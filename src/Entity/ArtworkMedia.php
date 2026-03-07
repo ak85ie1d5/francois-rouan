@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ArtworkMediaRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -47,6 +48,12 @@ class ArtworkMedia
 
     #[Vich\UploadableField(mapping: 'artworks', fileNameProperty: 'thumbnailName')]
     private ?File $thumbnailFile = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $photoCredit = null;
+
+    #[ORM\Column(length: 40, nullable: true)]
+    private ?string $photographerName = null;
 
     public function getId(): ?int
     {
@@ -200,5 +207,29 @@ class ArtworkMedia
             return "";
         }
         return $this->nom;
+    }
+
+    public function getPhotoCredit(): int
+    {
+        return $this->photoCredit;
+    }
+
+    public function setPhotoCredit(?int $photoCredit): static
+    {
+        $this->photoCredit = $photoCredit;
+
+        return $this;
+    }
+
+    public function getPhotographerName(): ?string
+    {
+        return $this->photographerName;
+    }
+
+    public function setPhotographerName(?string $photographerName): static
+    {
+        $this->photographerName = $photographerName;
+
+        return $this;
     }
 }
