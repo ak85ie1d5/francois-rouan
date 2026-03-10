@@ -236,6 +236,7 @@ class OeuvreCrudController extends AbstractCrudController
         $assets = parent::configureAssets($assets);
         return $assets
             ->addJsFile(Asset::new('image-preview.js'))
+            ->addJsFile(Asset::new('field-depend-on.js'))
             ->addAssetMapperEntry('scroll-auto')
             ->addAssetMapperEntry('modal-new-location')
             ->addAssetMapperEntry('modal-export-to-pdf')

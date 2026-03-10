@@ -16,16 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     field.style.display = 'none';
 
                     // Vider les inputs du champ masqué
-                    let inputs = field.querySelectorAll('input, select, textarea');
-                    inputs.forEach(input => {
-                        input.value = '';
-                    });
+                    if (field.nodeName === 'DIV') {
+                        let inputs = field.querySelectorAll('input, select, textarea');
+                        inputs.forEach(input => {
+                            input.removeAttribute('required');
+                            input.value = '';
+                        });
+                    } else {
+                        field.removeAttribute('required');
+                        field.value = '';
+                    }
+
                 } else {
                     field.style.display = 'block';
+                    field.setAttribute('required', 'required');
 
                     // Réactiver les inputs
                     let inputs = field.querySelectorAll('input, select, textarea');
                     inputs.forEach(input => {
+                        input.setAttribute('required', 'required');
                         input.disabled = false;
                     });
                 }
