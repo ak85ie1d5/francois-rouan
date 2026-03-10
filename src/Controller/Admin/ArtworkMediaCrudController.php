@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\ArtworkMedia;
 use App\Service\Options;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -42,6 +44,13 @@ class ArtworkMediaCrudController extends AbstractCrudController
         return parent::configureCrud($crud);
     }
 
+    public function configureAssets(Assets $assets): Assets
+    {
+        $assets = parent::configureAssets($assets);
+        return $assets
+            ->addJsFile(Asset::new('field-depend-on.js'));
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -62,7 +71,11 @@ class ArtworkMediaCrudController extends AbstractCrudController
             FormField::addColumn('col-lg-5'),
             ChoiceField::new('photoCredit', 'Crédit photo')
                 ->setChoices($this->options->getPhotoCredit()),
-            TextField::new('photographerName', 'Nom du photographe'),
+            TextField::new('photographerName', 'Nom du photographe')
+                ->setFormTypeOption('row_attr', [
+                    'data-depend-on' => 'ArtworkMedia_photoCredit',
+                    'data-depend-on-value' => '1',
+                ]),
             ImageField::new('imageFile', 'Image')
                 ->onlyOnIndex(),
             TextareaField::new('imageFile', 'Image')

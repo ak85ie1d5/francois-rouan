@@ -55,4 +55,8 @@ return [
         'path' => './assets/table-field-sortable.js',
         'entrypoint' => true,
     ],
+    'field-depend-on' => [
+        'path' => './assets/field-depend-on.js',
+        'entrypoint' => true,
+    ]
 ];
