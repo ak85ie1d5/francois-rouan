@@ -209,7 +209,7 @@ class ArtworkMedia
         return $this->nom;
     }
 
-    public function getPhotoCredit(): int
+    public function getPhotoCredit(): ?int
     {
         return $this->photoCredit;
     }

@@ -90,8 +90,13 @@ class PdfExportService
         // Convert the primary media image to base64, or use a dummy image if not available
         if (isset($oeuvresData->getPrimaryMedia()[0])) {
             $base64Image = $this->convertImageToBase64($oeuvresData->getPrimaryMedia()[0]->getImageFile());
+            $primaryMedia = [
+                'photoCredit' => $oeuvresData->getPrimaryMedia()[0]->getPhotoCredit(),
+                'photographerName' => $oeuvresData->getPrimaryMedia()[0]->getPhotographerName()
+            ];
         } else {
             $base64Image = $this->convertImageToBase64('../public/dummy-image-square.jpg');
+            $primaryMedia = null;
         }
 
         // Retrieve additional options for the PDF
@@ -103,6 +108,7 @@ class PdfExportService
             'oeuvre' => $oeuvresData,
             'last_localisation' => $lastLocalisation,
             'base64Image' => $base64Image,
+            'primary_media' => $primaryMedia,
             'month_textual' => $monthTextual,
             'separator' => $separator
         ];

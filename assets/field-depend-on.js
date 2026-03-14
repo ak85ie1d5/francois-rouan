@@ -23,13 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             input.value = '';
                         });
                     } else {
-                        field.removeAttribute('required');
+                        //field.removeAttribute('required');
                         field.value = '';
                     }
 
                 } else {
                     field.style.display = 'block';
-                    field.setAttribute('required', 'required');
+                    //field.setAttribute('required', 'required');
 
                     // Réactiver les inputs
                     let inputs = field.querySelectorAll('input, select, textarea');

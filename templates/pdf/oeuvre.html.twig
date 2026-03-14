@@ -17,7 +17,10 @@
         }
         .primary-media {
             height: 500px;
-            margin-bottom: 1em;
+            margin-bottom: 0;
+        }
+        .primary-media-credit {
+            margin-top: 0;
         }
         .mb-0 {
             margin-bottom: 0;
@@ -42,6 +45,14 @@
     <div class="pdf-wrapper">
         <div class="num-inventaire">{{ oeuvre.numInventaire }}</div>
         <img src="{{ base64Image }}" alt="" class="primary-media" />
+        {% if primary_media.photoCredit is not null %}
+            {% if primary_media.photoCredit == 1 %}
+                <div class="primary-media-credit">© {{ primary_media.photographerName }}</div>
+            {% else %}
+                <div  class="primary-media-credit">Photographie interne</div>
+            {% endif %}
+        {% endif %}
+
         <p><b>{{ oeuvre.titre }}</b></p>
         {% if oeuvre.FirstYear %}
             <p class="mb-0">
