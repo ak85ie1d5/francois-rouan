@@ -31,6 +31,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -252,14 +253,15 @@ class OeuvreCrudController extends AbstractCrudController
         return $filters
             ->add('numInventaire')
             ->add('titre')
-            ->add('sousTitre')
+            //->add('sousTitre')
+            ->add(TextFilter::new('sousTitre', 'Sous-titre'))
             ->add('dimensions')
-            ->add('DimensionWithFrame')
-            ->add('FirstYear')
-            ->add('serie')
+            ->add(TextFilter::new('DimensionWithFrame', 'Dimensions avec cadre'))
+            ->add(TextFilter::new('FirstYear', 'Année'))
+            ->add(TextFilter::new('serie', 'Titre de la série'))
             ->add('description')
-            ->add('commentairePublic')
-            ->add('ArtworkCategory')
+            ->add(TextFilter::new('commentairePublic', 'Commentaire public'))
+            ->add(TextFilter::new('ArtworkCategory', 'Catégories'))
             ->add(HistoryFilter::new('oeuvreHistoriques', 'Historique'))
             ->add(BibliographyFilter::new('oeuvreBibliographies', 'Bibliographies'))
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
