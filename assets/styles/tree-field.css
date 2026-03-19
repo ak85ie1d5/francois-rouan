@@ -25,3 +25,22 @@
 .umanit_easyadmintree_tree_field-item--active .umanit_easyadmintree_tree_field-item-label {
     color: var(--button-primary-color) !important;
 }
+
+#filters_ArtworkCategory {
+    margin-top: 7px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    border: 1px solid var(--form-input-border-color);
+    box-shadow: var(--form-input-shadow);
+    color: var(--form-input-text-color);
+    font-size: .875rem;
+    padding: 3px 7px 4px;
+    transition: box-shadow .08s ease-in,color .08s ease-in;
+    border-radius: var(--bs-border-radius);
+}
+
+#filters_ArtworkCategory .filter-content [data-level="1"] {
+    margin-left: 15px;
+}
