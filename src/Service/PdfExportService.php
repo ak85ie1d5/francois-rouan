@@ -84,7 +84,7 @@ class PdfExportService
         // Retrieve the Oeuvre entity by ID
         $oeuvresData = $this->entityManager->getRepository(Oeuvre::class)->findOneBy(['id' => $id]);
 
-        // Retrieve the last localisation of the Oeuvre entity
+        // Retrieve the last localization of the Oeuvre entity
         $lastLocalisation = $this->entityManager->getRepository(Oeuvre::class)->getLastLocalisation($id);
 
         // Convert the primary media image to base64, or use a dummy image if not available
@@ -136,7 +136,7 @@ class PdfExportService
      */
     public function getBibliography(int $artworkId): array
     {
-        return $this->entityManager->getRepository(OeuvreBibliographie::class)->findBy(['oeuvre' => $artworkId]);
+        return $this->entityManager->getRepository(OeuvreBibliographie::class)->findBy(['oeuvre' => $artworkId], ['Year' => 'DESC']);
     }
 
     /**
@@ -147,7 +147,7 @@ class PdfExportService
      */
     public function getExhibition(int $artworkId): array
     {
-        return $this->entityManager->getRepository(OeuvreExposition::class)->findBy(['oeuvre' => $artworkId]);
+        return $this->entityManager->getRepository(OeuvreExposition::class)->findBy(['oeuvre' => $artworkId], ['FirstYear' => 'DESC']);
     }
 
     /**
