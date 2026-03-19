@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\TableField;
 use App\Admin\Field\TreeField;
+use App\Controller\Admin\Filter\ArtworkCategoryFilter;
 use App\Controller\Admin\Filter\ArtworkMediaFilter;
 use App\Controller\Admin\Filter\BibliographyFilter;
 use App\Controller\Admin\Filter\ExhibitionFilter;
@@ -31,6 +32,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Vich\UploaderBundle\Storage\StorageInterface;
@@ -245,7 +247,9 @@ class OeuvreCrudController extends AbstractCrudController
             ->addAssetMapperEntry('modal-uncheck-all')
             ->addAssetMapperEntry('selection-multiple')
             ->addAssetMapperEntry('draggable-collection')
-            ->addAssetMapperEntry('table-field-sortable');
+            ->addAssetMapperEntry('table-field-sortable')
+            ->addCssFile(Asset::new('styles/tree-field.css'))
+            ;
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -257,11 +261,11 @@ class OeuvreCrudController extends AbstractCrudController
             ->add(TextFilter::new('sousTitre', 'Sous-titre'))
             ->add('dimensions')
             ->add(TextFilter::new('DimensionWithFrame', 'Dimensions avec cadre'))
-            ->add(TextFilter::new('FirstYear', 'Année'))
+            ->add(NumericFilter::new('FirstYear', 'Année'))
             ->add(TextFilter::new('serie', 'Titre de la série'))
             ->add('description')
             ->add(TextFilter::new('commentairePublic', 'Commentaire public'))
-            ->add(TextFilter::new('ArtworkCategory', 'Catégories'))
+            ->add(ArtworkCategoryFilter::new('ArtworkCategory', 'Catégories'))
             ->add(HistoryFilter::new('oeuvreHistoriques', 'Historique'))
             ->add(BibliographyFilter::new('oeuvreBibliographies', 'Bibliographies'))
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))
