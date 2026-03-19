@@ -45,7 +45,7 @@
     <div class="pdf-wrapper">
         <div class="num-inventaire">{{ oeuvre.numInventaire }}</div>
         <img src="{{ base64Image }}" alt="" class="primary-media" />
-        {% if primary_media.photoCredit is not null %}
+        {% if primary_media.photoCredit is defined %}
             {% if primary_media.photoCredit == 1 %}
                 <div class="primary-media-credit">© {{ primary_media.photographerName }}</div>
             {% else %}

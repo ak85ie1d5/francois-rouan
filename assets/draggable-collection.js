@@ -50,7 +50,6 @@ class DraggableCollection {
     }
 
     #getParentElement() {
-        console.log(document.getElementById('draggable-collection').children);
         return document.getElementById('draggable-collection');
     }
 
