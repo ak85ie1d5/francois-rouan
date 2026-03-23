@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArtworkCategory;
+use App\Entity\InternalLocation;
 use App\Entity\Lieu;
 use App\Entity\Oeuvre;
 use App\Entity\OeuvreBibliographie;
@@ -125,6 +126,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', Utilisateur::class);
 
         yield MenuItem::section('Super Users')->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Emplacements internes', 'fas fa-solid fa-table-cells', InternalLocation::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Historique', 'fa-solid fa-clock-rotate-left', OeuvreHistorique::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Bibliographie', 'fa-solid fa-book', OeuvreBibliographie::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Exposition', 'fa-solid fa-building-columns', OeuvreExposition::class)->setPermission('ROLE_SUPERADMIN');
