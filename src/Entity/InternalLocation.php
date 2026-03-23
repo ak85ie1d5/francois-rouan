@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\TimeColumnTrait;
+use App\Entity\Trait\UserColumnTrait;
 use App\Repository\InternalLocationRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +14,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Gedmo\Tree(type: 'nested')]
 class InternalLocation
 {
+    use TimeColumnTrait;
+    use UserColumnTrait;
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
