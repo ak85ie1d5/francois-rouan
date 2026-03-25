@@ -21,6 +21,7 @@
         }
         .primary-media-credit {
             margin-top: 0;
+            font: 15px/1.5 sans-serif;
         }
         .mb-0 {
             margin-bottom: 0;
@@ -45,7 +46,7 @@
     <div class="pdf-wrapper">
         <div class="num-inventaire">{{ oeuvre.numInventaire }}</div>
         <img src="{{ base64Image }}" alt="" class="primary-media" />
-        {% if primary_media.photoCredit is defined %}
+        {% if primary_media.photoCredit is defined and primary_media.photoCredit is not null %}
             {% if primary_media.photoCredit == 1 %}
                 <div class="primary-media-credit">© {{ primary_media.photographerName }}</div>
             {% else %}
