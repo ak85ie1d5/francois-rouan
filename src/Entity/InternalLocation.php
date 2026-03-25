@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\TimeColumnTrait;
 use App\Entity\Trait\UserColumnTrait;
 use App\Repository\InternalLocationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -16,7 +17,7 @@ class InternalLocation
 {
     use TimeColumnTrait;
     use UserColumnTrait;
-    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -52,6 +53,11 @@ class InternalLocation
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $children;
+
+    public function __construct()
+    {
+        $this->children = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -159,5 +165,21 @@ class InternalLocation
             }
         }
         return $this;
+    }
+
+    public function getLabel(): string
+    {
+        $current = ($this->RoomCode ?? '') . ': ' . ($this->RoomLabel ?? '');
+
+        if ($this->parent !== null) {
+            return $this->parent->getLabel() . ' > ' . $current;
+        }
+
+        return $current;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getLabel();
     }
 }
