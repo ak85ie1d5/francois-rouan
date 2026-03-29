@@ -3,18 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\InternalLocation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 /**
- * @extends ServiceEntityRepository<InternalLocation>
+ * @extends NestedTreeRepository<InternalLocation>
  */
-class InternalLocationRepository extends ServiceEntityRepository
+class InternalLocationRepository extends NestedTreeRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, InternalLocation::class);
-    }
 
     //    /**
     //     * @return InternalLocation[] Returns an array of InternalLocation objects
