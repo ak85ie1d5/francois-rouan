@@ -54,9 +54,16 @@ class InternalLocation
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $children;
 
+    /**
+     * @var Collection<int, OeuvreStockage>
+     */
+    #[ORM\OneToMany(mappedBy: 'internalLocation', targetEntity: OeuvreStockage::class)]
+    private Collection $oeuvreStockages;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
+        $this->oeuvreStockages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,5 +188,35 @@ class InternalLocation
     public function __toString(): string
     {
         return $this->getLabel();
+    }
+
+    /**
+     * @return Collection<int, OeuvreStockage>
+     */
+    public function getOeuvreStockages(): Collection
+    {
+        return $this->oeuvreStockages;
+    }
+
+    public function addOeuvreStockage(OeuvreStockage $oeuvreStockage): static
+    {
+        if (!$this->oeuvreStockages->contains($oeuvreStockage)) {
+            $this->oeuvreStockages->add($oeuvreStockage);
+            $oeuvreStockage->setInternalLocation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOeuvreStockage(OeuvreStockage $oeuvreStockage): static
+    {
+        if ($this->oeuvreStockages->removeElement($oeuvreStockage)) {
+            // set the owning side to null (unless already changed)
+            if ($oeuvreStockage->getInternalLocation() === $this) {
+                $oeuvreStockage->setInternalLocation(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Form\Type;
 
+use App\Entity\InternalLocation;
 use App\Entity\Lieu;
 use App\Entity\OeuvreStockage;
 use App\Service\Options;
@@ -54,6 +55,10 @@ class StockageCollectionType extends AbstractType
             ])
             ->add('precisions', ChoiceType::class, [
                 'choices' => $this->options->getLocationDetails(),
+                'attr' => [
+                    'data-depend-on' => "Oeuvre_oeuvreStockages_0_type",
+                    'data-depend-on-value' => '1',
+                ],
                 'placeholder' => ''
             ])
             ->add('lieu', EntityType::class, [
@@ -62,8 +67,21 @@ class StockageCollectionType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.nom', 'ASC');
                 },
+                'attr' => [
+                    'data-depend-on' => "Oeuvre_oeuvreStockages_0_type",
+                    'data-depend-on-value' => '1',
+                ],
+                'label' => 'Lieu externes',
                 'choice_label' => 'nom',
                 'placeholder' => '',
+            ])
+            ->add('internalLocation', EntityType::class, [
+                'class' => InternalLocation::class,
+                'label' => 'Emplacements internes',
+                'attr' => [
+                    'data-depend-on' => "Oeuvre_oeuvreStockages_0_type",
+                    'data-depend-on-value' => '0',
+                ],
             ])
             ->add('description', TextareaType::class)
             ->add('commentaire', TextareaType::class);
