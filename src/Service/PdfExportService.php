@@ -84,9 +84,6 @@ class PdfExportService
         // Retrieve the Oeuvre entity by ID
         $oeuvresData = $this->entityManager->getRepository(Oeuvre::class)->findOneBy(['id' => $id]);
 
-        // Retrieve the last localization of the Oeuvre entity
-        $lastLocalisation = $this->entityManager->getRepository(Oeuvre::class)->getLastLocalisation($id);
-
         // Convert the primary media image to base64, or use a dummy image if not available
         if (isset($oeuvresData->getPrimaryMedia()[0])) {
             $base64Image = $this->convertImageToBase64($oeuvresData->getPrimaryMedia()[0]->getImageFile());
@@ -106,7 +103,6 @@ class PdfExportService
         // Prepare the fields for the PDF template
         return [
             'oeuvre' => $oeuvresData,
-            'last_localisation' => $lastLocalisation,
             'base64Image' => $base64Image,
             'primary_media' => $primaryMedia,
             'month_textual' => $monthTextual,

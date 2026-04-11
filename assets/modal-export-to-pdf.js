@@ -43,6 +43,7 @@ class ModalExportToPdf {
                     // Add checkbox values
                     batchFormFields['includeBibliography'] = document.querySelector('#bibliography').checked;
                     batchFormFields['includeExhibition'] = document.querySelector('#exhibition').checked;
+                    batchFormFields['includeExternalLocation'] = document.querySelector('#external-location').checked;
 
                     const batchForm = document.createElement('form');
                     batchForm.setAttribute('method', 'POST');

@@ -84,7 +84,8 @@
         {% if oeuvre.commentairePublic %}
             <p class="mt-0">{{ oeuvre.commentairePublic|nl2br }}</p>
         {% endif %}
-        {% if last_localisation %}
+
+        {% if last_localisation is defined and last_localisation is not empty %}
             <p>{{ last_localisation.nom }}</p>
         {% endif %}
         {% if bibliographies is defined and bibliographies is not empty or exhibitions is defined and exhibitions is not empty %}

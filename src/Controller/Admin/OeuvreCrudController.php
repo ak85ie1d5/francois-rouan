@@ -257,7 +257,6 @@ class OeuvreCrudController extends AbstractCrudController
         return $filters
             ->add('numInventaire')
             ->add('titre')
-            //->add('sousTitre')
             ->add(TextFilter::new('sousTitre', 'Sous-titre'))
             ->add('dimensions')
             ->add(TextFilter::new('DimensionWithFrame', 'Dimensions avec cadre'))
