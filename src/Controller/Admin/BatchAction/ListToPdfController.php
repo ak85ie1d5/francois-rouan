@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin\BatchAction;
 
+use App\Entity\Oeuvre;
 use App\Service\PdfExportService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,11 +19,13 @@ class ListToPdfController extends AbstractController
 
     private mixed $selectedArtworks;
 
-    public function __construct(PdfExportService $pdfExportService)
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(PdfExportService $pdfExportService, EntityManagerInterface $entityManager)
     {
         $this->pdfExportService = $pdfExportService;
-
         $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true, 512, JSON_THROW_ON_ERROR) : [];
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -51,6 +55,11 @@ class ListToPdfController extends AbstractController
 
             if ($request->request->get('includeExhibition') === 'true') {
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
+            }
+
+            if ($request->request->get('includeExternalLocation') === 'true' || $request->request->get('includeInternalLocation') === 'true') {
+                // Retrieve the last localization of the Oeuvre entity
+                $fields['last_localisation'] = $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation([$id])[$id];
             }
 
             $pdfContent = $this->pdfExportService->generatePdf($fields, true);
@@ -87,7 +96,18 @@ class ListToPdfController extends AbstractController
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
             }
 
+            if ($request->request->get('includeExternalLocation') === 'true') {
+                // Retrieve the last localization of the Oeuvre entity
+                $fields['last_localisation'] = $this->entityManager->getRepository(Oeuvre::class)->getLastLocalisation($id);
+            }
+
+            if ($request->request->get('includeExternalLocation') === 'true' || $request->request->get('includeInternalLocation') === 'true') {
+                // Retrieve the last localization of the Oeuvre entity
+                $fields['last_localisation'] = $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation([$id])[$id];
+            }
+
             $htmlContent .= $this->pdfExportService->generateHtml($fields);
+
         }
 
         $pdfContent = $this->pdfExportService->generatePdf([], false, $htmlContent);

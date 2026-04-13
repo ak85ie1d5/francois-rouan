@@ -38,6 +38,9 @@ class OeuvreStockage
     #[ORM\ManyToOne(inversedBy: 'oeuvreStockages')]
     private ?Lieu $lieu = null;
 
+    #[ORM\ManyToOne(inversedBy: 'oeuvreStockages')]
+    private ?InternalLocation $internalLocation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -126,5 +129,17 @@ class OeuvreStockage
         }
 
         return '';
+    }
+
+    public function getInternalLocation(): ?InternalLocation
+    {
+        return $this->internalLocation;
+    }
+
+    public function setInternalLocation(?InternalLocation $internalLocation): static
+    {
+        $this->internalLocation = $internalLocation;
+
+        return $this;
     }
 }
