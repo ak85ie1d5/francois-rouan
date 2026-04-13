@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <h4 id="batch-action-confirmation-title-pdf">{{ 'batch_action_modal.title'|trans(domain = 'EasyAdminBundle') }}</h4>
-                <div class="">
+                <div class="mb-3">
                     <label for="bibliography">
                         <input id="bibliography" type="checkbox" name="additional_data" value="true" />
                         <span>Bibliographie</span>
@@ -12,9 +12,16 @@
                         <input id="exhibition" type="checkbox" name="additional_data" value="true" />
                         <span>Exposition</span>
                     </label>
+                </div>
+                <div class="">
+                    <span>Dernières locations : </span>
                     <label for="external-location">
                         <input id="external-location" type="checkbox" name="additional_data" value="true" />
-                        <span>Localisations externes</span>
+                        <span>externes</span>
+                    </label>
+                    <label for="internal-location">
+                        <input id="internal-location" type="checkbox" name="additional_data" value="true" />
+                        <span>internes</span>
                     </label>
                 </div>
             </div>
