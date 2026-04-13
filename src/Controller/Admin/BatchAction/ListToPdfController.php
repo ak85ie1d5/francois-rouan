@@ -96,11 +96,6 @@ class ListToPdfController extends AbstractController
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
             }
 
-            if ($request->request->get('includeExternalLocation') === 'true') {
-                // Retrieve the last localization of the Oeuvre entity
-                $fields['last_localisation'] = $this->entityManager->getRepository(Oeuvre::class)->getLastLocalisation($id);
-            }
-
             if ($request->request->get('includeExternalLocation') === 'true' || $request->request->get('includeInternalLocation') === 'true') {
                 // Retrieve the last localization of the Oeuvre entity
                 $fields['last_localisation'] = $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation([$id])[$id];
