@@ -128,6 +128,10 @@ class OeuvreStockage
             END;
         }
 
+        if ($this->getInternalLocation() !== null) {
+            return (string) $this->getInternalLocation();
+        }
+
         return '';
     }
 

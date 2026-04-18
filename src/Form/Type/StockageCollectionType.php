@@ -78,6 +78,9 @@ class StockageCollectionType extends AbstractType
             ->add('internalLocation', EntityType::class, [
                 'class' => InternalLocation::class,
                 'label' => 'Emplacements internes',
+                'choice_label' => fn(InternalLocation $loc) => $loc->getLabel(),
+                'placeholder' => '',
+                'required' => false,
                 'attr' => [
                     'data-depend-on' => "Oeuvre_oeuvreStockages_0_type",
                     'data-depend-on-value' => '0',
