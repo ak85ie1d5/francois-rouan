@@ -86,8 +86,7 @@ class StockageCollectionType extends AbstractType
                     'data-depend-on-value' => '0',
                 ],
             ])
-            ->add('description', TextareaType::class)
-            ->add('commentaire', TextareaType::class);
+            ->add('description', TextareaType::class);
     }
 
     /**

@@ -23,9 +23,6 @@ class OeuvreStockage
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $commentaire = null;
-
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $precisions = null;
 
@@ -54,18 +51,6 @@ class OeuvreStockage
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getCommentaire(): ?string
-    {
-        return $this->commentaire;
-    }
-
-    public function setCommentaire(?string $commentaire): static
-    {
-        $this->commentaire = $commentaire;
 
         return $this;
     }
