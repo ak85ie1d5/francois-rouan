@@ -2,6 +2,7 @@
 
 namespace App\Form\Type;
 
+use App\Entity\InternalLocation;
 use App\Entity\Lieu;
 use App\Entity\OeuvreStockage;
 use App\Service\Options;
@@ -46,6 +47,15 @@ class LocationFilterType extends AbstractType
                         ->orderBy('u.nom', 'ASC');
                 },
                 'placeholder' => ''
+            ])
+            ->add('internalLocation', EntityType::class, [
+                'class' => InternalLocation::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.RoomLabel', 'ASC');
+                },
+                'placeholder' => '',
+                'label' => 'Localisations internes'
             ])
             ->add('description', TextareaType::class);
     }
