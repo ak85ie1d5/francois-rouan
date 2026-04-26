@@ -50,7 +50,12 @@ class LocationFilterType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.nom', 'ASC');
                 },
-                'placeholder' => ''
+                'placeholder' => '',
+                'label' => 'Localisations externes',
+                'attr' => [
+                    'data-depend-on' => 'filters_oeuvreStockages_type',
+                    'data-depend-on-value' => '1'
+                ]
             ])
             ->add('internalLocation', EntityType::class, [
                 'class' => InternalLocation::class,
@@ -60,10 +65,6 @@ class LocationFilterType extends AbstractType
                 },
                 'placeholder' => '',
                 'label' => 'Localisations internes',
-                'label_attr' => [
-                    'data-depend-on' => 'filters_oeuvreStockages_type',
-                    'data-depend-on-value' => '0'
-                ],
                 'attr' => [
                     'data-depend-on' => 'filters_oeuvreStockages_type',
                     'data-depend-on-value' => '0'
