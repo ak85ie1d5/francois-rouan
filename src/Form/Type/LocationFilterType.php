@@ -38,7 +38,11 @@ class LocationFilterType extends AbstractType
             ])
             ->add('precisions', ChoiceType::class, [
                 'choices' => $this->options->getLocationDetails(),
-                'placeholder' => ''
+                'placeholder' => '',
+                'attr' => [
+                    'data-depend-on' => 'filters_oeuvreStockages_type',
+                    'data-depend-on-value' => '1'
+                ]
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
@@ -55,7 +59,15 @@ class LocationFilterType extends AbstractType
                         ->orderBy('u.RoomLabel', 'ASC');
                 },
                 'placeholder' => '',
-                'label' => 'Localisations internes'
+                'label' => 'Localisations internes',
+                'label_attr' => [
+                    'data-depend-on' => 'filters_oeuvreStockages_type',
+                    'data-depend-on-value' => '0'
+                ],
+                'attr' => [
+                    'data-depend-on' => 'filters_oeuvreStockages_type',
+                    'data-depend-on-value' => '0'
+                ]
             ])
             ->add('description', TextareaType::class);
     }
