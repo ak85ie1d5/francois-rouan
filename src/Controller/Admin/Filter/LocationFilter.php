@@ -48,6 +48,12 @@ class LocationFilter implements FilterInterface
                     ->setParameter('lieu', $values->getLieu());
             }
 
+            if ($values->getInternalLocation() !== null) {
+                $queryBuilder
+                    ->andWhere('os.internalLocation = :internalLocation')
+                    ->setParameter('internalLocation', $values->getInternalLocation());
+            }
+
             if ($values->getDescription() !== null) {
                 $queryBuilder
                     ->andWhere('os.description LIKE :description')
