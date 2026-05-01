@@ -46,6 +46,14 @@ class ListToPdfController extends AbstractController
             return new Response('Cannot open the zip file', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        $includeExternal = $request->request->get('includeExternalLocation') === 'true';
+        $includeInternal = $request->request->get('includeInternalLocation') === 'true';
+
+        // Une seule requête pour toutes les œuvres
+        $localisations = ($includeExternal || $includeInternal)
+            ? $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation($this->selectedArtworks)
+            : [];
+
         foreach ($this->selectedArtworks as $id) {
             $fields = $this->pdfExportService->getPdfContent($id);
 
@@ -57,9 +65,8 @@ class ListToPdfController extends AbstractController
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
             }
 
-            if ($request->request->get('includeExternalLocation') === 'true' || $request->request->get('includeInternalLocation') === 'true') {
-                // Retrieve the last localization of the Oeuvre entity
-                $fields['last_localisation'] = $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation([$id])[$id];
+            if ($includeExternal || $includeInternal) {
+                $fields['last_localisation'] = $this->resolveLocalisation($localisations[$id] ?? [], $includeExternal, $includeInternal);
             }
 
             $pdfContent = $this->pdfExportService->generatePdf($fields, true);
@@ -84,6 +91,13 @@ class ListToPdfController extends AbstractController
     public function indexPdf(Request $request): Response
     {
         $htmlContent = '';
+        $includeExternal = $request->request->get('includeExternalLocation') === 'true';
+        $includeInternal = $request->request->get('includeInternalLocation') === 'true';
+
+        // Une seule requête pour toutes les œuvres
+        $localisations = ($includeExternal || $includeInternal)
+            ? $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation($this->selectedArtworks)
+            : [];
 
         foreach ($this->selectedArtworks as $id) {
             $fields = $this->pdfExportService->getPdfContent($id);
@@ -96,13 +110,11 @@ class ListToPdfController extends AbstractController
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
             }
 
-            if ($request->request->get('includeExternalLocation') === 'true' || $request->request->get('includeInternalLocation') === 'true') {
-                // Retrieve the last localization of the Oeuvre entity
-                $fields['last_localisation'] = $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation([$id])[$id];
+            if ($includeExternal || $includeInternal) {
+                $fields['last_localisation'] = $this->resolveLocalisation($localisations[$id] ?? [], $includeExternal, $includeInternal);
             }
 
             $htmlContent .= $this->pdfExportService->generateHtml($fields);
-
         }
 
         $pdfContent = $this->pdfExportService->generatePdf([], false, $htmlContent);
@@ -112,4 +124,17 @@ class ListToPdfController extends AbstractController
             'Content-Disposition' => 'attachment; filename="export_oeuvres_' . date('Y-m-d_His') . '.pdf"',
         ]);
     }
+
+    private function resolveLocalisation(array $localisation, bool $includeExternal, bool $includeInternal): ?string
+{
+    if ($includeExternal && !empty($localisation['external_location_name'])) {
+        return $localisation['external_location_name'];
+    }
+
+    if ($includeInternal && !empty($localisation['internal_location_label'])) {
+        return $localisation['internal_location_label'];
+    }
+
+    return null;
+}
 }
