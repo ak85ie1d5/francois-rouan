@@ -118,14 +118,14 @@ class OeuvreRepository extends ServiceEntityRepository
             WHERE `o`.`id` IN (:ids);
         ";
 
-        $stmt = $conn->executeQuery($sql, ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER]);
+        $results = $conn->executeQuery($sql, ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER])->fetchAllAssociative();
 
-        $multipleLastLocalisation = [];
-        while ($row = $stmt->fetchAssociative()) {
-            $multipleLastLocalisation[$row['id']] = $row['internal_location_label'] ?? $row['external_location_name'] ?? '';
-        }
-
-        return $multipleLastLocalisation;
+        return array_reduce($results, function ($carry, $row) {
+            $id = $row['id'];
+            unset($row['id']);
+            $carry[$id] = $row;
+            return $carry;
+        }, []);
     }
 
 //    /**
