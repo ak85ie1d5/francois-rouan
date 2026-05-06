@@ -1,17 +1,20 @@
 <?php
 namespace App\Admin\Field;
 
-use App\Form\Type\ArtworkMediaType;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class VichImageField implements FieldInterface
 {
     use FieldTrait;
 
-    public static function new(string $propertyName, ?string $label = null)
+    /**
+     * @param string $propertyName
+     * @param string|null $label
+     * @return VichImageField|FieldInterface
+     */
+    public static function new(string $propertyName, ?string $label = null): VichImageField|FieldInterface
     {
         return (new self())
             ->setProperty($propertyName)

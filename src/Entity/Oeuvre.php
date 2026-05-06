@@ -54,7 +54,7 @@ class Oeuvre
     private Collection $oeuvreBibliographies;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreExposition::class, cascade: ["persist", "remove"], orphanRemoval: true)]
-    #[ORM\OrderBy(["FirstYear" => "DESC"])]
+    #[ORM\OrderBy(["FirstYear" => "DESC", "FirstMonth" => "ASC", "FirstDay" => "DESC"])]
     private Collection $oeuvreExpositions;
 
     #[ORM\OneToMany(mappedBy: 'oeuvre', targetEntity: OeuvreStockage::class, cascade: ["persist", "remove"], orphanRemoval: true)]

@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\Options as OptionsEntity;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -28,16 +29,20 @@ class PdfExportService
     private Environment $twig;
     private EntityManagerInterface $entityManager;
 
+    private  AssetMapperInterface $assetMapper;
+
     /**
      * PdfExportService constructor.
      *
      * @param Environment $twig
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager, Environment $twig)
+    public function __construct(EntityManagerInterface $entityManager, Environment $twig, string $projectDir, AssetMapperInterface $assetMapper)
     {
         $this->entityManager = $entityManager;
         $this->twig = $twig;
+        $this->projectDir = $projectDir;
+        $this->assetMapper = $assetMapper;
     }
 
     /**
@@ -92,7 +97,8 @@ class PdfExportService
                 'photographerName' => $oeuvresData->getPrimaryMedia()[0]->getPhotographerName()
             ];
         } else {
-            $base64Image = $this->convertImageToBase64('../public/dummy-image-square.jpg');
+            $asset = $this->assetMapper->getAsset('img/dummy-image-square.jpg');
+            $base64Image = $this->convertImageToBase64($this->projectDir . '/public' . $asset->publicPath);
             $primaryMedia = null;
         }
 
@@ -118,6 +124,7 @@ class PdfExportService
      */
     public function convertImageToBase64(string $imagePath): string
     {
+
         $type = pathinfo($imagePath, PATHINFO_EXTENSION);
         $data = file_get_contents($imagePath);
 

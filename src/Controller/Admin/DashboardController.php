@@ -14,6 +14,7 @@ use App\Entity\OeuvreStockage;
 use App\Entity\Options;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -26,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
+#[AdminDashboard]
 class DashboardController extends AbstractDashboardController
 {
     private EntityManagerInterface $entityManager;

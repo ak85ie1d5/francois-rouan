@@ -13,7 +13,12 @@ class TreeField implements FieldInterface
 
     public const OPTION_CLASS = 'class';
 
-    public static function new(string $propertyName, ?string $label = null)
+    /**
+     * @param string $propertyName
+     * @param string|null $label
+     * @return TreeField|FieldInterface
+     */
+    public static function new(string $propertyName, ?string $label = null): FieldInterface|TreeField
     {
         return (new self())
             ->setProperty($propertyName)
