@@ -28,10 +28,6 @@ return [
         'path' => './assets/modal-new-location.js',
         'entrypoint' => true,
     ],
-    'umanit-easyadmintree-tree-field' => [
-        'path' => './assets/umanit-easyadmintree-tree-field.js',
-        'entrypoint' => true,
-    ],
     'modal-export-to-csv' => [
         'path' => './assets/modal-export-to-csv.js',
         'entrypoint' => true,
@@ -55,4 +51,12 @@ return [
     'sortablejs' => [
         'version' => '1.15.6',
     ],
+    'table-field-sortable' => [
+        'path' => './assets/table-field-sortable.js',
+        'entrypoint' => true,
+    ],
+    'field-depend-on' => [
+        'path' => './assets/field-depend-on.js',
+        'entrypoint' => true,
+    ]
 ];

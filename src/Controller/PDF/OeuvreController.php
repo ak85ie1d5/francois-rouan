@@ -3,6 +3,7 @@
 namespace App\Controller\PDF;
 
 
+use App\Entity\Oeuvre;
 use App\Service\PdfExportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +41,17 @@ class OeuvreController extends AbstractController
     public function index(int $id): Response
     {
         $fields = $this->pdfExportService->getPdfContent($id);
+
+        $localisation = $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation([$id])[$id] ?? [];
+
+        if (!empty($localisation['external_location_name'])) {
+            $fields['last_localisation'] = $localisation['external_location_name'];
+        } elseif (!empty($localisation['internal_location_label'])) {
+            $fields['last_localisation'] = "Atelier de l'artiste";
+        } else {
+            $fields['last_localisation'] = null;
+        }
+
         $pdfContent = $this->pdfExportService->generatePdf($fields, true);
 
         return new Response($pdfContent, Response::HTTP_OK, [

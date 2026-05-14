@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Admin\Field\TableField;
+use App\Admin\Field\TreeField;
+use App\Controller\Admin\Filter\ArtworkCategoryFilter;
 use App\Controller\Admin\Filter\ArtworkMediaFilter;
 use App\Controller\Admin\Filter\BibliographyFilter;
 use App\Controller\Admin\Filter\ExhibitionFilter;
@@ -30,8 +32,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Umanit\EasyAdminTreeBundle\Field\TreeField;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 
@@ -126,6 +129,8 @@ class OeuvreCrudController extends AbstractCrudController
             ->setHtmlAttributes([
                 'target' => '_blank',
             ])
+            ->asTextLink()
+            ->asPrimaryAction()
             ->setCssClass('d-flex m-2');
 
         $pdfBtn = Action::new('pdf', 'Exporter en PDF', 'fa fa-file-pdf')
@@ -165,7 +170,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToCsv = Action::new('export_to_csv', 'Exporter en CSV')
-            ->linkToRoute('app_list_to_csv', ['ids' => 'entity.getId()'])
+            ->linkToRoute('app_list_to_csv')
             ->setHtmlAttributes([
                 'target' => '_blank',
                 'id' => 'export-to-csv-action',
@@ -176,7 +181,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToZip = Action::new('export_to_zip', 'Exporter dans un ZIP')
-            ->linkToRoute('app_list_to_zip', ['ids' => 'entity.getId()'])
+            ->linkToRoute('app_list_to_zip')
             ->setHtmlAttributes([
                 'target' => '_blank',
                 'id' => 'export-to-zip-action',
@@ -187,7 +192,7 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToPdf = Action::new('export_to_pdf', 'Exporter en PDF')
-            ->linkToRoute('app_list_to_pdf', ['ids' => 'entity.getId()'])
+            ->linkToRoute('app_list_to_pdf')
             ->setHtmlAttributes([
                 'target' => '_blank',
                 'id' => 'export-to-pdf-action',
@@ -198,16 +203,19 @@ class OeuvreCrudController extends AbstractCrudController
             ->setTemplatePath('admin/button/action.html.twig');
 
         $actions
-            ->addBatchAction($uncheckAll)
-            ->addBatchAction($exportToZip)
-            ->addBatchAction($exportToPdf)
             ->addBatchAction($exportToCsv)
+            ->addBatchAction($exportToPdf)
+            ->addBatchAction($exportToZip)
+            ->addBatchAction($uncheckAll)
+
             ->add(Crud::PAGE_INDEX, $pdfLink)
             ->update(Crud::PAGE_INDEX, Action::EDIT,
                 function (Action $action) {
                     return $action
                         ->setLabel('Modifier&nbsp;/&nbsp;Visualiser')
                         ->setIcon('fa fa-pencil-alt')
+                        ->asTextLink()
+                        ->asPrimaryAction()
                         ->addCssClass('d-flex m-2');
                 }
             )
@@ -218,6 +226,7 @@ class OeuvreCrudController extends AbstractCrudController
                         ->addCssClass('d-flex m-2');
                 }
             )
+            ->reorder(Crud::PAGE_INDEX, ['export_to_csv', 'export_to_pdf', 'export_to_zip', 'uncheckAll', Action::BATCH_DELETE, 'pdf', Action::EDIT, Action::DELETE])
             ->add(Crud::PAGE_EDIT, $newLocationModal)
             ->add(Crud::PAGE_EDIT, $pdfBtn)
             ->add(Crud::PAGE_EDIT, $goBack);
@@ -230,14 +239,17 @@ class OeuvreCrudController extends AbstractCrudController
         $assets = parent::configureAssets($assets);
         return $assets
             ->addJsFile(Asset::new('image-preview.js'))
+            ->addJsFile(Asset::new('field-depend-on.js'))
             ->addAssetMapperEntry('scroll-auto')
             ->addAssetMapperEntry('modal-new-location')
             ->addAssetMapperEntry('modal-export-to-pdf')
             ->addAssetMapperEntry('modal-export-to-csv')
             ->addAssetMapperEntry('modal-uncheck-all')
-            ->addAssetMapperEntry('umanit-easyadmintree-tree-field')
             ->addAssetMapperEntry('selection-multiple')
-            ->addAssetMapperEntry('draggable-collection');
+            ->addAssetMapperEntry('draggable-collection')
+            ->addAssetMapperEntry('table-field-sortable')
+            ->addCssFile(Asset::new('styles/tree-field.css'))
+            ;
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -245,14 +257,14 @@ class OeuvreCrudController extends AbstractCrudController
         return $filters
             ->add('numInventaire')
             ->add('titre')
-            ->add('sousTitre')
+            ->add(TextFilter::new('sousTitre', 'Sous-titre'))
             ->add('dimensions')
-            ->add('DimensionWithFrame')
-            ->add('FirstYear')
-            ->add('serie')
+            ->add(TextFilter::new('DimensionWithFrame', 'Dimensions avec cadre'))
+            ->add(NumericFilter::new('FirstYear', 'Année'))
+            ->add(TextFilter::new('serie', 'Titre de la série'))
             ->add('description')
-            ->add('commentairePublic')
-            ->add('ArtworkCategory')
+            ->add(TextFilter::new('commentairePublic', 'Commentaire public'))
+            ->add(ArtworkCategoryFilter::new('ArtworkCategory', 'Catégories'))
             ->add(HistoryFilter::new('oeuvreHistoriques', 'Historique'))
             ->add(BibliographyFilter::new('oeuvreBibliographies', 'Bibliographies'))
             ->add(ExhibitionFilter::new('oeuvreExpositions', 'Expositions'))

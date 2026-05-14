@@ -32,7 +32,11 @@ class UtilisateurCrudController extends AbstractCrudController
         return Utilisateur::class;
     }
 
-    public function createEntity(string $entityFqcn)
+    /**
+     * @param string $entityFqcn
+     * @return Utilisateur
+     */
+    public function createEntity(string $entityFqcn): Utilisateur
     {
         $artworkCategory = new Utilisateur();
         $artworkCategory->setCreatedBy($this->getUser());

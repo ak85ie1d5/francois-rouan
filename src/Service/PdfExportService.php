@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\Options as OptionsEntity;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -28,16 +29,20 @@ class PdfExportService
     private Environment $twig;
     private EntityManagerInterface $entityManager;
 
+    private  AssetMapperInterface $assetMapper;
+
     /**
      * PdfExportService constructor.
      *
      * @param Environment $twig
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager, Environment $twig)
+    public function __construct(EntityManagerInterface $entityManager, Environment $twig, string $projectDir, AssetMapperInterface $assetMapper)
     {
         $this->entityManager = $entityManager;
         $this->twig = $twig;
+        $this->projectDir = $projectDir;
+        $this->assetMapper = $assetMapper;
     }
 
     /**
@@ -84,14 +89,17 @@ class PdfExportService
         // Retrieve the Oeuvre entity by ID
         $oeuvresData = $this->entityManager->getRepository(Oeuvre::class)->findOneBy(['id' => $id]);
 
-        // Retrieve the last localisation of the Oeuvre entity
-        $lastLocalisation = $this->entityManager->getRepository(Oeuvre::class)->getLastLocalisation($id);
-
         // Convert the primary media image to base64, or use a dummy image if not available
         if (isset($oeuvresData->getPrimaryMedia()[0])) {
             $base64Image = $this->convertImageToBase64($oeuvresData->getPrimaryMedia()[0]->getImageFile());
+            $primaryMedia = [
+                'photoCredit' => $oeuvresData->getPrimaryMedia()[0]->getPhotoCredit(),
+                'photographerName' => $oeuvresData->getPrimaryMedia()[0]->getPhotographerName()
+            ];
         } else {
-            $base64Image = $this->convertImageToBase64('../public/dummy-image-square.jpg');
+            $asset = $this->assetMapper->getAsset('img/dummy-image-square.jpg');
+            $base64Image = $this->convertImageToBase64($this->projectDir . '/public' . $asset->publicPath);
+            $primaryMedia = null;
         }
 
         // Retrieve additional options for the PDF
@@ -101,8 +109,8 @@ class PdfExportService
         // Prepare the fields for the PDF template
         return [
             'oeuvre' => $oeuvresData,
-            'last_localisation' => $lastLocalisation,
             'base64Image' => $base64Image,
+            'primary_media' => $primaryMedia,
             'month_textual' => $monthTextual,
             'separator' => $separator
         ];
@@ -116,6 +124,7 @@ class PdfExportService
      */
     public function convertImageToBase64(string $imagePath): string
     {
+
         $type = pathinfo($imagePath, PATHINFO_EXTENSION);
         $data = file_get_contents($imagePath);
 
@@ -130,7 +139,7 @@ class PdfExportService
      */
     public function getBibliography(int $artworkId): array
     {
-        return $this->entityManager->getRepository(OeuvreBibliographie::class)->findBy(['oeuvre' => $artworkId]);
+        return $this->entityManager->getRepository(OeuvreBibliographie::class)->findBy(['oeuvre' => $artworkId], ['Year' => 'DESC']);
     }
 
     /**
@@ -141,7 +150,7 @@ class PdfExportService
      */
     public function getExhibition(int $artworkId): array
     {
-        return $this->entityManager->getRepository(OeuvreExposition::class)->findBy(['oeuvre' => $artworkId]);
+        return $this->entityManager->getRepository(OeuvreExposition::class)->findBy(['oeuvre' => $artworkId], ['FirstYear' => 'DESC']);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Form\Type;
 
+use App\Entity\InternalLocation;
 use App\Entity\Lieu;
 use App\Entity\OeuvreStockage;
 use App\Service\Options;
@@ -23,7 +24,12 @@ class LocationFilterType extends AbstractType
         $this->options= $options;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface<FormBuilderInterface> $builder
+     * @param array<string, mixed> $options
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('type', ChoiceType::class, [
@@ -32,7 +38,11 @@ class LocationFilterType extends AbstractType
             ])
             ->add('precisions', ChoiceType::class, [
                 'choices' => $this->options->getLocationDetails(),
-                'placeholder' => ''
+                'placeholder' => '',
+                'attr' => [
+                    'data-depend-on' => 'filters_oeuvreStockages_type',
+                    'data-depend-on-value' => '1'
+                ]
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
@@ -40,12 +50,34 @@ class LocationFilterType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.nom', 'ASC');
                 },
-                'placeholder' => ''
+                'placeholder' => '',
+                'label' => 'Localisations externes',
+                'attr' => [
+                    'data-depend-on' => 'filters_oeuvreStockages_type',
+                    'data-depend-on-value' => '1'
+                ]
+            ])
+            ->add('internalLocation', EntityType::class, [
+                'class' => InternalLocation::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.RoomLabel', 'ASC');
+                },
+                'placeholder' => '',
+                'label' => 'Localisations internes',
+                'attr' => [
+                    'data-depend-on' => 'filters_oeuvreStockages_type',
+                    'data-depend-on-value' => '0'
+                ]
             ])
             ->add('description', TextareaType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => OeuvreStockage::class

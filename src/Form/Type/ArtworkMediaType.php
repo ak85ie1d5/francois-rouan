@@ -3,25 +3,43 @@
 namespace App\Form\Type;
 
 use App\Entity\ArtworkMedia;
-use App\Entity\Utilisateur;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Service\Options;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyPath;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ArtworkMediaType extends AbstractType
 {
+    private Options $options;
+
+    public function __construct(Options $options)
+    {
+        $this->options = $options;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('imageFile', VichImageType::class, [
                 'allow_delete' => false,
                 'label' => 'Image'
+            ])
+            ->add('photoCredit', ChoiceType::class, [
+                'label' => 'Crédit photo',
+                'choices' => $this->options->getPhotoCredit(),
+                'placeholder' => ''
+            ])
+            ->add('photographerName', TextType::class, [
+                'label' => 'Nom du photographe',
+                'attr' => [
+                    'data-depend-on' => 'Oeuvre_ArtworkMedias_0_photoCredit',
+                    'data-depend-on-value' => '1',
+                ],
             ])
             ->add('libelle', TextType::class, [
                 'label' => 'Nom de fichier',
@@ -33,6 +51,9 @@ class ArtworkMediaType extends AbstractType
                 ],
             ])
             ->add('position', HiddenType::class, [
+                'label_attr' => [
+                    'class' => 'd-none'
+                ],
                 'empty_data' => 1,
             ])
         ;

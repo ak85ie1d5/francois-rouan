@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ArtworkCategory;
+use App\Entity\InternalLocation;
 use App\Entity\Lieu;
 use App\Entity\Oeuvre;
 use App\Entity\OeuvreBibliographie;
@@ -13,6 +14,7 @@ use App\Entity\OeuvreStockage;
 use App\Entity\Options;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -25,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
+#[AdminDashboard]
 class DashboardController extends AbstractDashboardController
 {
     private EntityManagerInterface $entityManager;
@@ -125,6 +128,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', Utilisateur::class);
 
         yield MenuItem::section('Super Users')->setPermission('ROLE_SUPERADMIN');
+        yield MenuItem::linkToCrud('Emplacements internes', 'fas fa-solid fa-table-cells', InternalLocation::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Historique', 'fa-solid fa-clock-rotate-left', OeuvreHistorique::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Bibliographie', 'fa-solid fa-book', OeuvreBibliographie::class)->setPermission('ROLE_SUPERADMIN');
         yield MenuItem::linkToCrud('Oeuvre Exposition', 'fa-solid fa-building-columns', OeuvreExposition::class)->setPermission('ROLE_SUPERADMIN');

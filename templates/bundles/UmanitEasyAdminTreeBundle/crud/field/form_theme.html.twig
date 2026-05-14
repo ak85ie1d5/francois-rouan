@@ -11,11 +11,11 @@
     {% endif %}
 
     <li>
-    <div class="umanit_easyadmintree_tree_field-item {% if child.vars.checked %}umanit_easyadmintree_tree_field-item--active{% endif %}">
+    <div class="umanit_easyadmintree_tree_field-item{% if child.vars.checked %} umanit_easyadmintree_tree_field-item--active{% endif %}">
       <input type="radio" id="{{ child.vars.id }}" name="{{ child.vars.full_name }}" class="form-check-input" value="{% if child.vars.value is defined %}{{ child.vars.value }}{% endif %}" {% if child.vars.checked %} checked="checked"{% endif %} />
       <label class="form-check-label umanit_easyadmintree_tree_field-item-label" for="{{ child.vars.id }}">
         {% if loop.first %}
-          {{ 'umanit.easyadmin.tree.form-field.placeholder' | trans }}
+          Aucun(e)
         {% else %}
           {{ child.vars.label }}
         {% endif %}

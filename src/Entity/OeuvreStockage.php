@@ -23,9 +23,6 @@ class OeuvreStockage
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $commentaire = null;
-
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $precisions = null;
 
@@ -37,6 +34,9 @@ class OeuvreStockage
 
     #[ORM\ManyToOne(inversedBy: 'oeuvreStockages')]
     private ?Lieu $lieu = null;
+
+    #[ORM\ManyToOne(inversedBy: 'oeuvreStockages')]
+    private ?InternalLocation $internalLocation = null;
 
     public function getId(): ?int
     {
@@ -51,18 +51,6 @@ class OeuvreStockage
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getCommentaire(): ?string
-    {
-        return $this->commentaire;
-    }
-
-    public function setCommentaire(?string $commentaire): static
-    {
-        $this->commentaire = $commentaire;
 
         return $this;
     }
@@ -125,6 +113,22 @@ class OeuvreStockage
             END;
         }
 
+        if ($this->getInternalLocation() !== null) {
+            return (string) $this->getInternalLocation();
+        }
+
         return '';
+    }
+
+    public function getInternalLocation(): ?InternalLocation
+    {
+        return $this->internalLocation;
+    }
+
+    public function setInternalLocation(?InternalLocation $internalLocation): static
+    {
+        $this->internalLocation = $internalLocation;
+
+        return $this;
     }
 }

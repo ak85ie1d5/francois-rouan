@@ -4,12 +4,9 @@
     font-weight: 700 !important;
 }
 
-.umanit_easyadmintree_tree_field-item--active {
-    background-color: var(--button-primary-bg) !important;
-}
-
-.umanit_easyadmintree_tree_field-item--active .umanit_easyadmintree_tree_field-item-label {
-    color: var(--button-primary-color) !important;
+.datagrid .ea-lightbox-thumbnail img {
+    max-block-size: 300px !important;
+    max-inline-size: 100% !important;
 }
 
 .badge-outline {
@@ -34,4 +31,56 @@
 
 .filter-content .form-widget-compound label {
     display: block !important;
+}
+
+.table-actions .field-collection-delete-button
+{
+    position: relative !important;
+}
+
+.btn-link-danger, .btn-link-danger:active, .btn-link-danger:active:focus, .btn-link-danger:focus, .btn-link-danger:hover {
+    color: var(--link-danger-color);
+}
+
+.btn-light {
+    --button-box-shadow: var(--button-danger-box-shadow);
+    --button-bg: var(--button-danger-bg);
+    --button-border-color: var(--button-danger-border-color);
+    --button-hover-bg: var(--text-color);
+    --button-hover-color: var(--button-danger-hover-color);
+}
+
+.actions a {
+    width: max-content;
+}
+
+.table-sortable th {
+    cursor: pointer;
+}
+
+.table-sortable th[data-table-sortable-th] span i {
+    --fa: "\f0dc";
+    --fa--fa: "\f0dc\f0dc";
+}
+
+
+.table-sortable th[aria-sort="desc"] span i,
+.table-sortable th[aria-sort-default="desc"] span i {
+    --fa: "\f063";
+    --fa--fa: "\f063\f063";
+    color: var(--table-thead-sorted-marker-color);
+}
+
+.table-sortable th[aria-sort="asc"] span i,
+.table-sortable th[aria-sort-default="asc"] span i {
+    --fa: "\f062";
+    --fa--fa: "\f062\f062";
+    color: var(--table-thead-sorted-marker-color);
+}
+
+.table-sortable th[aria-sort="desc"],
+.table-sortable th[aria-sort-default="desc"],
+.table-sortable th[aria-sort="asc"],
+.table-sortable th[aria-sort-default="asc"] {
+    box-shadow: inset 0 -2px 0 var(--color-primary)
 }

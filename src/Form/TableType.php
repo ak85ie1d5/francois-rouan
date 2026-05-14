@@ -131,6 +131,6 @@ class TableType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'collection';
+        return 'table';
     }
 }

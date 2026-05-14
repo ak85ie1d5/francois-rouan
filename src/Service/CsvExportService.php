@@ -53,7 +53,8 @@ class CsvExportService
                     $row[] = $value;
 
                 } elseif ($field === 'lastLocalisation' && isset($multipleLastLocalisation[$artwork->getId()])) {
-                    $row[] = $multipleLastLocalisation[$artwork->getId()]; // Add the last localisation if the field is not found
+                    $localisation = $multipleLastLocalisation[$artwork->getId()];
+                    $row[] = $localisation['external_location_name'] ?? $localisation['internal_location_label'] ?? '';
                 } else {
                     $row[] = ''; // Add an empty value if the field is not found
                 }

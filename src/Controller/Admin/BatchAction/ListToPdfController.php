@@ -2,11 +2,10 @@
 
 namespace App\Controller\Admin\BatchAction;
 
+use App\Entity\Oeuvre;
 use App\Service\PdfExportService;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,11 +19,13 @@ class ListToPdfController extends AbstractController
 
     private mixed $selectedArtworks;
 
-    public function __construct(PdfExportService $pdfExportService)
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(PdfExportService $pdfExportService, EntityManagerInterface $entityManager)
     {
         $this->pdfExportService = $pdfExportService;
-
-        $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true) : [];
+        $this->selectedArtworks = isset($_COOKIE['selectedArtworks']) ? json_decode($_COOKIE['selectedArtworks'], true, 512, JSON_THROW_ON_ERROR) : [];
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -34,8 +35,8 @@ class ListToPdfController extends AbstractController
      * @throws RuntimeError
      * @throws LoaderError
      */
-    #[Route('/list/to/zip', name: 'app_list_to_zip')]
-    public function indexZip(Request $request, BatchActionDto $batchActionDto): Response
+    #[Route('/list/to/zip', name: 'app_list_to_zip', methods: ['POST'])]
+    public function indexZip(Request $request): Response
     {
         $zip = new \ZipArchive();
         $zipFilename = 'export_oeuvres_' . date('Y-m-d_His') . '.zip';
@@ -44,6 +45,14 @@ class ListToPdfController extends AbstractController
         if ($zip->open($tempDir . '/' . $zipFilename, \ZipArchive::CREATE) !== true) {
             return new Response('Cannot open the zip file', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        $includeExternal = $request->request->get('includeExternalLocation') === 'true';
+        $includeInternal = $request->request->get('includeInternalLocation') === 'true';
+
+        // Une seule requête pour toutes les œuvres
+        $localisations = ($includeExternal || $includeInternal)
+            ? $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation($this->selectedArtworks)
+            : [];
 
         foreach ($this->selectedArtworks as $id) {
             $fields = $this->pdfExportService->getPdfContent($id);
@@ -54,6 +63,10 @@ class ListToPdfController extends AbstractController
 
             if ($request->request->get('includeExhibition') === 'true') {
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
+            }
+
+            if ($includeExternal || $includeInternal) {
+                $fields['last_localisation'] = $this->resolveLocalisation($localisations[$id] ?? [], $includeExternal, $includeInternal);
             }
 
             $pdfContent = $this->pdfExportService->generatePdf($fields, true);
@@ -74,10 +87,17 @@ class ListToPdfController extends AbstractController
      * @throws RuntimeError
      * @throws LoaderError
      */
-    #[Route('/list/to/pdf', name: 'app_list_to_pdf')]
-    public function indexPdf(Request $request, BatchActionDto $batchActionDto): Response
+    #[Route('/list/to/pdf', name: 'app_list_to_pdf', methods: ['POST'])]
+    public function indexPdf(Request $request): Response
     {
         $htmlContent = '';
+        $includeExternal = $request->request->get('includeExternalLocation') === 'true';
+        $includeInternal = $request->request->get('includeInternalLocation') === 'true';
+
+        // Une seule requête pour toutes les œuvres
+        $localisations = ($includeExternal || $includeInternal)
+            ? $this->entityManager->getRepository(Oeuvre::class)->getMultipleLastLocalisation($this->selectedArtworks)
+            : [];
 
         foreach ($this->selectedArtworks as $id) {
             $fields = $this->pdfExportService->getPdfContent($id);
@@ -90,6 +110,10 @@ class ListToPdfController extends AbstractController
                 $fields['exhibitions'] = $this->pdfExportService->getExhibition($id);
             }
 
+            if ($includeExternal || $includeInternal) {
+                $fields['last_localisation'] = $this->resolveLocalisation($localisations[$id] ?? [], $includeExternal, $includeInternal);
+            }
+
             $htmlContent .= $this->pdfExportService->generateHtml($fields);
         }
 
@@ -100,4 +124,17 @@ class ListToPdfController extends AbstractController
             'Content-Disposition' => 'attachment; filename="export_oeuvres_' . date('Y-m-d_His') . '.pdf"',
         ]);
     }
+
+    private function resolveLocalisation(array $localisation, bool $includeExternal, bool $includeInternal): ?string
+{
+    if ($includeExternal && !empty($localisation['external_location_name'])) {
+        return $localisation['external_location_name'];
+    }
+
+    if ($includeInternal && !empty($localisation['internal_location_label'])) {
+        return $localisation['internal_location_label'];
+    }
+
+    return null;
+}
 }

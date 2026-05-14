@@ -22,26 +22,6 @@ class OeuvreRepository extends ServiceEntityRepository
         parent::__construct($registry, Oeuvre::class);
     }
 
-    public function getLastLocalisation(int $id)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = "
-            SELECT
-                `l`.`nom`
-            FROM `oeuvre` AS `o`
-                JOIN `oeuvre_stockage` AS `os`
-                    ON `os`.`oeuvre_id` = `o`.`id`
-                JOIN `lieu` AS `l`
-                    ON `os`.`lieu_id` = `l`.`id`
-            WHERE `o`.`id` = :id
-            ORDER BY `os`.`id`
-            DESC LIMIT 1; 
-        ";
-
-        return $conn->executeQuery($sql, ['id' => $id])->fetchAssociative();
-    }
-
     public function countTotalArtworks()
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -111,25 +91,41 @@ class OeuvreRepository extends ServiceEntityRepository
         $sql = "
             SELECT
                 `o`.`id`,
-                `l`.`nom`
+                `l`.`nom` AS `external_location_name`,
+                (
+                    SELECT GROUP_CONCAT(
+                                   CONCAT(`anc`.`room_code`, ': ', `anc`.`room_label`)
+                                       ORDER BY `anc`.`lft` ASC
+                        SEPARATOR ' > '
+                           )
+                    FROM `internal_location` AS `anc`
+                    WHERE `anc`.`lft`     <= `il`.`lft`
+                      AND `anc`.`rgt`     >= `il`.`rgt`
+                      AND `anc`.`root_id`  = `il`.`root_id`
+                ) AS `internal_location_label`
             FROM `oeuvre` AS `o`
-                JOIN `oeuvre_stockage` AS `os`
-                    ON `os`.`oeuvre_id` = `o`.`id`
-                JOIN `lieu` AS `l`
-                    ON `os`.`lieu_id` = `l`.`id`
-            WHERE `o`.`id` IN (:ids)
-            ORDER BY `o`.`id`, `l`.`id`
-            DESC;
+                     JOIN `oeuvre_stockage` AS `os`
+                          ON `os`.`oeuvre_id` = `o`.`id`
+                          AND `os`.`id` = (
+                              SELECT MAX(`os2`.`id`)
+                              FROM `oeuvre_stockage` AS `os2`
+                              WHERE `os2`.`oeuvre_id` = `o`.`id`
+                          )
+                     LEFT JOIN `lieu` AS `l`
+                               ON `os`.`lieu_id` = `l`.`id`
+                     LEFT JOIN `internal_location` AS `il`
+                               ON `os`.`internal_location_id` = `il`.`id`
+            WHERE `o`.`id` IN (:ids);
         ";
 
-        $stmt = $conn->executeQuery($sql, ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER]);
+        $results = $conn->executeQuery($sql, ['ids' => $ids], ['ids' => ArrayParameterType::INTEGER])->fetchAllAssociative();
 
-        $multipleLastLocalisation = [];
-        while ($row = $stmt->fetchAssociative()) {
-            $multipleLastLocalisation[$row['id']] = $row['nom'];
-        }
-
-        return $multipleLastLocalisation;
+        return array_reduce($results, function ($carry, $row) {
+            $id = $row['id'];
+            unset($row['id']);
+            $carry[$id] = $row;
+            return $carry;
+        }, []);
     }
 
 //    /**

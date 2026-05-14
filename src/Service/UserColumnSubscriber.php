@@ -2,12 +2,15 @@
 namespace App\Service;
 
 use App\Entity\Trait\UserColumnTrait;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\EventSubscriber;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class UserColumnSubscriber implements EventSubscriber
+#[AsDoctrineListener(event: Events::prePersist)]
+#[AsDoctrineListener(event: Events::preUpdate)]
+class UserColumnSubscriber
 {
     private Security $security;
 
@@ -32,13 +35,5 @@ class UserColumnSubscriber implements EventSubscriber
         if (in_array(UserColumnTrait::class, class_uses($entity))) {
             $entity->setUpdatedBy($this->security->getUser());
         }
-    }
-
-    public function getSubscribedEvents(): array
-    {
-        return [
-            Events::prePersist => 'prePersist',
-            Events::preUpdate => 'preUpdate',
-        ];
     }
 }
