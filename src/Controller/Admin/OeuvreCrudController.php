@@ -54,6 +54,9 @@ class OeuvreCrudController extends AbstractCrudController
      *
      * OeuvreCrudController constructor.
      * @param StorageInterface $storage
+     * @param AdminUrlGenerator $adminUrlGenerator
+     * @param Options $options
+     * @param OeuvreRepository $oeuvreRepository
      */
     public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator, Options $options, OeuvreRepository $oeuvreRepository)
     {
@@ -96,22 +99,6 @@ class OeuvreCrudController extends AbstractCrudController
         return parent::createEntity($entityFqcn);
     }
 
-    /*public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $entityInstance
-            ->setUpdatedBy($this->getUser());
-
-        parent::updateEntity($entityManager, $entityInstance);
-    }
-
-    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        parent::persistEntity($entityManager, $entityInstance);
-
-
-        $entityManager->persist($entityInstance);
-        $entityManager->flush();
-    }*/
 
     /**
      * Configure the actions for the OeuvreCrudController.
@@ -121,6 +108,15 @@ class OeuvreCrudController extends AbstractCrudController
      */
     public function configureActions(Actions $actions): Actions
     {
+        $httpReferer = $_SERVER['HTTP_REFERER'] ?? '';
+        $query = parse_url($httpReferer, PHP_URL_QUERY) ?? '';
+
+        parse_str($query, $params);
+
+        $page = (isset($params['page']) && ctype_digit((string) $params['page']) && (int) $params['page'] >= 1)
+            ? (int) $params['page']
+            : 1;
+
         // Create a new action to generate a PDF of the Oeuvre entity.
         $pdfLink = Action::new('pdf', 'Exporter&nbsp;en&nbsp;PDF', 'fa fa-file-pdf')
             ->linkToRoute('pdf_oeuvre', function (Oeuvre $entity) {
@@ -144,7 +140,14 @@ class OeuvreCrudController extends AbstractCrudController
 
         // Create a new action to go back to the index page.
         $goBack = Action::new('goBack', 'Retourner à la liste', 'fa fa-arrow-left')
-            ->linkToCrudAction('index')
+            ->linkToUrl(
+                $this->adminUrlGenerator
+                    ->unsetAll()
+                    ->setController(self::class)
+                    ->setAction(Action::INDEX)
+                    ->set('page', $page)
+                    ->generateUrl()
+            )
             ->setCssClass('btn btn-secondary action-goBack');
 
         // Create a new action to add a new location.
