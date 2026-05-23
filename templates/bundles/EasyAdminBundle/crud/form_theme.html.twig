@@ -198,7 +198,7 @@
                                 {% set is_drag_and_drop = true %}
                             {% endif %}
 
-                             <th class="searchable header-for-field-{{ child_type }} {{ prototype_value.vars.label_attr.class|default('') }}" data-column="{{ prototype_value.vars.name }}" data-table-sortable-th="{{ loop.index0 }}" {% if prototype_value.vars.label_attr['aria-sort-default']|default(false) %}aria-sort-default="{{ prototype_value.vars.label_attr['aria-sort-default'] }}"{% endif %} dir="ltr">
+                             <th class="searchable header-for-field-{{ child_type }} {{ prototype_value.vars.label_attr.class|default('') }}" data-column="{{ prototype_value.vars.name }}" data-table-sortable-th="{{ loop.index0 }}" {% if prototype_value.vars.label_attr['aria-sort-default']|default(false) %}aria-sort-default="{{ prototype_value.vars.label_attr['aria-sort-default'] }}"{% endif %} {% if prototype_value.vars.label_attr['style']|default(false) %} style="{{ prototype_value.vars.label_attr['style'] }}" {% endif %} dir="ltr">
                                 <span>
                                     {{ (prototype_value.vars.label|default(prototype_value.vars.name))|humanize}}
                                     <i class="fas fa-fw fa-sort"></i>
