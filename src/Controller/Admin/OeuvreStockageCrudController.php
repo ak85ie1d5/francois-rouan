@@ -63,7 +63,6 @@ class OeuvreStockageCrudController extends AbstractCrudController
             AssociationField::new('lieu'),
             FormField::addColumn('col-lg-5'),
             TextareaField::new('description'),
-            TextareaField::new('commentaire'),
 
             FormField::addColumn('col-lg-2'),
             DateTimeField::new('createdAt', 'Date de creation')
