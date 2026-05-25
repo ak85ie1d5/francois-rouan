@@ -18,6 +18,7 @@
              ->add('Year', IntegerType::class, [
                  'label' => 'Année',
                  'label_attr' => [
+                     'style' => 'width: 110px',
                      'aria-sort-default' => 'desc',
                  ]
              ])

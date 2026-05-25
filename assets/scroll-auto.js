@@ -9,12 +9,13 @@ class ScrollAuto {
 
     #getPreviousURL() {
         let previousURL = document.referrer;
-        let urlParams = new URLSearchParams(previousURL);
-        let entityIdParam = urlParams.get('entityId');
+        //let urlParams = new URLSearchParams(previousURL);
+        //let entityIdParam = urlParams.get('entityId');
 
-        if (entityIdParam) {
-            this.#getRow(entityIdParam);
-        }
+        let splitPreviewsURL = previousURL.split('/');
+        let getSecondLastIndex = splitPreviewsURL.slice(-2)[0];
+
+        this.#getRow(getSecondLastIndex);
     }
 
     #getRow(entityId) {
