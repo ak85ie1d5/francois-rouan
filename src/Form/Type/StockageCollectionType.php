@@ -36,16 +36,23 @@ class StockageCollectionType extends AbstractType
             ->add('FirstDay', ChoiceType::class, [
                 'choices' => $this->options->getDayNumeric(),
                 'label' => 'Jour',
+                'label_attr' => [
+                    'style' => 'min-width: 80px'
+            ],
                 'placeholder' => ''
             ])
             ->add('FirstMonth', ChoiceType::class, [
                 'choices' => $this->options->getMonthTextual(),
                 'label' => 'Mois',
+                'label_attr' => [
+                    'style' => 'min-width: 150px'
+                ],
                 'placeholder' => ''
             ])
             ->add('FirstYear', IntegerType::class, [
                 'label' => 'Année',
                 'label_attr' => [
+                    'style' => 'width: 110px',
                     'aria-sort-default' => 'desc'
                 ]
             ])
