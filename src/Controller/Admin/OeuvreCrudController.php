@@ -24,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -35,9 +36,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\Response;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class OeuvreCrudController extends AbstractCrudController
 {
@@ -49,6 +53,8 @@ class OeuvreCrudController extends AbstractCrudController
 
     private $oeuvreRepository;
 
+    private RequestStack $requestStack;
+
     /**
      * Inject the StorageInterface instance into the controller.
      *
@@ -57,13 +63,15 @@ class OeuvreCrudController extends AbstractCrudController
      * @param AdminUrlGenerator $adminUrlGenerator
      * @param Options $options
      * @param OeuvreRepository $oeuvreRepository
+     * @param RequestStack $requestStack
      */
-    public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator, Options $options, OeuvreRepository $oeuvreRepository)
+    public function __construct(StorageInterface $storage, AdminUrlGenerator $adminUrlGenerator, Options $options, OeuvreRepository $oeuvreRepository, RequestStack $requestStack)
     {
         $this->adminUrlGenerator = $adminUrlGenerator;
         $this->storage = $storage;
         $this->options = $options;
         $this->oeuvreRepository = $oeuvreRepository;
+        $this->requestStack = $requestStack;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -98,7 +106,6 @@ class OeuvreCrudController extends AbstractCrudController
 
         return parent::createEntity($entityFqcn);
     }
-
 
     /**
      * Configure the actions for the OeuvreCrudController.
@@ -378,5 +385,53 @@ class OeuvreCrudController extends AbstractCrudController
                 ->allowDelete()
                 ->setEntryIsComplex(),
         ];
+    }
+
+    /**
+     * Override the edit action to store the current list page in session.
+     * This allows restoring the correct page when returning to the list.
+     * The page is only stored on GET requests (form display), not on POST (form submit).
+     *
+     * @param AdminContext $context
+     * @return KeyValueStore|Response
+     */
+    public function edit(AdminContext $context): KeyValueStore|Response
+    {
+        // On ne stocke la page que lors de l'affichage du formulaire, pas au submit
+        if ($context->getRequest()->isMethod('GET')) {
+            $httpReferer = $context->getRequest()->headers->get('referer') ?? '';
+            $query = parse_url($httpReferer, PHP_URL_QUERY) ?? '';
+            parse_str($query, $params);
+
+            $page = (isset($params['page']) && ctype_digit((string) $params['page']) && (int) $params['page'] >= 1)
+                ? (int) $params['page']
+                : 1;
+
+            $this->requestStack->getSession()->set('oeuvre_list_page', $page);
+        }
+
+        return parent::edit($context);
+    }
+
+    /**
+     * Override the redirect response after saving an entity.
+     * When the "Save and return" button is clicked, redirects to the list page
+     * that was stored in session when the edit form was opened, preserving pagination.
+     *
+     * @param AdminContext $context
+     * @param string $action
+     * @return RedirectResponse
+     */
+    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    {
+        $submitButtonName = $context->getRequest()->request->all()['ea']['newForm']['btn'] ?? null;
+
+        if ('saveAndReturn' === $submitButtonName) {
+            $page = $this->requestStack->getSession()->get('oeuvre_list_page', 1);
+
+            return $this->redirectToRoute('admin_oeuvre_index', ['page' => $page]);
+        }
+
+        return parent::getRedirectResponseAfterSave($context, $action);
     }
 }
