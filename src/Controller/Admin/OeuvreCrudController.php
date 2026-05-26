@@ -403,11 +403,9 @@ class OeuvreCrudController extends AbstractCrudController
             $query = parse_url($httpReferer, PHP_URL_QUERY) ?? '';
             parse_str($query, $params);
 
-            $page = (isset($params['page']) && ctype_digit((string) $params['page']) && (int) $params['page'] >= 1)
-                ? (int) $params['page']
-                : 1;
-
-            $this->requestStack->getSession()->set('oeuvre_list_page', $page);
+            if (!empty($params)) {
+                $this->requestStack->getSession()->set('oeuvre_list_page', $params);
+            }
         }
 
         return parent::edit($context);
@@ -427,9 +425,9 @@ class OeuvreCrudController extends AbstractCrudController
         $submitButtonName = $context->getRequest()->request->all()['ea']['newForm']['btn'] ?? null;
 
         if ('saveAndReturn' === $submitButtonName) {
-            $page = $this->requestStack->getSession()->get('oeuvre_list_page', 1);
+            $params = $this->requestStack->getSession()->get('oeuvre_list_page');
 
-            return $this->redirectToRoute('admin_oeuvre_index', ['page' => $page]);
+            return $this->redirectToRoute('admin_oeuvre_index', $params);
         }
 
         return parent::getRedirectResponseAfterSave($context, $action);
