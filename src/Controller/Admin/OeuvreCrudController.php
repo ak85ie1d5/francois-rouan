@@ -398,7 +398,7 @@ class OeuvreCrudController extends AbstractCrudController
             $httpReferer = $context->getRequest()->headers->get('referer') ?? '';
             $query = parse_url($httpReferer, PHP_URL_QUERY) ?? '';
             parse_str($query, $params);
-            dump($params);
+
             if (!empty($params)) {
                 $this->requestStack->getSession()->set('oeuvre_list_page', $params);
             }
@@ -419,10 +419,11 @@ class OeuvreCrudController extends AbstractCrudController
     protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
     {
         $submitButtonName = $context->getRequest()->request->all()['ea']['newForm']['btn'] ?? null;
+        $params = $this->requestStack->getSession()->get('oeuvre_list_page');
 
-        if ('saveAndReturn' === $submitButtonName) {
-            $params = $this->requestStack->getSession()->get('oeuvre_list_page');
-            //dd($params);
+        if ('saveAndReturn' === $submitButtonName && $params) {
+
+            $this->requestStack->getSession()->remove('oeuvre_list_page');
             return $this->redirectToRoute('admin_oeuvre_index', $params);
         }
 
