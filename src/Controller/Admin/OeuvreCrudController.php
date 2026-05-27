@@ -115,14 +115,10 @@ class OeuvreCrudController extends AbstractCrudController
      */
     public function configureActions(Actions $actions): Actions
     {
+        // Get parameters from the referer URL to restore them on clic on goBack button
         $httpReferer = $_SERVER['HTTP_REFERER'] ?? '';
         $query = parse_url($httpReferer, PHP_URL_QUERY) ?? '';
-
         parse_str($query, $params);
-
-        $page = (isset($params['page']) && ctype_digit((string) $params['page']) && (int) $params['page'] >= 1)
-            ? (int) $params['page']
-            : 1;
 
         // Create a new action to generate a PDF of the Oeuvre entity.
         $pdfLink = Action::new('pdf', 'Exporter&nbsp;en&nbsp;PDF', 'fa fa-file-pdf')
@@ -152,7 +148,7 @@ class OeuvreCrudController extends AbstractCrudController
                     ->unsetAll()
                     ->setController(self::class)
                     ->setAction(Action::INDEX)
-                    ->set('page', $page)
+                    ->setAll($params ?? [])
                     ->generateUrl()
             )
             ->setCssClass('btn btn-secondary action-goBack');
@@ -402,7 +398,7 @@ class OeuvreCrudController extends AbstractCrudController
             $httpReferer = $context->getRequest()->headers->get('referer') ?? '';
             $query = parse_url($httpReferer, PHP_URL_QUERY) ?? '';
             parse_str($query, $params);
-
+            dump($params);
             if (!empty($params)) {
                 $this->requestStack->getSession()->set('oeuvre_list_page', $params);
             }
@@ -426,7 +422,7 @@ class OeuvreCrudController extends AbstractCrudController
 
         if ('saveAndReturn' === $submitButtonName) {
             $params = $this->requestStack->getSession()->get('oeuvre_list_page');
-
+            //dd($params);
             return $this->redirectToRoute('admin_oeuvre_index', $params);
         }
 
