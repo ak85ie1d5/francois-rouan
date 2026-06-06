@@ -370,6 +370,19 @@ class OeuvreCrudController extends AbstractCrudController
             FormField::addTab('Localisation'),
             TableField::new('oeuvreStockages', 'Dernière localisation ')
                 ->setEntryType(StockageCollectionType::class)
+                ->formatValue(function ($value, $entity) {
+                    if ($entity->getOeuvreStockages()[0]->getType() === 0) {
+                        if ($entity->getOeuvreStockages()[0]->getInternalLocation() === null) {
+                            return "Atelier de l'artiste";
+                        } else {
+                            return $entity->getOeuvreStockages()[0]->getInternalLocation();
+                        }
+                    } elseif ($entity->getOeuvreStockages()[0]->getType() === 1) {
+                        return $entity->getOeuvreStockages()[0]->getLieu();
+                    } else {
+                        return '';
+                    }
+                })
                 ->allowAdd()
                 ->allowDelete()
                 ->setEntryIsComplex(),
