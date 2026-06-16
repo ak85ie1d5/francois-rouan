@@ -47,6 +47,9 @@ class BackupCommand extends Command
             )
             ->addOption('skip-database', null, InputOption::VALUE_NONE, 'Do not create the SQL dump.')
             ->addOption('skip-media', null, InputOption::VALUE_NONE, 'Do not create the media archive.')
+            ->addOption('skip-upload', null, InputOption::VALUE_NONE, 'Do not upload backup files to the SSH server.')
+            ->addOption('local-keep', null, InputOption::VALUE_REQUIRED, 'Number of local backup sets to keep.', 1)
+            ->addOption('remote-keep', null, InputOption::VALUE_REQUIRED, 'Number of remote backup sets to keep.', 7)
         ;
     }
 
@@ -78,6 +81,17 @@ class BackupCommand extends Command
                 $mediaDir = $this->resolvePath((string) $input->getOption('media-dir'));
                 $createdFiles[] = $this->archiveMedia($mediaDir, $outputDir, $timestamp, $io);
             }
+
+            if (!$input->getOption('skip-upload')) {
+                $this->uploadFiles(
+                    $createdFiles,
+                    $this->getRemoteDirectory(),
+                    (int) $input->getOption('remote-keep'),
+                    $io
+                );
+            }
+
+            $this->cleanupLocalBackups($outputDir, (int) $input->getOption('local-keep'), $io);
         } catch (\Throwable $exception) {
             $io->error($exception->getMessage());
 
@@ -174,6 +188,138 @@ class BackupCommand extends Command
         return $archivePath;
     }
 
+    private function uploadFiles(array $files, string $remoteDir, int $remoteKeep, SymfonyStyle $io): void
+    {
+        if ($remoteKeep < 1) {
+            throw new \RuntimeException('--remote-keep must be greater than or equal to 1.');
+        }
+
+        $rsyncBinary = $this->findExecutable(['rsync']);
+        $sshBinary = $this->findExecutable(['ssh']);
+        $connection = $this->getSshConnection();
+        $remoteTarget = sprintf('%s@%s:%s/', $connection['username'], $connection['host'], $remoteDir);
+        $knownHostsFile = $this->projectDir.'/var/ssh_known_hosts';
+        $sshOptions = [
+            '-o',
+            'StrictHostKeyChecking=accept-new',
+            '-o',
+            'UserKnownHostsFile='.$knownHostsFile,
+            '-p',
+            (string) $connection['port'],
+        ];
+
+        if (!is_dir(dirname($knownHostsFile)) && !mkdir(dirname($knownHostsFile), 0755, true) && !is_dir(dirname($knownHostsFile))) {
+            throw new \RuntimeException(sprintf('Unable to create SSH directory "%s".', dirname($knownHostsFile)));
+        }
+
+        $io->section('Rsync upload');
+        $this->runSshCommand($sshBinary, $sshOptions, $connection, sprintf('mkdir -p %s', $this->shellQuote($remoteDir)));
+
+        $process = new Process(array_merge(
+            [$rsyncBinary, '-az', '-e', $this->buildSshCommand($sshBinary, $sshOptions)],
+            $files,
+            [$remoteTarget]
+        ));
+        $process->setTimeout(null);
+
+        try {
+            $process->mustRun();
+        } catch (ProcessFailedException $exception) {
+            throw new \RuntimeException(sprintf('Rsync upload failed: %s', trim($exception->getProcess()->getErrorOutput())));
+        }
+
+        $this->cleanupRemoteBackups($sshBinary, $sshOptions, $connection, $remoteDir, $remoteKeep);
+    }
+
+    private function cleanupLocalBackups(string $outputDir, int $keep, SymfonyStyle $io): void
+    {
+        if ($keep < 1) {
+            throw new \RuntimeException('--local-keep must be greater than or equal to 1.');
+        }
+
+        $backupSets = $this->findLocalBackupSets($outputDir);
+        $expiredBackupSets = array_slice($backupSets, $keep);
+
+        foreach ($expiredBackupSets as $backupSet) {
+            foreach ($backupSet as $file) {
+                @unlink($file);
+            }
+        }
+
+        if ($expiredBackupSets !== []) {
+            $io->note(sprintf('Removed %d old local backup set(s).', count($expiredBackupSets)));
+        }
+    }
+
+    private function cleanupRemoteBackups(
+        string $sshBinary,
+        array $sshOptions,
+        array $connection,
+        string $remoteDir,
+        int $keep,
+    ): void {
+        $remoteScript = sprintf(
+            <<<'SH'
+set -eu
+cd %s
+for stamp in $(
+    for file in database_*.sql oeuvre-medias_*.tar.gz; do
+        [ -e "$file" ] || continue
+        stamp="${file#database_}"
+        stamp="${stamp#oeuvre-medias_}"
+        stamp="${stamp%.sql}"
+        stamp="${stamp%.tar.gz}"
+        printf '%%s\n' "$stamp"
+    done | sort -ru | tail -n +%d
+); do
+    rm -f "database_${stamp}.sql" "oeuvre-medias_${stamp}.tar.gz"
+done
+SH,
+            $this->shellQuote($remoteDir),
+            $keep + 1
+        );
+
+        $this->runSshCommand($sshBinary, $sshOptions, $connection, $remoteScript);
+    }
+
+    private function findLocalBackupSets(string $outputDir): array
+    {
+        $sets = [];
+        $files = glob($outputDir.'/{database_*.sql,oeuvre-medias_*.tar.gz}', GLOB_BRACE);
+
+        foreach ($files === false ? [] : $files as $file) {
+            if (!preg_match('/(?:database|oeuvre-medias)_(\d{8}_\d{6})\.(?:sql|tar\.gz)$/', $file, $matches)) {
+                continue;
+            }
+
+            $sets[$matches[1]][] = $file;
+        }
+
+        krsort($sets);
+
+        return array_values($sets);
+    }
+
+    private function runSshCommand(
+        string $sshBinary,
+        array $sshOptions,
+        array $connection,
+        string $remoteCommand,
+    ): void {
+        $process = new Process(array_merge(
+            [$sshBinary],
+            $sshOptions,
+            [sprintf('%s@%s', $connection['username'], $connection['host']), $remoteCommand]
+        ));
+        $process->setTimeout(null);
+
+        try {
+            $process->mustRun();
+        } catch (ProcessFailedException $exception) {
+            throw new \RuntimeException(sprintf('SSH command failed: %s', trim($exception->getProcess()->getErrorOutput())));
+        }
+    }
+
     private function parseDatabaseUrl(): array
     {
         $parts = parse_url($this->databaseUrl);
@@ -198,6 +344,60 @@ class BackupCommand extends Command
         }
 
         return rtrim($this->projectDir.'/'.$path, '/');
+    }
+
+    private function getSshConnection(): array
+    {
+        return [
+            'host' => $this->getRequiredEnv('SSH_HOST'),
+            'port' => (int) ($this->getEnv('SSH_PORT') ?: 22),
+            'username' => $this->getRequiredEnv('SSH_USERNAME'),
+        ];
+    }
+
+    private function getRemoteDirectory(): string
+    {
+        $remoteDir = $this->getRequiredEnv('SSH_REMOTE_DIR');
+
+        return rtrim((string) $remoteDir, '/');
+    }
+
+    private function getRequiredEnv(string $name): string
+    {
+        $value = $this->getEnv($name);
+
+        if ($value === null || $value === '') {
+            throw new \RuntimeException(sprintf('Missing environment variable "%s".', $name));
+        }
+
+        return $value;
+    }
+
+    private function getEnv(string $name): ?string
+    {
+        if (isset($_ENV[$name])) {
+            return (string) $_ENV[$name];
+        }
+
+        if (isset($_SERVER[$name])) {
+            return (string) $_SERVER[$name];
+        }
+
+        $value = getenv($name);
+
+        return $value === false ? null : $value;
+    }
+
+    private function shellQuote(string $value): string
+    {
+        return "'".str_replace("'", "'\\''", $value)."'";
+    }
+
+    private function buildSshCommand(string $sshBinary, array $sshOptions): string
+    {
+        $command = array_merge([$sshBinary], $sshOptions);
+
+        return implode(' ', array_map(fn (string $argument): string => $this->shellQuote($argument), $command));
     }
 
     private function findExecutable(array $names): string
