@@ -267,8 +267,8 @@ for stamp in $(
         [ -e "$file" ] || continue
         stamp="${file#database_}"
         stamp="${stamp#oeuvre-medias_}"
-        stamp="${stamp%.sql}"
-        stamp="${stamp%.tar.gz}"
+        stamp="${stamp%%.sql}"
+        stamp="${stamp%%.tar.gz}"
         printf '%%s\n' "$stamp"
     done | sort -ru | tail -n +%d
 ); do
