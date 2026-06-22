@@ -1,3 +1,40 @@
+:root {
+    --tg-primary: #b66a50;
+
+    --link-color: #7f3e2f;
+    --link-hover-color: #bc7157;
+
+    --sidebar-menu-active-item-color: #b66a50;
+
+    --form-switch-checked-bg: #b66a50;
+
+    --button-primary-bg: linear-gradient(135deg, #bc7157 0%, #9f533b 42%, #7f3e2f 100%);
+    --button-primary-hover-bg: linear-gradient(135deg, #bc7157 0%, #9f533b 42%, #7f3e2f 100%);
+    --button-primary-active-bg: linear-gradient(135deg, #bc7157 0%, #9f533b 42%, #7f3e2f 100%);
+
+    --button-secondary-bg: rgba(255, 255, 255, 0.92);
+
+    --button-secondary-color: #232326;
+    --button-secondary-border-color: #e6e2da;
+    --button-secondary-hover-border-color: rgba(182, 106, 80, 0.46);
+    --button-secondary-hover-bg: rgba(255, 250, 245, 0.98);
+    --button-secondary-hover-color: #9f533b;
+
+    --form-type-check-input-checked-bg: #b66a50;
+    --form-type-check-input-border-color: #7f3e2f;
+
+    --sidebar-bg: linear-gradient(180deg, rgba(252, 251, 248, 0.95) 0%, rgba(247, 244, 239, 0.88) 100%);
+    --page-login-bg: linear-gradient(180deg, rgba(252, 251, 248, 0.95) 0%, rgba(247, 244, 239, 0.88) 100%);
+}
+
+.searchable img {
+    border-radius: 12px;
+}
+
+.dummy-image {
+    border: 1px dashed #9ea9bf;
+}
+
 .form-control-label,
 .datagrid thead a,
 .datagrid thead span {
@@ -38,8 +75,26 @@
     position: relative !important;
 }
 
-.btn-link-danger, .btn-link-danger:active, .btn-link-danger:active:focus, .btn-link-danger:focus, .btn-link-danger:hover {
-    color: var(--link-danger-color);
+/* Buttons */
+.btn {
+    border-radius: 999px;
+}
+
+.btn-primary {
+    border: 1px solid transparent;
+}
+
+.btn-primary:hover {
+    filter: saturate(1.14) contrast(1.08) brightness(0.94);
+    transform: none;
+}
+
+.btn-secondary:hover svg path {
+    fill: var(--button-secondary-hover-color);
+}
+
+.btn-secondary:hover i {
+    color: var(--button-secondary-hover-color);
 }
 
 .btn-light {
@@ -48,6 +103,10 @@
     --button-border-color: var(--button-danger-border-color);
     --button-hover-bg: var(--text-color);
     --button-hover-color: var(--button-danger-hover-color);
+}
+
+.btn-link-danger, .btn-link-danger:active, .btn-link-danger:active:focus, .btn-link-danger:focus, .btn-link-danger:hover {
+    color: var(--link-danger-color);
 }
 
 .actions a {

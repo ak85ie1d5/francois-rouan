@@ -183,7 +183,7 @@ class OeuvreCrudController extends AbstractCrudController
                 'override-data-bs-target' => '#modal-batch-action-csv',
             ])
             ->setIcon('fa fa-file-csv')
-            ->setCssClass('btn btn-success')
+            ->setCssClass('btn btn-csv')
             ->setTemplatePath('admin/button/action.html.twig');
 
         $exportToZip = Action::new('export_to_zip', 'Exporter dans un ZIP')
