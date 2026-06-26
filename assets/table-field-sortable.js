@@ -30,11 +30,12 @@
  * 5. The script automatically calculates the real column index within each table.
  */
 document.addEventListener('DOMContentLoaded', function () {
-    if (document.querySelectorAll(".table-sortable")) {
-        if (document.querySelectorAll("[data-table-sortable-th]")) {
-            new tableSortable;
-        } else {}
-    } else {}
+    if (
+        document.querySelectorAll(".table-sortable").length &&
+        document.querySelectorAll("[data-table-sortable-th]").length
+    ) {
+        new tableSortable();
+    }
 })
 
 /**
@@ -49,6 +50,7 @@ class tableSortable {
         this.tables = document.querySelectorAll(".table-sortable");
         let tableHeaders = document.querySelectorAll("[data-table-sortable-th]");
         this.#getTableHeaders(tableHeaders);
+        this.#sortDefaultTableHeaders();
     }
 
     /**
@@ -62,6 +64,21 @@ class tableSortable {
             tableHeader.addEventListener("click", () => {
                 this.#sortTable(tableHeader);
             });
+        });
+    }
+
+    /**
+     * Sorts tables on page load using headers with the "aria-sort-default" attribute.
+     *
+     * @private
+     */
+    #sortDefaultTableHeaders() {
+        document.querySelectorAll("[data-table-sortable-th][aria-sort-default]").forEach(tableHeader => {
+            const sortableDirection = tableHeader.getAttribute("aria-sort-default");
+
+            if (sortableDirection === "asc" || sortableDirection === "desc") {
+                this.#sortTable(tableHeader, sortableDirection);
+            }
         });
     }
 
@@ -94,74 +111,73 @@ class tableSortable {
      * Updates the attributes and classes of the table headers to reflect the sorting state.
      *
      * @param {HTMLElement} tableHeader - The table header element that was clicked.
+     * @param {string|null} sortableDirection - The forced sorting direction ("asc" or "desc").
      * @private
      */
-    #sortTable(tableHeader) {
-        let rows, i, x, y, shouldSwitch, switchcount = 0;
-        let switching = true;
-        // Set the sorting direction to ascending:
-        let dir = "asc";
-
+    #sortTable(tableHeader, sortableDirection = null) {
         // Find the table that contains this header
         const table = tableHeader.closest('.table-sortable');
         if (!table) return;
 
         // Calculate the real column index within this specific table
-        const allHeadersInTable = Array.from(table.querySelectorAll('thead th[data-table-sortable-th]'));
+        const allHeadersInTable = table.tHead ? Array.from(table.tHead.querySelectorAll('th')) : [];
+        const sortableHeadersInTable = allHeadersInTable.filter(header => header.hasAttribute("data-table-sortable-th"));
         const n = allHeadersInTable.indexOf(tableHeader);
 
         if (n === -1) return; // Header not found in this table
 
         // Delete the attributes of other th in THIS table only
-        allHeadersInTable.forEach(header => {
+        sortableHeadersInTable.forEach(header => {
             if (header !== tableHeader) {
                 this.#removeAttributeToTableHeader(header);
             }
         });
 
-        // Make a loop that will continue until no switching has been done:
-        while (switching) {
-            // Start by saying: no switching is done:
-            switching = false;
-            rows = table.rows;
-            // Loop through all table rows (except the first, which contains table headers):
-            for (i = 1; i < (rows.length - 1); i++) {
-                // Start by saying there should be no switching:
-                shouldSwitch = false;
-                /* Get the two elements you want to compare,
-                one from current row and one from the next: */
-                x = rows[i].getElementsByTagName("TD")[n];
-                y = rows[i + 1].getElementsByTagName("TD")[n];
+        const tableBody = table.tBodies[0];
+        if (!tableBody) return;
 
-                // Skip if cells don't exist
-                if (!x || !y) continue;
+        const rows = Array.from(tableBody.rows);
+        const dir = sortableDirection || (tableHeader.getAttribute("aria-sort") === "asc" ? "desc" : "asc");
 
-                // Check if the two rows should switch place, based on the direction, asc or desc:
-                if (dir === "asc" && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                    shouldSwitch = true;
-                    this.#addAttributeToTableHeader(tableHeader, dir);
-                    break;
-                } else if (dir === "desc" && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                    shouldSwitch = true;
-                    this.#addAttributeToTableHeader(tableHeader, dir);
-                    break;
-                }
-            }
-            if (shouldSwitch) {
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.getElementsByTagName("TD")[n];
+            const cellB = rowB.getElementsByTagName("TD")[n];
+            const valueA = this.#getCellValue(cellA);
+            const valueB = this.#getCellValue(cellB);
+            const comparison = valueA.localeCompare(valueB, undefined, {
+                numeric: true,
+                sensitivity: "base"
+            });
 
-                // If a switch has been marked, make the switch and mark that a switch has been done: */
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-                // Each time a switch is done, increase this count by 1:
-                switchcount ++;
-            } else {
-                // If no switching has been done AND the direction is "asc", set the direction to "desc" and run the while loop again.
-                if (switchcount === 0 && dir === "asc") {
+            return dir === "asc" ? comparison : comparison * -1;
+        });
 
-                    dir = "desc";
-                    switching = true;
-                }
-            }
+        rows.forEach(row => {
+            tableBody.appendChild(row);
+        });
+
+        tableHeader.removeAttribute("aria-sort-default");
+        this.#addAttributeToTableHeader(tableHeader, dir);
+    }
+
+    /**
+     * Returns the comparable value of a table cell.
+     *
+     * @param {HTMLElement|null} tableCell - The cell to read.
+     * @returns {string}
+     * @private
+     */
+    #getCellValue(tableCell) {
+        if (!tableCell) {
+            return "";
         }
+
+        const field = tableCell.querySelector("input, select, textarea");
+
+        if (field) {
+            return field.value.trim();
+        }
+
+        return tableCell.textContent.trim();
     }
 }
