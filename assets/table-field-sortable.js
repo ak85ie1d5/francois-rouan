@@ -7,6 +7,11 @@
  * 3. Automatically adds `aria-sort` attributes for accessibility.
  * 4. Adds the `table-sortable-active` class to the active header.
  * 5. Works with multiple tables on the same page - each table is sorted independently.
+ * 6. Supports cascading sort: a header carrying `aria-sort-<level>="asc|desc"` becomes a tie-breaker,
+ *    applied after the sorted column when its values are equal. Levels are applied in ascending order
+ *    (`aria-sort-1` before `aria-sort-2`) and each tie-breaker keeps its own direction, whatever the
+ *    direction of the sorted column. `aria-sort-default` is not a level, it designates the column
+ *    sorted on page load.
  *
  * Example usage in the DOM:
  * <table class="table-sortable">
@@ -138,18 +143,18 @@ class tableSortable {
 
         const rows = Array.from(tableBody.rows);
         const dir = sortableDirection || (tableHeader.getAttribute("aria-sort") === "asc" ? "desc" : "asc");
+        const sortColumns = this.#getSortColumns(allHeadersInTable, n, dir);
 
         rows.sort((rowA, rowB) => {
-            const cellA = rowA.getElementsByTagName("TD")[n];
-            const cellB = rowB.getElementsByTagName("TD")[n];
-            const valueA = this.#getCellValue(cellA);
-            const valueB = this.#getCellValue(cellB);
-            const comparison = valueA.localeCompare(valueB, undefined, {
-                numeric: true,
-                sensitivity: "base"
-            });
+            for (const sortColumn of sortColumns) {
+                const comparison = this.#compareCells(rowA, rowB, sortColumn.index);
 
-            return dir === "asc" ? comparison : comparison * -1;
+                if (comparison !== 0) {
+                    return sortColumn.direction === "asc" ? comparison : comparison * -1;
+                }
+            }
+
+            return 0;
         });
 
         rows.forEach(row => {
@@ -158,6 +163,80 @@ class tableSortable {
 
         tableHeader.removeAttribute("aria-sort-default");
         this.#addAttributeToTableHeader(tableHeader, dir);
+    }
+
+    /**
+     * Builds the ordered list of columns used to sort the table.
+     * The clicked column comes first, then the tie-breaker columns declared with
+     * "aria-sort-1", "aria-sort-2", ... in ascending level order. Each tie-breaker keeps
+     * its own declared direction, only the clicked column follows the toggled direction.
+     *
+     * @param {HTMLElement[]} allHeadersInTable - Every header of the table being sorted.
+     * @param {number} columnIndex - The index of the clicked column.
+     * @param {string} sortableDirection - The sorting direction of the clicked column ("asc" or "desc").
+     * @returns {{index: number, direction: string}[]}
+     * @private
+     */
+    #getSortColumns(allHeadersInTable, columnIndex, sortableDirection) {
+        const sortColumns = [{index: columnIndex, direction: sortableDirection}];
+
+        allHeadersInTable
+            .map((header, index) => ({index: index, level: this.#getSortLevel(header), header: header}))
+            .filter(tieBreaker => tieBreaker.level !== null)
+            .sort((tieBreakerA, tieBreakerB) => tieBreakerA.level - tieBreakerB.level)
+            .forEach(tieBreaker => {
+                if (sortColumns.some(sortColumn => sortColumn.index === tieBreaker.index)) {
+                    return;
+                }
+
+                const direction = tieBreaker.header.getAttribute(`aria-sort-${tieBreaker.level}`);
+
+                sortColumns.push({
+                    index: tieBreaker.index,
+                    direction: direction === "asc" ? "asc" : "desc"
+                });
+            });
+
+        return sortColumns;
+    }
+
+    /**
+     * Returns the tie-breaker level of a header, read from its "aria-sort-<level>" attribute.
+     * "aria-sort-default" is not a level and is ignored here.
+     *
+     * @param {HTMLElement} tableHeader - The header to inspect.
+     * @returns {number|null}
+     * @private
+     */
+    #getSortLevel(tableHeader) {
+        for (const attribute of tableHeader.attributes) {
+            const matches = attribute.name.match(/^aria-sort-(\d+)$/);
+
+            if (matches) {
+                return parseInt(matches[1], 10);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Compares two rows on a single column, ignoring the sorting direction.
+     *
+     * @param {HTMLElement} rowA - The first row to compare.
+     * @param {HTMLElement} rowB - The second row to compare.
+     * @param {number} columnIndex - The index of the column to compare.
+     * @returns {number}
+     * @private
+     */
+    #compareCells(rowA, rowB, columnIndex) {
+        const valueA = this.#getCellValue(rowA.getElementsByTagName("TD")[columnIndex]);
+        const valueB = this.#getCellValue(rowB.getElementsByTagName("TD")[columnIndex]);
+
+        return valueA.localeCompare(valueB, undefined, {
+            numeric: true,
+            sensitivity: "base"
+        });
     }
 
     /**
