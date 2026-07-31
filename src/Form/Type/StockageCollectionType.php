@@ -37,7 +37,8 @@ class StockageCollectionType extends AbstractType
                 'choices' => $this->options->getDayNumeric(),
                 'label' => 'Jour',
                 'label_attr' => [
-                    'style' => 'min-width: 80px'
+                    'style' => 'min-width: 80px',
+                    'aria-sort-2' => 'desc'
             ],
                 'placeholder' => ''
             ])
@@ -45,7 +46,8 @@ class StockageCollectionType extends AbstractType
                 'choices' => $this->options->getMonthTextual(),
                 'label' => 'Mois',
                 'label_attr' => [
-                    'style' => 'min-width: 150px'
+                    'style' => 'min-width: 150px',
+                    'aria-sort-1' => 'desc'
                 ],
                 'placeholder' => ''
             ])
