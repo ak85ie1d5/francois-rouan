@@ -266,6 +266,30 @@ class Oeuvre
         return $this->oeuvreStockages;
     }
 
+    /**
+     * Return the most recent location, based on its date (year, month, day), then on its id.
+     *
+     * @return OeuvreStockage|null
+     */
+    public function getLastOeuvreStockage(): ?OeuvreStockage
+    {
+        $last = null;
+
+        foreach ($this->oeuvreStockages as $stockage) {
+            if ($last === null || $this->compareStockageDates($stockage, $last) > 0) {
+                $last = $stockage;
+            }
+        }
+
+        return $last;
+    }
+
+    private function compareStockageDates(OeuvreStockage $a, OeuvreStockage $b): int
+    {
+        return [$a->getFirstYear(), $a->getFirstMonth() ?? 0, $a->getFirstDay() ?? 0, $a->getId() ?? PHP_INT_MAX]
+            <=> [$b->getFirstYear(), $b->getFirstMonth() ?? 0, $b->getFirstDay() ?? 0, $b->getId() ?? PHP_INT_MAX];
+    }
+
     public function addOeuvreStockage(OeuvreStockage $oeuvreStockage): static
     {
         if (!$this->oeuvreStockages->contains($oeuvreStockage)) {
